@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:reactiveUi="http://reactiveui.net"
              xmlns:views="clr-namespace:DndSpellbook.Views"
+             xmlns:dndSpellbook="clr-namespace:DndSpellbook"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="views:MainViewModel"
              x:Class="DndSpellbook.Views.MainView">
@@ -16,6 +17,9 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
             </reactiveUi:RoutedViewHost.DefaultContent>
+            <reactiveUi:RoutedViewHost.ViewLocator>
+                <dndSpellbook:ViewLocator/>
+            </reactiveUi:RoutedViewHost.ViewLocator>
         </reactiveUi:RoutedViewHost>
     </Grid>
 </UserControl>
