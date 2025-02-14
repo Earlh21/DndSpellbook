@@ -2,6 +2,7 @@
 using System.Reactive;
 using System.Threading.Tasks;
 using DndSpellbook.Data.Models;
+using DndSpellbook.Data.Models.Enums;
 using DndSpellbook.Data.Services;
 using ReactiveUI;
 
@@ -50,6 +51,8 @@ public class SpellCardViewModel : ReactiveObject
         get => isEditing;
         set => this.RaiseAndSetIfChanged(ref isEditing, value);
     }
+    
+    
 
     public SpellSchool[] Schools { get; }
     public CastingTime[] CastingTimes { get; }

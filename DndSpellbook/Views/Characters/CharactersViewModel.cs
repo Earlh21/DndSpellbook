@@ -13,9 +13,6 @@ public class CharactersViewModel : ViewModelBase
     private readonly Navigator navigator;
     private readonly CharacterService characterService;
     
-    public override string? UrlPathSegment => "characters";
-    public override IScreen HostScreen { get; }
-    
     private ObservableCollection<Character> characters = new();
     public ObservableCollection<Character> Characters
     {
@@ -27,9 +24,8 @@ public class CharactersViewModel : ViewModelBase
     public ReactiveCommand<Character, Unit> DeleteCharacterCommand { get; }
     public ReactiveCommand<Character, Unit> EditCharacterCommand { get; }
 
-    public CharactersViewModel(IScreen screen, Navigator navigator, CharacterService characterService)
+    public CharactersViewModel(Navigator navigator, CharacterService characterService)
     {
-        HostScreen = screen;
         this.navigator = navigator;
         
         this.characterService = characterService;

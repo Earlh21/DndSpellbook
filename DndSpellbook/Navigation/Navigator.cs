@@ -1,6 +1,7 @@
 ﻿using System;
 using DndSpellbook.Data.Services;
 using DndSpellbook.Views;
+using DndSpellbook.Views.SpellLists;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 
@@ -39,30 +40,46 @@ public class Navigator
     {
         var scope = ServiceProvider.CreateScope();
 
-        var screen = scope.ServiceProvider.GetService<IScreen>()!;
         var spellService = scope.ServiceProvider.GetService<SpellService>()!;
         
-        return new SpellsViewModel(screen, spellService, isSelector);
+        return new SpellsViewModel(spellService, isSelector);
     }
     
     public CharactersViewModel BuildCharactersViewModel()
     {
         var scope = ServiceProvider.CreateScope();
 
-        var screen = scope.ServiceProvider.GetService<IScreen>()!;
         var characterService = scope.ServiceProvider.GetService<CharacterService>()!;
         
-        return new CharactersViewModel(screen, this, characterService);
+        return new CharactersViewModel(this, characterService);
     }
     
     public CharacterViewModel BuildCharacterViewModel(int characterId)
     {
         var scope = ServiceProvider.CreateScope();
 
-        var screen = scope.ServiceProvider.GetService<IScreen>()!;
         var characterService = scope.ServiceProvider.GetService<CharacterService>()!;
         var spellService = scope.ServiceProvider.GetService<SpellService>()!;
         
-        return new CharacterViewModel(screen, this, characterService, spellService, characterId);
+        return new CharacterViewModel(this, characterService, spellService, characterId);
+    }
+    
+    public SpellListsViewModel BuildSpellListsViewModel()
+    {
+        var scope = ServiceProvider.CreateScope();
+
+        var spellListService = scope.ServiceProvider.GetService<SpellListService>()!;
+        
+        return new SpellListsViewModel(this, spellListService);
+    }
+    
+    public SpellListViewModel BuildSpellListViewModel(int spellListId)
+    {
+        var scope = ServiceProvider.CreateScope();
+
+        var spellListService = scope.ServiceProvider.GetService<SpellListService>()!;
+        var spellService = scope.ServiceProvider.GetService<SpellService>()!;
+        
+        return new SpellListViewModel(this, spellService, spellListService, spellListId);
     }
 }

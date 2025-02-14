@@ -16,9 +16,6 @@ public class SpellsViewModel : ViewModelBase, IDialog
 {
     private readonly SpellService spellService;
 
-    public override string UrlPathSegment => "spells";
-    public override IScreen HostScreen { get; }
-
     private bool isSelector;
 
     public bool IsSelector
@@ -28,7 +25,6 @@ public class SpellsViewModel : ViewModelBase, IDialog
     }
 
     private ObservableCollection<SpellCardViewModel> spells = new();
-
     public ObservableCollection<SpellCardViewModel> Spells
     {
         get => spells;
@@ -40,7 +36,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
-    public SpellsViewModel(IScreen hostScreen, SpellService spellService, bool asSelector = false)
+    public SpellsViewModel(SpellService spellService, bool asSelector = false)
     {
         this.spellService = spellService;
         IsSelector = asSelector;
@@ -49,8 +45,6 @@ public class SpellsViewModel : ViewModelBase, IDialog
         DeleteSpellCommand = ReactiveCommand.CreateFromTask<SpellCardViewModel>(DeleteSpell);
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
-
-        HostScreen = hostScreen;
     }
 
     public async Task LoadDataAsync()

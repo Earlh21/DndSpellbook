@@ -18,9 +18,6 @@ public class CharacterViewModel : ViewModelBase
     private readonly SpellService spellService;
     private readonly int characterId;
     
-    public override string? UrlPathSegment => $"characters/{characterId}";
-    public override IScreen HostScreen { get; }
-    
     private Character? character;
     public Character? Character
     {
@@ -33,9 +30,8 @@ public class CharacterViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> AddSpellsCommand { get; }
     public ReactiveCommand<SpellEntry, Unit> DeleteSpellCommand { get; }
     
-    public CharacterViewModel(IScreen screen, Navigator navigator, CharacterService characterService, SpellService spellService, int characterId)
+    public CharacterViewModel(Navigator navigator, CharacterService characterService, SpellService spellService, int characterId)
     {
-        HostScreen = screen;
         this.navigator = navigator;
         this.characterId = characterId;
         this.characterService = characterService;

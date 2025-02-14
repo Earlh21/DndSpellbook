@@ -4,6 +4,6 @@ namespace DndSpellbook.Views;
 
 public abstract class ViewModelBase : ReactiveObject, IRoutableViewModel
 {
-    public abstract string? UrlPathSegment { get; }
-    public abstract IScreen HostScreen { get; }
+    public string? UrlPathSegment => null;
+    public IScreen HostScreen => null;
 }

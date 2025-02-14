@@ -1,5 +1,7 @@
 ﻿using System;
-    using ReactiveUI;
+using System.Collections.ObjectModel;
+using DndSpellbook.Data.Models.Enums;
+using ReactiveUI;
     using ReactiveUI.Validation.Extensions;
     using ReactiveUI.Validation.Helpers;
 
@@ -77,6 +79,13 @@
         {
             get => description;
             set => this.RaiseAndSetIfChanged(ref description, value);
+        }
+        
+        private ObservableCollection<SpellList> spellLists = new();
+        public ObservableCollection<SpellList> SpellLists
+        {
+            get => spellLists;
+            set => this.RaiseAndSetIfChanged(ref spellLists, value);
         }
 
         private Spell()

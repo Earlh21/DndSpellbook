@@ -14,6 +14,7 @@
             <Button Command="{Binding Router.NavigateBack}" Content="Back" Margin="0,0,0,20" />
             <Button Command="{Binding NavigateCommand}" CommandParameter="spells" Content="Spells" />
             <Button Command="{Binding NavigateCommand}" CommandParameter="characters" Content="Characters" />
+            <Button Command="{Binding NavigateCommand}" CommandParameter="spelllists" Content="Spell Lists" />
         </StackPanel>
 
         <reactiveUi:RoutedViewHost Grid.Column="1" Router="{Binding Router}" PageTransition="{x:Null}">

@@ -34,6 +34,10 @@ public class MainViewModel : ReactiveObject, IScreen
                 var charactersViewModel = navigator.BuildCharactersViewModel();
                 navigator.NavigateAndReset(charactersViewModel);
                 break;
+            case "spelllists":
+                var spellListsViewModel = navigator.BuildSpellListsViewModel();
+                navigator.NavigateAndReset(spellListsViewModel);
+                break;
         }
     }
 }

@@ -1,0 +1,29 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:spellLists="clr-namespace:DndSpellbook.Views.SpellLists"
+             xmlns:models="clr-namespace:DndSpellbook.Data.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="spellLists:SpellListViewModel"
+             x:Class="DndSpellbook.Views.SpellLists.SpellListView"
+             x:Name="Root">
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="{x:Type models:Spell}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}"/>
+                <Button Content="Remove" 
+                    Command="{Binding #Root.((spellLists:SpellListViewModel)DataContext).RemoveSpellCommand}"
+                        CommandParameter="{Binding}"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+    
+    <StackPanel Orientation="Vertical">
+        <TextBox Text="{Binding SpellList.Name}"/>
+        <Button Content="Add Spells"
+                Command="{Binding AddSpellsCommand}"/>
+        <Separator/>
+        <ItemsControl ItemsSource="{Binding SpellList.Spells}"/>
+    </StackPanel>
+</UserControl>

@@ -35,7 +35,7 @@ public partial class App : Application
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow()
+            desktop.MainWindow = new MainWindow
             {
                 DataContext = serviceProvider.GetRequiredService<MainViewModel>()
             };
@@ -53,8 +53,7 @@ public partial class App : Application
         var services = new ServiceCollection();
 
         services.AddSingleton(navigator);
-        services.AddSingleton<MainViewModel>(mainViewModel);
-        services.AddSingleton<IScreen>(mainViewModel);
+        services.AddSingleton(mainViewModel);
         
         services.AddDbContext<SpellbookContext>(options =>
         {
