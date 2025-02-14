@@ -1,4 +1,5 @@
-﻿using System.Reactive;
+﻿using System;
+using System.Reactive;
 using System.Threading.Tasks;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Services;
@@ -50,8 +51,8 @@ public class SpellCardViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref isEditing, value);
     }
 
-    private readonly ObservableAsPropertyHelper<bool> showCheckbox;
-    public bool ShowCheckbox => showCheckbox.Value;
+    public SpellSchool[] Schools { get; }
+    public CastingTime[] CastingTimes { get; }
 
     public ReactiveCommand<SpellCardViewModel, Unit> DeleteCommand { get; }
 
@@ -59,13 +60,18 @@ public class SpellCardViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
-    public SpellCardViewModel(Spell spell, SpellService spellService, bool asSelector,
+    public SpellCardViewModel(Spell spell,
+        SpellService spellService,
+        bool asSelector,
         ReactiveCommand<SpellCardViewModel, Unit> deleteCommand)
     {
         this.spell = spell;
         this.spellService = spellService;
         IsSelector = asSelector;
         DeleteCommand = deleteCommand;
+
+        Schools = Enum.GetValues<SpellSchool>();
+        CastingTimes = Enum.GetValues<CastingTime>();
 
         EditCommand = ReactiveCommand.Create(
             Edit,
@@ -81,11 +87,6 @@ public class SpellCardViewModel : ReactiveObject
             Cancel,
             this.WhenAnyValue(x => x.IsEditing)
         );
-
-        showCheckbox = this.WhenAnyValue(
-                x => x.IsSelector, x => x.IsEditing,
-                (isSelector, isEditing) => isSelector && !isEditing)
-            .ToProperty(this, x => x.ShowCheckbox);
     }
 
     private void Edit()

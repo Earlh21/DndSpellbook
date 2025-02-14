@@ -9,32 +9,86 @@
              x:DataType="views:SpellCardViewModel">
     <Border Width="350" Height="500">
         <ScrollViewer>
-            <StackPanel Orientation="Vertical">
-                <Grid ColumnDefinitions="*,Auto">
-                    <TextBlock Grid.Column="0" IsVisible="{Binding !IsEditing}"
-                               Text="{Binding Spell.Name}" TextWrapping="WrapWithOverflow" />
+            <Panel>
+                <StackPanel IsVisible="{Binding !IsEditing}" Orientation="Vertical">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0" Text="{Binding Spell.Name}" TextWrapping="WrapWithOverflow" />
 
-                    <TextBox Grid.Column="0" IsVisible="{Binding IsEditing}"
-                             Text="{Binding EditCopy.Name}" TextWrapping="WrapWithOverflow" />
+                        <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
+                            <CheckBox IsVisible="{Binding IsSelector}" IsChecked="{Binding IsSelected}" />
+                            <Button x:Name="EditButton" Content="E"
+                                    Command="{Binding EditCommand}" />
+                            <Button x:Name="DeleteButton" Content="D"
+                                    Command="{Binding DeleteCommand}"
+                                    CommandParameter="{Binding}" />
+                        </StackPanel>
+                    </Grid>
 
-                    <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
-                        <CheckBox IsVisible="{Binding ShowCheckbox}" IsChecked="{Binding IsSelected}"/>
-                        <Button x:Name="EditButton" Content="E"
-                                Command="{Binding EditCommand}"
-                                IsVisible="{Binding !IsEditing}" />
-                        <Button x:Name="DeleteButton" Content="D"
-                                Command="{Binding DeleteCommand}"
-                                CommandParameter="{Binding}"
-                                IsVisible="{Binding !IsEditing}" />
-                        <Button x:Name="SaveButton" Content="S"
-                                Command="{Binding SaveCommand}"
-                                IsVisible="{Binding IsEditing}" />
-                        <Button x:Name="CancelButton" Content="C"
-                                Command="{Binding CancelCommand}"
-                                IsVisible="{Binding IsEditing}" />
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="Level {0}, {1}">
+                                <Binding Path="Spell.Level" />
+                                <Binding Path="Spell.School" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
+                    <TextBlock Text="{Binding Spell.CastingTime}" />
+                    <TextBlock Text="{Binding Spell.Range, StringFormat='Range: {0} feet'}" />
+                    <TextBlock Text="{Binding Spell.Duration, Converter={StaticResource SecondsToDurationText}}" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsEnabled="False" IsChecked="{Binding Spell.Verbal}" Content="V" />
+                        <CheckBox IsEnabled="False" IsChecked="{Binding Spell.Somatic}" Content="S" />
+                        <CheckBox IsEnabled="False" IsChecked="{Binding Spell.Material}" Content="M" />
                     </StackPanel>
-                </Grid>
-            </StackPanel>
+
+                    <TextBlock Text="{Binding Spell.Description}" TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+
+                <StackPanel IsVisible="{Binding IsEditing}" Orientation="Vertical">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding EditCopy.Name}" TextWrapping="WrapWithOverflow" />
+
+                        <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
+                            <Button x:Name="SaveButton" Content="S"
+                                    Command="{Binding SaveCommand}" />
+                            <Button x:Name="CancelButton" Content="C"
+                                    Command="{Binding CancelCommand}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Level: " />
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding EditCopy.Level}"
+                                       Minimum="0" Maximum="9" ParsingNumberStyle="Integer" />
+                    </StackPanel>
+
+                    <ComboBox SelectedItem="{Binding EditCopy.School}" ItemsSource="{Binding Schools}" />
+                    <ComboBox SelectedItem="{Binding EditCopy.CastingTime}" ItemsSource="{Binding CastingTimes}" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Range (ft):" />
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding EditCopy.Range}"
+                                       Minimum="0" ParsingNumberStyle="Integer" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Duration (s):" />
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding EditCopy.Duration}"
+                                       Minimum="0" ParsingNumberStyle="Integer" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding EditCopy.Verbal}" Content="V" />
+                        <CheckBox IsChecked="{Binding EditCopy.Somatic}" Content="S" />
+                        <CheckBox IsChecked="{Binding EditCopy.Material}" Content="M" />
+                    </StackPanel>
+
+                    <TextBox Text="{Binding EditCopy.Description}" TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </Panel>
         </ScrollViewer>
     </Border>
 </UserControl>

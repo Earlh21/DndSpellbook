@@ -1,9 +1,11 @@
 ﻿using System;
     using ReactiveUI;
-    
+    using ReactiveUI.Validation.Extensions;
+    using ReactiveUI.Validation.Helpers;
+
     namespace DndSpellbook.Data.Models;
     
-    public partial class Spell : ReactiveObject
+    public partial class Spell : ReactiveValidationObject
     {
         public int Id { get; set; }
     
@@ -76,10 +78,15 @@
             get => description;
             set => this.RaiseAndSetIfChanged(ref description, value);
         }
-    
-        private Spell() { }
-    
-        public Spell(string name)
+
+        private Spell()
+        {
+            this.ValidationRule(s => s.Level,
+                level => level is >= 0 and <= 9,
+                "Level must be between 0 and 9.");
+        }
+
+        public Spell(string name) : this()
         {
             Name = name;
         }
