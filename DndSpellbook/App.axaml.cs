@@ -24,6 +24,15 @@ public partial class App : Application
     {
         var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DndSpellbook", "data.db");
         
+        var serviceProvider = ConfigureServices(dbPath);
+        
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.MainWindow = new MainWindow()
+            {
+                DataContext = serviceProvider.GetRequiredService<MainViewModel>()
+            };
+        }
 
         base.OnFrameworkInitializationCompleted();
     }
@@ -36,6 +45,7 @@ public partial class App : Application
         var services = new ServiceCollection();
 
         services.AddSingleton(vmBuilder);
+        services.AddSingleton<MainViewModel>(mainViewModel);
         services.AddSingleton<IScreen>(mainViewModel);
         
         services.AddDbContext<SpellbookContext>(options =>

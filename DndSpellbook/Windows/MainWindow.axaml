@@ -9,6 +9,6 @@
         x:Class="DndSpellbook.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="DndSpellbook">
-
+<views:MainView DataContext="{Binding}"/>
 
 </Window>

@@ -8,6 +8,8 @@
              x:DataType="views:MainViewModel"
              x:Class="DndSpellbook.Views.MainView">
     <Grid ColumnDefinitions="200,*">
+        <Button Command="{Binding NavigateCommand}" CommandParameter="spells" Content="Spells"/>
+        
         <reactiveUi:RoutedViewHost Grid.Column="1" Router="{Binding Router}" PageTransition="{x:Null}">
             <reactiveUi:RoutedViewHost.DefaultContent>
                 <TextBlock Text="Default content"
