@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using DndSpellbook.Data.Models;
@@ -16,20 +17,22 @@ public class SpellsViewModel : ViewModelBase
     public override string UrlPathSegment => "spells";
     public override IScreen HostScreen { get; }
     
-    private ObservableCollection<Spell> spells = new();
-    public ObservableCollection<Spell> Spells
+    private ObservableCollection<SpellCardViewModel> spells = new();
+    public ObservableCollection<SpellCardViewModel> Spells
     {
         get => spells;
         set => this.RaiseAndSetIfChanged(ref spells, value);
     }
     
     public ReactiveCommand<Unit, Unit> NewSpellCommand { get; }
+    public ReactiveCommand<SpellCardViewModel, Unit> DeleteSpellCommand { get; }
     
     public SpellsViewModel(IScreen hostScreen, SpellService spellService)
     {
         this.spellService = spellService;
         
-        NewSpellCommand = ReactiveCommand.Create(NewSpell);
+        NewSpellCommand = ReactiveCommand.CreateFromTask(NewSpell);
+        DeleteSpellCommand = ReactiveCommand.CreateFromTask<SpellCardViewModel>(DeleteSpell);
         
         HostScreen = hostScreen;
     }
@@ -38,11 +41,21 @@ public class SpellsViewModel : ViewModelBase
     {
         var spells = await spellService.GetAllAsync();
         
-        Spells = new (spells);
+        Spells = new (spells.Select(s => new SpellCardViewModel(s, spellService, DeleteSpellCommand)));
     }
     
-    private void NewSpell()
+    private async Task DeleteSpell(SpellCardViewModel spell)
     {
-        Spells.Add(new("Name"));
+        await spellService.DeleteAsync(spell.Spell);
+        Spells.Remove(spell);
+    }
+    
+    private async Task NewSpell()
+    {
+        var spell = new Spell("Name");
+        var spellCard = new SpellCardViewModel(spell, spellService, DeleteSpellCommand);
+        Spells.Add(spellCard);
+        
+        await spellService.AddAsync(spell);
     }
 }

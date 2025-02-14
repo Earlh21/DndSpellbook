@@ -8,31 +8,8 @@
              x:DataType="views:SpellsViewModel"
              x:Class="DndSpellbook.Views.SpellsView">
     <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type models:Spell}">
-            <ScrollViewer Width="350" Height="500">
-                <StackPanel Orientation="Vertical" Spacing="10">
-                    <TextBlock Text="{Binding Name}"/>
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}Level {0}, {1}">
-                                <Binding Path="Level"/>
-                                <Binding Path="School"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <Separator/>
-                    <StackPanel Orientation="Horizontal" Spacing="5">
-                        <CheckBox IsEnabled="False" IsChecked="{Binding Material}" Content="M"/>
-                        <CheckBox IsEnabled="False" IsChecked="{Binding Somatic}" Content="S"/>
-                        <CheckBox IsEnabled="False" IsChecked="{Binding Verbal}" Content="V"/>
-                    </StackPanel>
-                    <TextBlock Text="{Binding CastingTime, StringFormat='Casting Time: {0}'}"/>
-                    <TextBlock Text="{Binding Range, StringFormat='Range: {0} feet'}"/>
-                    <TextBlock Text="{Binding Duration, StringFormat='Duration: {0} seconds'}"/>
-                    <Separator/>
-                    <TextBlock Text="{Binding Description}"/>
-                </StackPanel>
-            </ScrollViewer>
+        <DataTemplate DataType="{x:Type views:SpellCardViewModel}">
+            <views:SpellCard DataContext="{Binding}"/>
         </DataTemplate>
     </UserControl.DataTemplates>
     

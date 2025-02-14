@@ -7,7 +7,7 @@
     {
         public int Id { get; set; }
     
-        private string name;
+        private string name = "";
         public string Name
         {
             get => name;
@@ -42,8 +42,8 @@
             set => this.RaiseAndSetIfChanged(ref range, value);
         }
     
-        private TimeSpan duration;
-        public TimeSpan Duration
+        private int duration;
+        public int Duration
         {
             get => duration;
             set => this.RaiseAndSetIfChanged(ref duration, value);
@@ -70,7 +70,7 @@
             set => this.RaiseAndSetIfChanged(ref material, value);
         }
         
-        private string description;
+        private string description = "";
         public string Description
         {
             get => description;
@@ -82,5 +82,35 @@
         public Spell(string name)
         {
             Name = name;
+        }
+        
+        public Spell Clone()
+        {
+            return new Spell(Name)
+            {
+                Level = Level,
+                School = School,
+                CastingTime = CastingTime,
+                Range = Range,
+                Duration = Duration,
+                Verbal = Verbal,
+                Somatic = Somatic,
+                Material = Material,
+                Description = Description
+            };
+        }
+        
+        public void CopyFrom(Spell other)
+        {
+            Name = other.Name;
+            Level = other.Level;
+            School = other.School;
+            CastingTime = other.CastingTime;
+            Range = other.Range;
+            Duration = other.Duration;
+            Verbal = other.Verbal;
+            Somatic = other.Somatic;
+            Material = other.Material;
+            Description = other.Description;
         }
     }

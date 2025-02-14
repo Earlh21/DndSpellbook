@@ -30,7 +30,7 @@ public partial class App : Application
         var serviceProvider = ConfigureServices(dbPath);
         
         var dbContext = serviceProvider.GetRequiredService<SpellbookContext>();
-        dbContext.Database.Migrate();
+        dbContext.Database.EnsureCreated();
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
