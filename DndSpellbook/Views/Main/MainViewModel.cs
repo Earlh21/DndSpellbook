@@ -10,12 +10,13 @@ public class MainViewModel : ReactiveObject, IScreen
 {
     private readonly Navigator navigator;
 
-    public RoutingState Router { get; } = new();
+    public RoutingState Router { get; }
     
     public ReactiveCommand<string, Unit> NavigateCommand { get; }
 
-    public MainViewModel(Navigator navigator)
+    public MainViewModel(RoutingState router, Navigator navigator)
     {
+        Router = router;
         this.navigator = navigator;
         
         NavigateCommand = ReactiveCommand.Create<string>(Navigate);
@@ -27,11 +28,11 @@ public class MainViewModel : ReactiveObject, IScreen
         {
             case "spells":
                 var spellsViewModel = navigator.BuildSpellsViewModel();
-                Router.NavigateAndReset.Execute(spellsViewModel);
+                navigator.NavigateAndReset(spellsViewModel);
                 break;
             case "characters":
                 var charactersViewModel = navigator.BuildCharactersViewModel();
-                Router.NavigateAndReset.Execute(charactersViewModel);
+                navigator.NavigateAndReset(charactersViewModel);
                 break;
         }
     }

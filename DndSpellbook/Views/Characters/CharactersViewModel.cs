@@ -52,7 +52,7 @@ public class CharactersViewModel : ViewModelBase
         Characters.Add(character);
 
         var vm = navigator.BuildCharacterViewModel(character.Id);
-        navigator.Router.NavigateAndReset.Execute(vm);
+        navigator.NavigateAndReset(vm);
     }
     
     private async Task DeleteCharacter(Character character)
@@ -64,6 +64,6 @@ public class CharactersViewModel : ViewModelBase
     private async Task EditCharacter(Character character)
     {
         var vm = navigator.BuildCharacterViewModel(character.Id);
-        navigator.Router.NavigateAndReset.Execute(vm);
+        navigator.NavigateAndReset(vm);
     }
 }

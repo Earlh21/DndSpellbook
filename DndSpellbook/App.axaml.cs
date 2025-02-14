@@ -46,10 +46,9 @@ public partial class App : Application
     
     private IServiceProvider ConfigureServices(string dbPath)
     {
-        var navigator = new Navigator();
-        
-        var mainViewModel = new MainViewModel(navigator);
-        navigator.Router = mainViewModel.Router;
+        RoutingState router = new();
+        var navigator = new Navigator(router);
+        var mainViewModel = new MainViewModel(router, navigator);
         
         var services = new ServiceCollection();
 
