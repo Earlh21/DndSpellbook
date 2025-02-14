@@ -22,9 +22,15 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DndSpellbook", "data.db");
+        var appdataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DndSpellbook");
+        Directory.CreateDirectory(appdataPath);
+        
+        var dbPath = Path.Combine(appdataPath, "data.db");
         
         var serviceProvider = ConfigureServices(dbPath);
+        
+        var dbContext = serviceProvider.GetRequiredService<SpellbookContext>();
+        dbContext.Database.Migrate();
         
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

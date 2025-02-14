@@ -69,6 +69,13 @@
             get => material;
             set => this.RaiseAndSetIfChanged(ref material, value);
         }
+        
+        private string description;
+        public string Description
+        {
+            get => description;
+            set => this.RaiseAndSetIfChanged(ref description, value);
+        }
     
         private Spell() { }
     

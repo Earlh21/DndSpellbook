@@ -1,5 +1,8 @@
-﻿using Avalonia;
+﻿using System;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -12,5 +15,14 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
     {
         this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
+    }
+
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+
+        if (DataContext is not SpellsViewModel vm) return;
+
+        vm.LoadDataAsync();
     }
 }
