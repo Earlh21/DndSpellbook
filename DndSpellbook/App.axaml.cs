@@ -5,11 +5,12 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using DndSpellbook.Data;
 using DndSpellbook.Data.Services;
-using DndSpellbook.ViewModels;
+using DndSpellbook.Navigation;
 using DndSpellbook.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using MainWindow = DndSpellbook.Windows.MainWindow;
 
 namespace DndSpellbook;
 
@@ -45,12 +46,14 @@ public partial class App : Application
     
     private IServiceProvider ConfigureServices(string dbPath)
     {
-        var vmBuilder = new ViewModelBuilder();
-        var mainViewModel = new MainViewModel(vmBuilder);
+        var navigator = new Navigator();
+        
+        var mainViewModel = new MainViewModel(navigator);
+        navigator.Router = mainViewModel.Router;
         
         var services = new ServiceCollection();
 
-        services.AddSingleton(vmBuilder);
+        services.AddSingleton(navigator);
         services.AddSingleton<MainViewModel>(mainViewModel);
         services.AddSingleton<IScreen>(mainViewModel);
         
@@ -67,7 +70,7 @@ public partial class App : Application
         
         var serviceProvider = services.BuildServiceProvider();
         
-        vmBuilder.ServiceProvider = serviceProvider;
+        navigator.ServiceProvider = serviceProvider;
         
         return serviceProvider;
     }

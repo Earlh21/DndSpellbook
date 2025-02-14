@@ -18,6 +18,7 @@
                              Text="{Binding EditCopy.Name}" TextWrapping="WrapWithOverflow" />
 
                     <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
+                        <CheckBox IsVisible="{Binding ShowCheckbox}" IsChecked="{Binding IsSelected}"/>
                         <Button x:Name="EditButton" Content="E"
                                 Command="{Binding EditCommand}"
                                 IsVisible="{Binding !IsEditing}" />

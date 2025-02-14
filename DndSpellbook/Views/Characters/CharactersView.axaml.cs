@@ -1,13 +1,24 @@
-﻿using Avalonia;
-using Avalonia.Controls;
+﻿using System;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using ReactiveUI;
 
-namespace DndSpellbook.Views.Characters;
+namespace DndSpellbook.Views;
 
-public partial class CharactersView : UserControl
+public partial class CharactersView : ReactiveUserControl<CharactersViewModel>
 {
     public CharactersView()
     {
-        InitializeComponent();
+        this.WhenActivated(disposables => { });
+        AvaloniaXamlLoader.Load(this);
+    }
+
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        
+        if (DataContext is not CharactersViewModel vm) return;
+        
+        vm.LoadDataAsync();
     }
 }

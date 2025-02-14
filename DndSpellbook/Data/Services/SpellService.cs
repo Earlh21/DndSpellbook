@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DndSpellbook.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,13 @@ public class SpellService(SpellbookContext context)
         return await context.Spells.ToListAsync();
     }
 
+    public async Task<List<Spell>> GetByIdsAsync(IEnumerable<int> ids)
+    {
+        return await context.Spells.Where(s => ids.Contains(s.Id)).ToListAsync();
+    }
+
     public async Task AddAsync(Spell spell)
     {
-        spell.Id = default;
-        
         context.Spells.Add(spell);
         await context.SaveChangesAsync();
     }

@@ -10,7 +10,24 @@ public class SpellCardViewModel : ReactiveObject
 {
     private readonly SpellService spellService;
 
+    private bool isSelected;
+
+    public bool IsSelected
+    {
+        get => isSelected;
+        set => this.RaiseAndSetIfChanged(ref isSelected, value);
+    }
+
+    private bool isSelector;
+
+    public bool IsSelector
+    {
+        get => isSelector;
+        set => this.RaiseAndSetIfChanged(ref isSelector, value);
+    }
+
     private Spell spell;
+
     public Spell Spell
     {
         get => spell;
@@ -18,6 +35,7 @@ public class SpellCardViewModel : ReactiveObject
     }
 
     private Spell editCopy = new("...");
+
     public Spell EditCopy
     {
         get => editCopy;
@@ -25,11 +43,15 @@ public class SpellCardViewModel : ReactiveObject
     }
 
     private bool isEditing;
+
     public bool IsEditing
     {
         get => isEditing;
         set => this.RaiseAndSetIfChanged(ref isEditing, value);
     }
+
+    private readonly ObservableAsPropertyHelper<bool> showCheckbox;
+    public bool ShowCheckbox => showCheckbox.Value;
 
     public ReactiveCommand<SpellCardViewModel, Unit> DeleteCommand { get; }
 
@@ -37,10 +59,12 @@ public class SpellCardViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
-    public SpellCardViewModel(Spell spell, SpellService spellService, ReactiveCommand<SpellCardViewModel, Unit> deleteCommand)
+    public SpellCardViewModel(Spell spell, SpellService spellService, bool asSelector,
+        ReactiveCommand<SpellCardViewModel, Unit> deleteCommand)
     {
         this.spell = spell;
         this.spellService = spellService;
+        IsSelector = asSelector;
         DeleteCommand = deleteCommand;
 
         EditCommand = ReactiveCommand.Create(
@@ -57,6 +81,11 @@ public class SpellCardViewModel : ReactiveObject
             Cancel,
             this.WhenAnyValue(x => x.IsEditing)
         );
+
+        showCheckbox = this.WhenAnyValue(
+                x => x.IsSelector, x => x.IsEditing,
+                (isSelector, isEditing) => isSelector && !isEditing)
+            .ToProperty(this, x => x.ShowCheckbox);
     }
 
     private void Edit()

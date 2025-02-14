@@ -2,7 +2,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:characters="clr-namespace:DndSpellbook.Views"
+             xmlns:views="clr-namespace:DndSpellbook.Views"
+             xmlns:models="clr-namespace:DndSpellbook.Data.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="DndSpellbook.Views.Characters.CharacterView">
-    Welcome to Avalonia!
+             x:Class="DndSpellbook.Views.CharacterView"
+             x:DataType="views:CharacterViewModel"
+             x:Name="Root">
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="{x:Type models:SpellEntry}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Spell.Name}"/>
+                <Button Content="Delete"
+                        Command="{Binding #Root.((characters:CharacterViewModel)DataContext).DeleteSpellCommand}"
+                        CommandParameter="{Binding}"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+    
+    <StackPanel Orientation="Vertical">
+        <TextBox Width="400" Height="80" Text="{Binding Character.Name}"/>
+        <Button Command="{Binding AddSpellsCommand}" Content="Add Spells"/>
+        <ItemsControl ItemsSource="{Binding Character.Spells}"/>
+    </StackPanel>
 </UserControl>

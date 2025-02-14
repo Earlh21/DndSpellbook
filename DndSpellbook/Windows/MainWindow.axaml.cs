@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace DndSpellbook.Views;
+namespace DndSpellbook.Windows;
 
 public partial class MainWindow : Window
 {

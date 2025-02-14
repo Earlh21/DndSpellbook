@@ -1,22 +1,22 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
 using Avalonia.Interactivity;
-using DndSpellbook.ViewModels;
+using DndSpellbook.Navigation;
 using ReactiveUI;
 
 namespace DndSpellbook.Views;
 
 public class MainViewModel : ReactiveObject, IScreen
 {
-    private readonly ViewModelBuilder vmBuilder;
+    private readonly Navigator navigator;
 
     public RoutingState Router { get; } = new();
     
     public ReactiveCommand<string, Unit> NavigateCommand { get; }
 
-    public MainViewModel(ViewModelBuilder vmBuilder)
+    public MainViewModel(Navigator navigator)
     {
-        this.vmBuilder = vmBuilder;
+        this.navigator = navigator;
         
         NavigateCommand = ReactiveCommand.Create<string>(Navigate);
     }
@@ -26,8 +26,12 @@ public class MainViewModel : ReactiveObject, IScreen
         switch (pageName)
         {
             case "spells":
-                var vm = vmBuilder.BuildSpellsViewModel();
-                Router.Navigate.Execute(vm);
+                var spellsViewModel = navigator.BuildSpellsViewModel();
+                Router.NavigateAndReset.Execute(spellsViewModel);
+                break;
+            case "characters":
+                var charactersViewModel = navigator.BuildCharactersViewModel();
+                Router.NavigateAndReset.Execute(charactersViewModel);
                 break;
         }
     }

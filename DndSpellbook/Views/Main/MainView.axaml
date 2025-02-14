@@ -5,12 +5,17 @@
              xmlns:reactiveUi="http://reactiveui.net"
              xmlns:views="clr-namespace:DndSpellbook.Views"
              xmlns:dndSpellbook="clr-namespace:DndSpellbook"
+             xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="views:MainViewModel"
              x:Class="DndSpellbook.Views.MainView">
     <Grid ColumnDefinitions="200,*">
-        <Button Command="{Binding NavigateCommand}" CommandParameter="spells" Content="Spells"/>
-        
+        <StackPanel Orientation="Vertical">
+            <Button Command="{Binding Router.NavigateBack}" Content="Back" Margin="0,0,0,20" />
+            <Button Command="{Binding NavigateCommand}" CommandParameter="spells" Content="Spells" />
+            <Button Command="{Binding NavigateCommand}" CommandParameter="characters" Content="Characters" />
+        </StackPanel>
+
         <reactiveUi:RoutedViewHost Grid.Column="1" Router="{Binding Router}" PageTransition="{x:Null}">
             <reactiveUi:RoutedViewHost.DefaultContent>
                 <TextBlock Text="Default content"
@@ -18,7 +23,7 @@
                            VerticalAlignment="Center" />
             </reactiveUi:RoutedViewHost.DefaultContent>
             <reactiveUi:RoutedViewHost.ViewLocator>
-                <dndSpellbook:ViewLocator/>
+                <dndSpellbook:ViewLocator />
             </reactiveUi:RoutedViewHost.ViewLocator>
         </reactiveUi:RoutedViewHost>
     </Grid>

@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace DndSpellbook.ViewModels;
+namespace DndSpellbook.Views;
 
 public abstract class ViewModelBase : ReactiveObject, IRoutableViewModel
 {

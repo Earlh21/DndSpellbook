@@ -1,10 +1,11 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using DndSpellbook.ViewModels;
 using DndSpellbook.Views;
 using ReactiveUI;
 using Splat;
+using CharactersView = DndSpellbook.Views.CharactersView;
+using CharacterView = DndSpellbook.Views.CharacterView;
 
 namespace DndSpellbook;
 
@@ -38,6 +39,8 @@ public class ViewLocator : IDataTemplate, IViewLocator
         return viewModel switch
         {
             SpellsViewModel => new SpellsView { DataContext = viewModel },
+            CharactersViewModel => new CharactersView { DataContext = viewModel },
+            CharacterViewModel => new CharacterView { DataContext = viewModel },
             _ => null
         };
     }
