@@ -6,7 +6,7 @@ using DndSpellbook.Data.Services;
 using DndSpellbook.Navigation;
 using ReactiveUI;
 
-namespace DndSpellbook.Views.SpellLists;
+namespace DndSpellbook.Views;
 
 public class SpellListsViewModel : ViewModelBase
 {

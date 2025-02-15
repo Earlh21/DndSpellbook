@@ -7,9 +7,8 @@ using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Services;
 using DndSpellbook.Navigation;
 using ReactiveUI;
-using SQLitePCL;
 
-namespace DndSpellbook.Views.SpellLists;
+namespace DndSpellbook.Views;
 
 public class SpellListViewModel : ViewModelBase
 {

@@ -4,19 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:DndSpellbook.Data.Models"
              xmlns:spellLists="clr-namespace:DndSpellbook.Views.SpellLists"
+             xmlns:views="clr-namespace:DndSpellbook.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="DndSpellbook.Views.SpellLists.SpellListsView"
-             x:DataType="spellLists:SpellListsViewModel"
+             x:Class="DndSpellbook.Views.SpellListsView"
+             x:DataType="views:SpellListsViewModel"
              x:Name="Root">
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type models:SpellList}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Name}" />
                 <Button Content="Edit"
-                        Command="{Binding #Root.((spellLists:SpellListsViewModel)DataContext).NavigateCommand}"
+                        Command="{Binding #Root.((views:SpellListsViewModel)DataContext).NavigateCommand}"
                         CommandParameter="{Binding}" />
                 <Button Content="Delete"
-                        Command="{Binding #Root.((spellLists:SpellListsViewModel)DataContext).DeleteCommand}"
+                        Command="{Binding #Root.((views:SpellListsViewModel)DataContext).DeleteCommand}"
                         CommandParameter="{Binding}" />
             </StackPanel>
         </DataTemplate>

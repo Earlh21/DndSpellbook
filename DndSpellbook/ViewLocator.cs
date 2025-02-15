@@ -2,11 +2,7 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using DndSpellbook.Views;
-using DndSpellbook.Views.SpellLists;
 using ReactiveUI;
-using Splat;
-using CharactersView = DndSpellbook.Views.CharactersView;
-using CharacterView = DndSpellbook.Views.CharacterView;
 
 namespace DndSpellbook;
 

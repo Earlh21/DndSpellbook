@@ -4,16 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:spellLists="clr-namespace:DndSpellbook.Views.SpellLists"
              xmlns:models="clr-namespace:DndSpellbook.Data.Models"
+             xmlns:views="clr-namespace:DndSpellbook.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="spellLists:SpellListViewModel"
-             x:Class="DndSpellbook.Views.SpellLists.SpellListView"
+             x:DataType="views:SpellListViewModel"
+             x:Class="DndSpellbook.Views.SpellListView"
              x:Name="Root">
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type models:Spell}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Name}"/>
                 <Button Content="Remove" 
-                    Command="{Binding #Root.((spellLists:SpellListViewModel)DataContext).RemoveSpellCommand}"
+                    Command="{Binding #Root.((views:SpellListViewModel)DataContext).RemoveSpellCommand}"
                         CommandParameter="{Binding}"/>
             </StackPanel>
         </DataTemplate>

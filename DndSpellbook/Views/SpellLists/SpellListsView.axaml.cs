@@ -1,10 +1,7 @@
 ﻿using System;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 
-namespace DndSpellbook.Views.SpellLists;
+namespace DndSpellbook.Views;
 
 public partial class SpellListsView : ReactiveUserControl<SpellListsViewModel>
 {
