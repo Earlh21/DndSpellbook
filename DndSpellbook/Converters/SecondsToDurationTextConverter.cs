@@ -10,8 +10,19 @@ public class SecondsToDurationTextConverter : IValueConverter
     {
         if (value is not int seconds) return null;
 
-        if(seconds % 3600 == 0) return $"{seconds / 3600} hours";
-        if(seconds % 60 == 0) return $"{seconds / 60} minutes";
+        int minute = 60;
+        int hour = minute * 60;
+        int day = hour * 24;
+        int week = day * 7;
+        int month = day * 30;
+        int year = day * 365;
+        
+        if (seconds % year == 0) return $"{seconds / year} years";
+        if (seconds % month == 0) return $"{seconds / month} months";
+        if (seconds % week == 0) return $"{seconds / week} weeks";
+        if (seconds % day == 0) return $"{seconds / day} days";
+        if (seconds % hour == 0) return $"{seconds / hour} hours";
+        if (seconds % minute == 0) return $"{seconds / minute} minutes";
         
         return $"{seconds} seconds";
     }

@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:characters="clr-namespace:DndSpellbook.Views"
              xmlns:views="clr-namespace:DndSpellbook.Views"
              xmlns:models="clr-namespace:DndSpellbook.Data.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -10,19 +9,33 @@
              x:DataType="views:CharacterViewModel"
              x:Name="Root">
     <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type models:SpellEntry}">
+        <DataTemplate DataType="{x:Type views:SpellEntryEditor}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Spell.Name}"/>
+                <TextBlock Text="{Binding Entry.Spell.Name}" />
                 <Button Content="Delete"
-                        Command="{Binding #Root.((characters:CharacterViewModel)DataContext).DeleteSpellCommand}"
-                        CommandParameter="{Binding}"/>
+                        Command="{Binding #Root.((views:CharacterViewModel)DataContext).RemoveEntryCommand}"
+                        CommandParameter="{Binding Entry}" />
+
+                <CheckBox IsChecked="{Binding Entry.Uses.SpellSlot}" Content="Spell Slot" />
+                <CheckBox IsChecked="{Binding RechargeIsChecked}" Content="Charges" />
+
+                <StackPanel Orientation="Horizontal" IsVisible="{Binding RechargeIsChecked}">
+                    <Label Content="Recharge on:" />
+                    <ComboBox
+                        SelectedItem="{Binding Entry.Uses.Recharge.Type}"
+                        ItemsSource="{Binding #Root.((views:CharacterViewModel)DataContext).RechargeTypes}" />
+                    <Label Content="Max Charges:" />
+                    <NumericUpDown ShowButtonSpinner="False"
+                                   Value="{Binding Entry.Uses.Recharge.MaxCharges}"
+                                   Minimum="0" ParsingNumberStyle="Integer" />
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
     </UserControl.DataTemplates>
-    
+
     <StackPanel Orientation="Vertical">
-        <TextBox Width="400" Height="80" Text="{Binding Character.Name}"/>
-        <Button Command="{Binding AddSpellsCommand}" Content="Add Spells"/>
-        <ItemsControl ItemsSource="{Binding Character.Spells}"/>
+        <TextBox Width="400" Height="80" Text="{Binding Character.Name}" />
+        <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
+        <ItemsControl ItemsSource="{Binding SpellEntries}" />
     </StackPanel>
 </UserControl>

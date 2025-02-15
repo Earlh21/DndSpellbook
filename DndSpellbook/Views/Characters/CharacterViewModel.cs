@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DndSpellbook.Data.Models;
+using DndSpellbook.Data.Models.Enums;
 using DndSpellbook.Data.Services;
+using DndSpellbook.Extensions;
 using DndSpellbook.Navigation;
 using DynamicData;
 using ReactiveUI;
@@ -28,7 +32,11 @@ public class CharacterViewModel : ViewModelBase
     public Interaction<SpellsViewModel, IEnumerable<int>?> AddSpellsInteraction { get; } = new();
     
     public ReactiveCommand<Unit, Unit> AddSpellsCommand { get; }
-    public ReactiveCommand<SpellEntry, Unit> DeleteSpellCommand { get; }
+    public ReactiveCommand<SpellEntry, Unit> RemoveEntryCommand { get; }
+    
+    public ObservableCollection<SpellEntryEditor> SpellEntries { get; } = new();
+    
+    public RechargeType[] RechargeTypes { get; } = Enum.GetValues<RechargeType>();
     
     public CharacterViewModel(Navigator navigator, CharacterService characterService, SpellService spellService, int characterId)
     {
@@ -38,25 +46,42 @@ public class CharacterViewModel : ViewModelBase
         this.spellService = spellService;
         
         AddSpellsCommand = ReactiveCommand.CreateFromTask(AddSpells);
-        DeleteSpellCommand = ReactiveCommand.CreateFromTask<SpellEntry>(DeleteSpell);
+        RemoveEntryCommand = ReactiveCommand.CreateFromTask<SpellEntry>(RemoveEntry);
     }
     
     public async Task LoadDataAsync()
     {
         Character = await characterService.GetByIdAsync(characterId);
         if (Character == null) return;
-        
-        Character.PropertyChanged += async (sender, args) =>
+
+        Character.SubscribeToAllChanges(() => characterService.UpdateAsync(Character));
+
+        Character.Spells.CollectionChanged += (_, args) =>
         {
-            await characterService.UpdateAsync(Character);
+            if (args.NewItems == null) return;
+
+            foreach (var newItem in args.NewItems)
+            {
+                if (newItem is not SpellEntry spellEntry) continue;
+
+                spellEntry.SubscribeToAllChanges(() => characterService.UpdateAsync(Character));
+            }
         };
+        
+        foreach (var spellEntry in Character.Spells)
+        {
+            spellEntry.SubscribeToAllChanges(() => characterService.UpdateAsync(Character));
+        }
+        
+        SpellEntries.AddRange(Character.Spells.Select(spell => new SpellEntryEditor(spell)));
     }
 
-    private async Task DeleteSpell(SpellEntry spellEntry)
+    private async Task RemoveEntry(SpellEntry spellEntry)
     {
         if(Character == null) return;
         
         Character.Spells.Remove(spellEntry);
+        SpellEntries.Remove(SpellEntries.First(s => s.Entry == spellEntry));
         await characterService.UpdateAsync(Character);
     }
 
@@ -69,10 +94,40 @@ public class CharacterViewModel : ViewModelBase
 
         if (result == null) return;
 
-        var newSpells = result.Except(Character.Spells.Select(s => s.SpellId));
-        var spells = await spellService.GetByIdsAsync(newSpells);
+        var spells = await spellService.GetByIdsAsync(result);
         
         Character.Spells.AddRange(spells.Select(spell => new SpellEntry(spell, Character)));
+        SpellEntries.AddRange(spells.Select(spell => new SpellEntryEditor(new SpellEntry(spell, Character))));
         await characterService.UpdateAsync(Character);
+    }
+}
+
+public class SpellEntryEditor : ReactiveObject
+{
+    public SpellEntry Entry { get; }
+
+    private bool rechargeIsChecked;
+    public bool RechargeIsChecked
+    {
+        get => rechargeIsChecked;
+        set => this.RaiseAndSetIfChanged(ref rechargeIsChecked, value);
+    }
+
+    public SpellEntryEditor(SpellEntry spellEntry)
+    {
+        Entry = spellEntry;
+        RechargeIsChecked = spellEntry.Uses.Recharge != null;
+
+        this.WhenAnyValue(x => x.RechargeIsChecked).Do(val =>
+        {
+            if(val && Entry.Uses.Recharge == null)
+            {
+                Entry.Uses.Recharge = new(RechargeType.ShortRest, 1);
+            }
+            else if(!val && Entry.Uses.Recharge != null)
+            {
+                Entry.Uses.Recharge = null;
+            }
+        }).Subscribe();
     }
 }

@@ -36,6 +36,13 @@ public class SpellEntry : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref character, value);
     }
 
+    private Uses uses = new(true, null);
+    public Uses Uses
+    {
+        get => uses;
+        set => this.RaiseAndSetIfChanged(ref uses, value);
+    }
+
     private SpellEntry() { }
 
     public SpellEntry(int spellId, int characterId)
