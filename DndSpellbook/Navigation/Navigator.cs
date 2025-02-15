@@ -1,7 +1,6 @@
 ﻿using System;
 using DndSpellbook.Data.Services;
 using DndSpellbook.Views;
-using DndSpellbook.Views.SpellLists;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 
