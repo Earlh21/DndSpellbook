@@ -2,14 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:models="clr-namespace:DndSpellbook.Data.Models"
-             xmlns:views="clr-namespace:DndSpellbook.Views"
              xmlns:enums="clr-namespace:DndSpellbook.Data.Models.Enums"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="DndSpellbook.Views.SpellCard"
-             x:DataType="views:SpellCardViewModel">
+             x:Class="DndSpellbook.Controls.SpellCard"
+             x:DataType="controls:SpellCardViewModel">
     <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type views:SpellListEntry}">
+        <DataTemplate DataType="{x:Type controls:SpellListEntry}">
             <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding SpellList.Name}" />
         </DataTemplate>
     </UserControl.DataTemplates>
@@ -17,41 +16,12 @@
     <Border Width="350" Height="500" BorderBrush="Black" BorderThickness="1" Background="LightGray">
         <ScrollViewer>
             <Panel>
-                <StackPanel IsVisible="{Binding !IsEditing}" Orientation="Vertical">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <TextBlock Grid.Column="0" Text="{Binding Spell.Name}" TextWrapping="WrapWithOverflow" />
-
-                        <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
-                            <CheckBox IsVisible="{Binding IsSelector}" IsChecked="{Binding IsSelected}" />
-                            <Button x:Name="EditButton" Content="E"
-                                    Command="{Binding EditCommand}" />
-                            <Button x:Name="DeleteButton" Content="D"
-                                    Command="{Binding DeleteCommand}"
-                                    CommandParameter="{Binding}" />
-                        </StackPanel>
-                    </Grid>
-
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="Level {0}, {1}">
-                                <Binding Path="Spell.Level" />
-                                <Binding Path="Spell.School" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-
-                    <TextBlock Text="{Binding Spell.CastingTime}" />
-                    <TextBlock Text="{Binding Spell.Range.DisplayString}" />
-                    <TextBlock Text="{Binding Spell.Duration, Converter={StaticResource SecondsToDurationText}}" />
-
-                    <StackPanel Orientation="Horizontal">
-                        <CheckBox IsEnabled="False" IsChecked="{Binding Spell.Verbal}" Content="V" />
-                        <CheckBox IsEnabled="False" IsChecked="{Binding Spell.Somatic}" Content="S" />
-                        <CheckBox IsEnabled="False" IsChecked="{Binding Spell.Material}" Content="M" />
-                    </StackPanel>
-
-                    <TextBlock Text="{Binding Spell.Description}" TextWrapping="WrapWithOverflow" />
-                </StackPanel>
+                <controls:SpellCardViewer
+                    Spell="{Binding Spell}"
+                    IsVisible="{Binding !IsEditing}"
+                    EditCommand="{Binding EditCommand}"
+                    DeleteCommand="{Binding DeleteCommand}"
+                    IsSelector="{Binding IsSelector}"/>
 
                 <StackPanel IsVisible="{Binding IsEditing}" Orientation="Vertical">
                     <Grid ColumnDefinitions="*,Auto">
@@ -175,7 +145,7 @@
                         </Button.Flyout>
                     </Button>
 
-                    <TextBox Text="{Binding SpellEditor.EditCopy.Description}" TextWrapping="WrapWithOverflow" />
+                    <TextBox Text="{Binding SpellEditor.EditCopy.Description}" AcceptsReturn="True" TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </Panel>
         </ScrollViewer>

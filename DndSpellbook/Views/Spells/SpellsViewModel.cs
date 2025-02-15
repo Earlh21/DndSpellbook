@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using DndSpellbook.Controls;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Services;
 using DndSpellbook.Navigation;

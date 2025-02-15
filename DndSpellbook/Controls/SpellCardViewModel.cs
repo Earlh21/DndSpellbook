@@ -9,7 +9,7 @@ using DndSpellbook.Data.Models.Enums;
 using DndSpellbook.Data.Services;
 using ReactiveUI;
 
-namespace DndSpellbook.Views;
+namespace DndSpellbook.Controls;
 
 public class SpellCardViewModel : ReactiveObject
 {
@@ -55,11 +55,12 @@ public class SpellCardViewModel : ReactiveObject
     public CastingTime[] CastingTimes { get; }
     public RangeType[] RangeTypes { get; }
 
-    public ReactiveCommand<SpellCardViewModel, Unit> DeleteCommand { get; }
-
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
+    public ReactiveCommand<Spell, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
+    
+    private ReactiveCommand<SpellCardViewModel, Unit> deleteCommand;
 
     public SpellCardViewModel(
         Spell spell,
@@ -74,7 +75,7 @@ public class SpellCardViewModel : ReactiveObject
         
         this.allSpellLists = allSpellLists;
         this.spellService = spellService;
-        DeleteCommand = deleteCommand;
+        this.deleteCommand = deleteCommand;
 
         isEditing = this.WhenAnyValue(x => x.SpellEditor)
             .Select(e => e != null)
@@ -88,6 +89,11 @@ public class SpellCardViewModel : ReactiveObject
             Edit,
             this.WhenAnyValue(x => x.IsEditing, e => !e)
         );
+        
+        DeleteCommand = ReactiveCommand.Create<Spell>(
+            Delete,
+            this.WhenAnyValue(x => x.IsEditing, e => !e)
+        );
 
         SaveCommand = ReactiveCommand.CreateFromTask(
             Save,
@@ -98,6 +104,11 @@ public class SpellCardViewModel : ReactiveObject
             Cancel,
             this.WhenAnyValue(x => x.IsEditing)
         );
+    }
+
+    private void Delete(Spell _)
+    {
+        deleteCommand.Execute(this);
     }
 
     private void Edit()

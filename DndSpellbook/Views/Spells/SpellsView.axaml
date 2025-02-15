@@ -4,12 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:DndSpellbook.Data.Models"
              xmlns:views="clr-namespace:DndSpellbook.Views"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="views:SpellsViewModel"
              x:Class="DndSpellbook.Views.SpellsView">
     <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type views:SpellCardViewModel}">
-            <views:SpellCard DataContext="{Binding}"/>
+        <DataTemplate DataType="{x:Type controls:SpellCardViewModel}">
+            <controls:SpellCard DataContext="{Binding}"/>
         </DataTemplate>
     </UserControl.DataTemplates>
     

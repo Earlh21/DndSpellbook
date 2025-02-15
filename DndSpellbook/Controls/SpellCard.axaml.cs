@@ -1,10 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Markup.Xaml;
-using DndSpellbook.Data.Models;
+﻿using Avalonia.Controls;
 
-namespace DndSpellbook.Views;
+namespace DndSpellbook.Controls;
 
 public partial class SpellCard : UserControl
 {
