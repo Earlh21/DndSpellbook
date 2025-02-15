@@ -25,6 +25,13 @@ public class SpellsViewModel : ViewModelBase, IDialog
         set => this.RaiseAndSetIfChanged(ref isSelector, value);
     }
 
+    private bool isCardView;
+    public bool IsCardView
+    {
+        get => isCardView;
+        set => this.RaiseAndSetIfChanged(ref isCardView, value);
+    }
+    
     private ObservableCollection<SpellCardViewModel> spells = new();
     public ObservableCollection<SpellCardViewModel> Spells
     {
@@ -44,11 +51,12 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
-    public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false)
+    public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false, bool asCardView = false)
     {
         this.spellService = spellService;
         this.spellListService = spellListService;
         IsSelector = asSelector;
+        IsCardView = asCardView;
 
         NewSpellCommand = ReactiveCommand.CreateFromTask(NewSpell);
         DeleteSpellCommand = ReactiveCommand.CreateFromTask<SpellCardViewModel>(DeleteSpell);
@@ -82,7 +90,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
             var spell = new Spell("Name");
             var spellCard = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector,
                 DeleteSpellCommand);
-            Spells.Add(spellCard);
+            Spells.Insert(0, spellCard);
 
             await spellService.AddAsync(spell);
         }

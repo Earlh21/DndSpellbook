@@ -9,13 +9,28 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="views:MainViewModel"
              x:Class="DndSpellbook.Views.MainView">
+    <UserControl.Styles>
+        <Style Selector="Button.sidebar-button">
+            <Setter Property="Background" Value="Cornsilk"></Setter>
+            <Setter Property="BorderBrush" Value="MediumPurple"></Setter>
+            <Setter Property="Width" Value="198"></Setter>
+            <Setter Property="Foreground" Value="Purple"></Setter>
+            <Setter Property="FontSize" Value="16"></Setter>
+            <Setter Property="CornerRadius" Value="0"></Setter>
+        </Style>
+        <Style Selector="Button.sidebar-button:pointerover">
+            <Setter Property="Background" Value="Aquamarine"></Setter>
+        </Style>
+    </UserControl.Styles>
     <Grid ColumnDefinitions="200,*">
-        <StackPanel Orientation="Vertical">
-            <Button Command="{Binding Router.NavigateBack}" Content="Back" Margin="0,0,0,20" />
-            <Button Command="{Binding NavigateCommand}" CommandParameter="spells" Content="Spells" />
-            <Button Command="{Binding NavigateCommand}" CommandParameter="characters" Content="Characters" />
-            <Button Command="{Binding NavigateCommand}" CommandParameter="spelllists" Content="Spell Lists" />
-        </StackPanel>
+        <Border BorderBrush="MediumPurple" BorderThickness="1" >
+            <StackPanel Orientation="Vertical" Background="Cornsilk">
+                <Button Command="{Binding Router.NavigateBack}" Content="Back" Margin="0,0,0,20" />
+                <Button Classes="sidebar-button" Command="{Binding NavigateCommand}" CommandParameter="spells" Content="Spells" />
+                <Button Classes="sidebar-button" Command="{Binding NavigateCommand}" CommandParameter="characters" Content="Characters" />
+                <Button Classes="sidebar-button" Command="{Binding NavigateCommand}" CommandParameter="spelllists" Content="Spell Lists" />
+            </StackPanel>
+        </Border>
 
         <reactiveUi:RoutedViewHost Grid.Column="1" Router="{Binding Router}" PageTransition="{x:Null}">
             <reactiveUi:RoutedViewHost.DefaultContent>

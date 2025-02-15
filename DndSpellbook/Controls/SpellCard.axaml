@@ -13,8 +13,7 @@
             <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding SpellList.Name}" />
         </DataTemplate>
     </UserControl.DataTemplates>
-
-    <Border Width="350" Height="500" BorderBrush="Black" BorderThickness="1" Background="LightGray">
+    <Border BorderBrush="Black" BorderThickness="1" Background="LightGray">
         <ScrollViewer>
             <Panel>
                 <StackPanel IsVisible="{Binding !IsEditing}" Orientation="Vertical">
@@ -22,7 +21,6 @@
                         <TextBlock Grid.Column="0" Text="{Binding Spell.Name}" TextWrapping="WrapWithOverflow" />
 
                         <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
-                            <CheckBox IsVisible="{Binding IsSelector}" IsChecked="{Binding IsSelected}" />
                             <Button x:Name="EditButton" Content="E"
                                     Command="{Binding EditCommand}" />
                             <Button x:Name="DeleteButton" Content="D"
