@@ -7,7 +7,13 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Views.SpellCard"
              x:DataType="views:SpellCardViewModel">
-    <Border Width="350" Height="500">
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="{x:Type views:SpellListEntry}">
+            <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding SpellList.Name}"/>
+        </DataTemplate>
+    </UserControl.DataTemplates>
+    
+    <Border Width="350" Height="500" BorderBrush="Black" BorderThickness="1" Background="LightGray">
         <ScrollViewer>
             <Panel>
                 <StackPanel IsVisible="{Binding !IsEditing}" Orientation="Vertical">
@@ -49,7 +55,7 @@
                 <StackPanel IsVisible="{Binding IsEditing}" Orientation="Vertical">
                     <Grid ColumnDefinitions="*,Auto">
                         <TextBox Grid.Column="0"
-                                 Text="{Binding EditCopy.Name}" TextWrapping="WrapWithOverflow" />
+                                 Text="{Binding SpellEditor.EditCopy.Name}" TextWrapping="WrapWithOverflow" />
 
                         <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
                             <Button x:Name="SaveButton" Content="S"
@@ -61,32 +67,48 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Level: " />
-                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding EditCopy.Level}"
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding SpellEditor.EditCopy.Level}"
                                        Minimum="0" Maximum="9" ParsingNumberStyle="Integer" />
                     </StackPanel>
 
-                    <ComboBox SelectedItem="{Binding EditCopy.School}" ItemsSource="{Binding Schools}" />
-                    <ComboBox SelectedItem="{Binding EditCopy.CastingTime}" ItemsSource="{Binding CastingTimes}" />
+                    <ComboBox SelectedItem="{Binding SpellEditor.EditCopy.School}" ItemsSource="{Binding Schools}" />
+                    <ComboBox SelectedItem="{Binding SpellEditor.EditCopy.CastingTime}" ItemsSource="{Binding CastingTimes}" />
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Range (ft):" />
-                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding EditCopy.Range}"
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding SpellEditor.EditCopy.Range}"
                                        Minimum="0" ParsingNumberStyle="Integer" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Duration (s):" />
-                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding EditCopy.Duration}"
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding SpellEditor.EditCopy.Duration}"
                                        Minimum="0" ParsingNumberStyle="Integer" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding EditCopy.Verbal}" Content="V" />
-                        <CheckBox IsChecked="{Binding EditCopy.Somatic}" Content="S" />
-                        <CheckBox IsChecked="{Binding EditCopy.Material}" Content="M" />
+                        <CheckBox IsChecked="{Binding SpellEditor.EditCopy.Verbal}" Content="V" />
+                        <CheckBox IsChecked="{Binding SpellEditor.EditCopy.Somatic}" Content="S" />
+                        <CheckBox IsChecked="{Binding SpellEditor.EditCopy.Material}" Content="M" />
                     </StackPanel>
+                    
+                    <Button Content="Spell Lists">
+                        <Button.Flyout>
+                            <Flyout>
+                                <ScrollViewer>
+                                    <ItemsControl ItemsSource="{Binding SpellEditor.SpellListEntries}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
 
-                    <TextBox Text="{Binding EditCopy.Description}" TextWrapping="WrapWithOverflow" />
+                    <TextBox Text="{Binding SpellEditor.EditCopy.Description}" TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </Panel>
         </ScrollViewer>

@@ -10,7 +10,9 @@ public class SpellService(SpellbookContext context)
 {
     public async Task<List<Spell>> GetAllAsync()
     {
-        return await context.Spells.ToListAsync();
+        return await context.Spells
+            .Include(s => s.SpellLists)
+            .ToListAsync();
     }
 
     public async Task<List<Spell>> GetByIdsAsync(IEnumerable<int> ids)

@@ -7,19 +7,14 @@ public class SpellList : ReactiveObject
 {
     public int Id { get; set; }
     
-    private string name;
+    private string name = "";
     public string Name
     {
         get => name;
         set => this.RaiseAndSetIfChanged(ref name, value);
     }
 
-    private ObservableCollection<Spell> spells = new();
-    public ObservableCollection<Spell> Spells
-    {
-        get => spells;
-        set => this.RaiseAndSetIfChanged(ref spells, value);
-    }
+    public ObservableCollection<Spell> Spells { get; } = new();
     
     private SpellList() { }
 

@@ -41,8 +41,9 @@ public class Navigator
         var scope = ServiceProvider.CreateScope();
 
         var spellService = scope.ServiceProvider.GetService<SpellService>()!;
+        var spellListService = scope.ServiceProvider.GetService<SpellListService>()!;
         
-        return new SpellsViewModel(spellService, isSelector);
+        return new SpellsViewModel(spellService, spellListService, isSelector);
     }
     
     public CharactersViewModel BuildCharactersViewModel()

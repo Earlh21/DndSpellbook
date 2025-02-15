@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Models.Enums;
@@ -11,6 +14,7 @@ namespace DndSpellbook.Views;
 public class SpellCardViewModel : ReactiveObject
 {
     private readonly SpellService spellService;
+    private readonly SpellList[] allSpellLists;
 
     private bool isSelected;
 
@@ -36,23 +40,16 @@ public class SpellCardViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref spell, value);
     }
 
-    private Spell editCopy = new("...");
+    private SpellEditor? spellEditor = null;
 
-    public Spell EditCopy
+    public SpellEditor? SpellEditor
     {
-        get => editCopy;
-        set => this.RaiseAndSetIfChanged(ref editCopy, value);
+        get => spellEditor;
+        set => this.RaiseAndSetIfChanged(ref spellEditor, value);
     }
 
-    private bool isEditing;
-
-    public bool IsEditing
-    {
-        get => isEditing;
-        set => this.RaiseAndSetIfChanged(ref isEditing, value);
-    }
-    
-    
+    readonly ObservableAsPropertyHelper<bool> isEditing;
+    public bool IsEditing => isEditing.Value;
 
     public SpellSchool[] Schools { get; }
     public CastingTime[] CastingTimes { get; }
@@ -63,15 +60,23 @@ public class SpellCardViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
-    public SpellCardViewModel(Spell spell,
+    public SpellCardViewModel(
+        Spell spell,
+        SpellList[] allSpellLists,
         SpellService spellService,
         bool asSelector,
         ReactiveCommand<SpellCardViewModel, Unit> deleteCommand)
     {
         this.spell = spell;
+        this.allSpellLists = allSpellLists;
+
         this.spellService = spellService;
         IsSelector = asSelector;
         DeleteCommand = deleteCommand;
+
+        isEditing = this.WhenAnyValue(x => x.SpellEditor)
+            .Select(e => e != null)
+            .ToProperty(this, x => x.IsEditing);
 
         Schools = Enum.GetValues<SpellSchool>();
         CastingTimes = Enum.GetValues<CastingTime>();
@@ -94,19 +99,69 @@ public class SpellCardViewModel : ReactiveObject
 
     private void Edit()
     {
-        EditCopy.CopyFrom(Spell);
-        IsEditing = true;
+        SpellEditor = new SpellEditor(Spell.Clone(), allSpellLists);
     }
 
     private async Task Save()
     {
-        Spell.CopyFrom(EditCopy);
+        if (SpellEditor == null) return;
+
+        Spell.CopyFrom(SpellEditor.EditCopy);
         await spellService.UpdateAsync(Spell);
-        IsEditing = false;
+        SpellEditor = null;
     }
 
     private void Cancel()
     {
-        IsEditing = false;
+        if (SpellEditor == null) return;
+        SpellEditor = null;
+    }
+}
+
+public class SpellEditor : ReactiveObject
+{
+    public Spell EditCopy { get; }
+    public SpellListEntry[] SpellListEntries { get; }
+    //public SpellList[] OriginalSpellLists { get; }
+
+    public SpellEditor(Spell originalSpell, IEnumerable<SpellList> spellLists)
+    {
+        EditCopy = originalSpell.Clone();
+        //OriginalSpellLists = originalSpell.SpellLists.ToArray();
+
+        SpellListEntries = spellLists.Select(sl => new SpellListEntry(sl, EditCopy.SpellLists.Contains(sl)))
+            .ToArray();
+
+        foreach (var entry in SpellListEntries)
+        {
+            entry.WhenAnyValue(x => x.IsSelected)
+                .Subscribe(isSelected =>
+                {
+                    if (isSelected)
+                    {
+                        if (!EditCopy.SpellLists.Contains(entry.SpellList))
+                        {
+                            EditCopy.SpellLists.Add(entry.SpellList);
+                        }
+                    }
+                    else
+                    {
+                        EditCopy.SpellLists.Remove(entry.SpellList);
+                    }
+                });
+        }
+    }
+}
+
+public class SpellListEntry(SpellList spellList, bool isSelected) : ReactiveObject
+{
+    public SpellList SpellList { get; } = spellList;
+
+    private bool isSelected = isSelected;
+
+    public bool IsSelected
+    {
+        get => isSelected;
+        set => this.RaiseAndSetIfChanged(ref isSelected, value);
     }
 }

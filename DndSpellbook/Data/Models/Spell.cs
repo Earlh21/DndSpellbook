@@ -81,12 +81,7 @@ using ReactiveUI;
             set => this.RaiseAndSetIfChanged(ref description, value);
         }
         
-        private ObservableCollection<SpellList> spellLists = new();
-        public ObservableCollection<SpellList> SpellLists
-        {
-            get => spellLists;
-            set => this.RaiseAndSetIfChanged(ref spellLists, value);
-        }
+        public ObservableCollection<SpellList> SpellLists { get; } = new();
 
         private Spell()
         {
@@ -102,7 +97,7 @@ using ReactiveUI;
         
         public Spell Clone()
         {
-            return new Spell(Name)
+            var clone = new Spell(Name)
             {
                 Level = Level,
                 School = School,
@@ -112,8 +107,15 @@ using ReactiveUI;
                 Verbal = Verbal,
                 Somatic = Somatic,
                 Material = Material,
-                Description = Description
+                Description = Description,
             };
+            
+            foreach (var spellList in SpellLists)
+            {
+                clone.SpellLists.Add(spellList);
+            }
+            
+            return clone;
         }
         
         public void CopyFrom(Spell other)
@@ -128,5 +130,11 @@ using ReactiveUI;
             Somatic = other.Somatic;
             Material = other.Material;
             Description = other.Description;
+            
+            SpellLists.Clear();
+            foreach (var spellList in other.SpellLists)
+            {
+                SpellLists.Add(spellList);
+            }
         }
     }

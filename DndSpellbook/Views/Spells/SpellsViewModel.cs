@@ -15,6 +15,7 @@ namespace DndSpellbook.Views;
 public class SpellsViewModel : ViewModelBase, IDialog
 {
     private readonly SpellService spellService;
+    private readonly SpellListService spellListService;
 
     private bool isSelector;
 
@@ -30,15 +31,23 @@ public class SpellsViewModel : ViewModelBase, IDialog
         get => spells;
         set => this.RaiseAndSetIfChanged(ref spells, value);
     }
+    
+    private ObservableCollection<SpellList> spellLists = new();
+    public ObservableCollection<SpellList> SpellLists
+    {
+        get => spellLists;
+        set => this.RaiseAndSetIfChanged(ref spellLists, value);
+    }
 
     public ReactiveCommand<Unit, Unit> NewSpellCommand { get; }
     public ReactiveCommand<SpellCardViewModel, Unit> DeleteSpellCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
-    public SpellsViewModel(SpellService spellService, bool asSelector = false)
+    public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false)
     {
         this.spellService = spellService;
+        this.spellListService = spellListService;
         IsSelector = asSelector;
 
         NewSpellCommand = ReactiveCommand.CreateFromTask(NewSpell);
@@ -50,9 +59,14 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public async Task LoadDataAsync()
     {
         var fetchedSpells = await spellService.GetAllAsync();
+        var fetchedSpellLists = await spellListService.GetAllAsync();
+
+        var spellListArray = fetchedSpellLists.ToArray();
 
         Spells = new(fetchedSpells.Select(s =>
-            new SpellCardViewModel(s, spellService, IsSelector, DeleteSpellCommand)));
+            new SpellCardViewModel(s, spellListArray, spellService, IsSelector, DeleteSpellCommand)));
+        
+        SpellLists = new(fetchedSpellLists);
     }
 
     private async Task DeleteSpell(SpellCardViewModel spell)
@@ -64,7 +78,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
     private async Task NewSpell()
     {
         var spell = new Spell("Name");
-        var spellCard = new SpellCardViewModel(spell, spellService, IsSelector, DeleteSpellCommand);
+        var spellCard = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector, DeleteSpellCommand);
         Spells.Add(spellCard);
 
         await spellService.AddAsync(spell);

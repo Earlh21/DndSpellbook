@@ -7,19 +7,14 @@ public partial class Character : ReactiveObject
 {
     public int Id { get; set; }
 
-    private string name;
+    private string name = "";
     public string Name
     {
         get => name;
         set => this.RaiseAndSetIfChanged(ref name, value);
     }
 
-    private ObservableCollection<SpellEntry> spells = new();
-    public ObservableCollection<SpellEntry> Spells
-    {
-        get => spells;
-        set => this.RaiseAndSetIfChanged(ref spells, value);
-    }
+    public ObservableCollection<SpellEntry> Spells { get; } = new();
 
     private Character() { }
 
