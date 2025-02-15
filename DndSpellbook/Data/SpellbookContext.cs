@@ -25,6 +25,7 @@ public class SpellbookContext : DbContext
     private static void IgnoreReactiveObjectProperties(ModelBuilder modelBuilder)
     {
         var reactiveObjects = modelBuilder.Model.GetEntityTypes()
+            .Where(e => !e.IsOwned())
             .Select(e => e.ClrType)
             .Where(t => t.IsClass && !t.IsAbstract && typeof(ReactiveObject).IsAssignableFrom(t));
 
@@ -36,6 +37,7 @@ public class SpellbookContext : DbContext
         }
         
         var reactiveValidationObjects = modelBuilder.Model.GetEntityTypes()
+            .Where(e => !e.IsOwned())
             .Select(e => e.ClrType)
             .Where(t => t.IsClass && !t.IsAbstract && typeof(ReactiveValidationObject).IsAssignableFrom(t));
 

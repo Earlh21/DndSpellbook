@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using ReactiveUI;
 
 namespace DndSpellbook.Data.Models;
 
 public class SpellEntry : ReactiveObject
 {
+    [Key]
     public int Id { get; set; }
 
     private bool prepared;

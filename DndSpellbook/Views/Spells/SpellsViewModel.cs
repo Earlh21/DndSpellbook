@@ -77,11 +77,19 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
     private async Task NewSpell()
     {
-        var spell = new Spell("Name");
-        var spellCard = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector, DeleteSpellCommand);
-        Spells.Add(spellCard);
+        try
+        {
+            var spell = new Spell("Name");
+            var spellCard = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector,
+                DeleteSpellCommand);
+            Spells.Add(spellCard);
 
-        await spellService.AddAsync(spell);
+            await spellService.AddAsync(spell);
+        }
+        catch (Exception e)
+        {
+            int d = 3;
+        }
     }
 
     private void Save()

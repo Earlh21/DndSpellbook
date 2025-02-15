@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using DndSpellbook.Data.Models.Enums;
 using ReactiveUI;
     using ReactiveUI.Validation.Extensions;
@@ -9,6 +10,7 @@ using ReactiveUI;
     
     public partial class Spell : ReactiveValidationObject
     {
+        [Key]
         public int Id { get; set; }
     
         private string name = "";
@@ -38,9 +40,9 @@ using ReactiveUI;
             get => castingTime;
             set => this.RaiseAndSetIfChanged(ref castingTime, value);
         }
-    
-        private int range;
-        public int Range
+
+        private Range range;
+        public Range Range
         {
             get => range;
             set => this.RaiseAndSetIfChanged(ref range, value);
@@ -93,6 +95,7 @@ using ReactiveUI;
         public Spell(string name) : this()
         {
             Name = name;
+            Range = new Range(RangeType.Touch);
         }
         
         public Spell Clone()

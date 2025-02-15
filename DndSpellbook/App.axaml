@@ -12,6 +12,7 @@
 
     <Application.Resources>
         <converters:SecondsToDurationTextConverter x:Key="SecondsToDurationText" />
+        <converters:EqualsConverter x:Key="Equals"/>
     </Application.Resources>
 
     <Application.Styles>
