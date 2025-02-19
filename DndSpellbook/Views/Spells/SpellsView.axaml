@@ -17,6 +17,8 @@
     <Grid RowDefinitions="Auto,*" Margin="10 10 0 10 ">
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New" />
+            <Button Command="{Binding ImportSpellsCommand}" Content="Import"/>
+            <Button Command="{Binding ClearSpellsCommand}" Content="Delete all"/>
             <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}" Content="Add Spells" />
             <Button IsVisible="{Binding IsSelector}" Command="{Binding CancelCommand}" Content="Cancel" />
             <CheckBox IsChecked="{Binding IsCardView}" Content="Cards" />

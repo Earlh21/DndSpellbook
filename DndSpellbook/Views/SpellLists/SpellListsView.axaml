@@ -25,6 +25,7 @@
 
     <StackPanel Orientation="Vertical">
         <Button Content="New" Command="{Binding NewSpellListCommand}" />
+        <Button Content="Delete all" Command="{Binding ClearSpellListsCommand}"/>
         <Separator/>
         <ItemsControl ItemsSource="{Binding SpellLists}"/>
     </StackPanel>

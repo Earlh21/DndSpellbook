@@ -16,6 +16,7 @@ public class SpellListsViewModel : ViewModelBase
     public ReactiveCommand<SpellList, Unit> DeleteCommand { get; }
     public ReactiveCommand<SpellList, Unit> NavigateCommand { get; }
     public ReactiveCommand<Unit, Unit> NewSpellListCommand { get; }
+    public ReactiveCommand<Unit, Unit> ClearSpellListsCommand { get; }
     
     private ObservableCollection<SpellList> spellLists = new();
     public ObservableCollection<SpellList> SpellLists
@@ -32,6 +33,7 @@ public class SpellListsViewModel : ViewModelBase
         DeleteCommand = ReactiveCommand.CreateFromTask<SpellList>(DeleteSpellList);
         NavigateCommand = ReactiveCommand.Create<SpellList>(Navigate);
         NewSpellListCommand = ReactiveCommand.CreateFromTask(NewSpellList);
+        ClearSpellListsCommand = ReactiveCommand.CreateFromTask(ClearSpellLists);
     }
 
     public async Task LoadDataAsync()
@@ -52,6 +54,12 @@ public class SpellListsViewModel : ViewModelBase
     {
         await spellListService.DeleteAsync(spellList);
         SpellLists.Remove(spellList);
+    }
+    
+    private async Task ClearSpellLists()
+    {
+        await spellListService.ClearAsync();
+        SpellLists.Clear();
     }
 
     private void Navigate(SpellList spellList)

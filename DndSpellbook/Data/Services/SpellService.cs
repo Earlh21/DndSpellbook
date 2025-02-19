@@ -20,9 +20,20 @@ public class SpellService(SpellbookContext context)
         return await context.Spells.Where(s => ids.Contains(s.Id)).ToListAsync();
     }
 
+    public async Task<List<Spell>> GetByNamesAsync(IEnumerable<string> names)
+    {
+        return await context.Spells.Where(s => names.Contains(s.Name)).ToListAsync();
+    }
+
     public async Task AddAsync(Spell spell)
     {
         context.Spells.Add(spell);
+        await context.SaveChangesAsync();
+    }
+    
+    public async Task AddAsync(IEnumerable<Spell> spells)
+    {
+        context.Spells.AddRange(spells);
         await context.SaveChangesAsync();
     }
 
@@ -36,5 +47,10 @@ public class SpellService(SpellbookContext context)
     {
         context.Spells.Remove(spell);
         await context.SaveChangesAsync();
+    }
+    
+    public async Task ClearAsync()
+    {
+        await context.Database.ExecuteSqlRawAsync("DELETE FROM Spells");
     }
 }

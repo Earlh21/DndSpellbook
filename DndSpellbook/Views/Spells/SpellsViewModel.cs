@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using DndSpellbook.Controls;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Services;
+using DndSpellbook.Import;
 using DndSpellbook.Navigation;
 using ReactiveUI;
 using Splat;
@@ -27,20 +30,23 @@ public class SpellsViewModel : ViewModelBase, IDialog
     }
 
     private bool isCardView;
+
     public bool IsCardView
     {
         get => isCardView;
         set => this.RaiseAndSetIfChanged(ref isCardView, value);
     }
-    
+
     private ObservableCollection<SpellCardViewModel> spells = new();
+
     public ObservableCollection<SpellCardViewModel> Spells
     {
         get => spells;
         set => this.RaiseAndSetIfChanged(ref spells, value);
     }
-    
+
     private ObservableCollection<SpellList> spellLists = new();
+
     public ObservableCollection<SpellList> SpellLists
     {
         get => spellLists;
@@ -51,8 +57,13 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public ReactiveCommand<SpellCardViewModel, Unit> DeleteSpellCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
+    public ReactiveCommand<Unit, Unit> ImportSpellsCommand { get; }
+    public ReactiveCommand<Unit, Unit> ClearSpellsCommand { get; }
 
-    public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false, bool asCardView = false)
+    public Interaction<Unit, string?> OpenImportSpellsFile { get; } = new();
+
+    public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false,
+        bool asCardView = false)
     {
         this.spellService = spellService;
         this.spellListService = spellListService;
@@ -63,6 +74,8 @@ public class SpellsViewModel : ViewModelBase, IDialog
         DeleteSpellCommand = ReactiveCommand.CreateFromTask<SpellCardViewModel>(DeleteSpell);
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
+        ImportSpellsCommand = ReactiveCommand.CreateFromTask(ImportSpells);
+        ClearSpellsCommand = ReactiveCommand.CreateFromTask(ClearSpells);
     }
 
     public async Task LoadDataAsync()
@@ -74,7 +87,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
         Spells = new(fetchedSpells.Select(s =>
             new SpellCardViewModel(s, spellListArray, spellService, IsSelector, DeleteSpellCommand)));
-        
+
         SpellLists = new(fetchedSpellLists);
     }
 
@@ -86,19 +99,29 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
     private async Task NewSpell()
     {
-        try
-        {
-            var spell = new Spell("Name");
-            var spellCard = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector,
-                DeleteSpellCommand);
-            Spells.Insert(0, spellCard);
+        var spell = new Spell("Name");
+        var spellCard = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector,
+            DeleteSpellCommand);
+        Spells.Insert(0, spellCard);
 
-            await spellService.AddAsync(spell);
-        }
-        catch (Exception e)
-        {
-            int d = 3;
-        }
+        await spellService.AddAsync(spell);
+    }
+
+    private async Task ImportSpells()
+    {
+        var path = await OpenImportSpellsFile.Handle(Unit.Default);
+        if (path == null) return;
+
+        var importer = new SpellImporter(spellService, spellListService);
+        var data = await importer.ImportSpellsAsync(await File.ReadAllTextAsync(path));
+
+        await spellService.AddAsync(data.NewSpells);
+    }
+    
+    private async Task ClearSpells()
+    {
+        await spellService.ClearAsync();
+        await LoadDataAsync();
     }
 
     private void Save()
