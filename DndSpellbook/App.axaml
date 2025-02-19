@@ -13,6 +13,7 @@
     <Application.Resources>
         <converters:SecondsToDurationTextConverter x:Key="SecondsToDurationText" />
         <converters:EqualsConverter x:Key="Equals"/>
+        <converters:SpellSchoolIconConverter x:Key="SpellSchoolToIcon"/>
     </Application.Resources>
 
     <Application.Styles>

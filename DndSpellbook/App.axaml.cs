@@ -3,6 +3,7 @@ using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using DndSpellbook.Converters;
 using DndSpellbook.Data;
 using DndSpellbook.Data.Services;
 using DndSpellbook.Navigation;
@@ -40,6 +41,8 @@ public partial class App : Application
                 DataContext = serviceProvider.GetRequiredService<MainViewModel>()
             };
         }
+        
+        SpellSchoolIconConverter.LoadImages();
 
         base.OnFrameworkInitializationCompleted();
     }
