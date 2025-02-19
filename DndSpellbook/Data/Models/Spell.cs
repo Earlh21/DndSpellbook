@@ -1,92 +1,95 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using DndSpellbook.Data.Models.Enums;
 using ReactiveUI;
-    using ReactiveUI.Validation.Extensions;
-    using ReactiveUI.Validation.Helpers;
+using ReactiveUI.Validation.Extensions;
+using ReactiveUI.Validation.Helpers;
 
-    namespace DndSpellbook.Data.Models;
-    
+namespace DndSpellbook.Data.Models
+{
+    [JsonConverter(typeof(SpellJsonConverter))]
     public partial class Spell : ReactiveValidationObject
     {
         [Key]
         public int Id { get; set; }
-    
-        private string name = "";
+
         public string Name
         {
             get => name;
             set => this.RaiseAndSetIfChanged(ref name, value);
         }
-    
-        private int level;
+        private string name = "";
+
         public int Level
         {
             get => level;
             set => this.RaiseAndSetIfChanged(ref level, value);
         }
-    
-        private SpellSchool school;
+        private int level;
+
         public SpellSchool School
         {
             get => school;
             set => this.RaiseAndSetIfChanged(ref school, value);
         }
-    
-        private CastingTime castingTime;
+        private SpellSchool school;
+
         public CastingTime CastingTime
         {
             get => castingTime;
             set => this.RaiseAndSetIfChanged(ref castingTime, value);
         }
+        private CastingTime castingTime;
 
-        private Range range;
         public Range Range
         {
             get => range;
             set => this.RaiseAndSetIfChanged(ref range, value);
         }
-    
-        private int duration;
+        private Range range;
+
         public int Duration
         {
             get => duration;
             set => this.RaiseAndSetIfChanged(ref duration, value);
         }
-    
-        private bool verbal;
+        private int duration;
+
         public bool Verbal
         {
             get => verbal;
             set => this.RaiseAndSetIfChanged(ref verbal, value);
         }
-    
-        private bool somatic;
+        private bool verbal;
+
         public bool Somatic
         {
             get => somatic;
             set => this.RaiseAndSetIfChanged(ref somatic, value);
         }
-    
-        private bool material;
+        private bool somatic;
+
         public bool Material
         {
             get => material;
             set => this.RaiseAndSetIfChanged(ref material, value);
         }
-        
-        private string description = "";
+        private bool material;
+
         public string Description
         {
             get => description;
             set => this.RaiseAndSetIfChanged(ref description, value);
         }
-        
+        private string description = "";
+
         public ObservableCollection<SpellList> SpellLists { get; } = new();
 
         private Spell()
         {
+            // Example of existing validation rule:
             this.ValidationRule(s => s.Level,
                 level => level is >= 0 and <= 9,
                 "Level must be between 0 and 9.");
@@ -120,7 +123,7 @@ using ReactiveUI;
             
             return clone;
         }
-        
+
         public void CopyFrom(Spell other)
         {
             Name = other.Name;
@@ -141,3 +144,4 @@ using ReactiveUI;
             }
         }
     }
+}
