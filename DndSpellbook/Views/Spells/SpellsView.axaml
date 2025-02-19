@@ -10,44 +10,55 @@
              x:Class="DndSpellbook.Views.SpellsView">
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type controls:SpellCardViewModel}">
-            <controls:SpellCard DataContext="{Binding}"/>
+            <controls:SpellCard DataContext="{Binding}" Margin="15"/>
         </DataTemplate>
     </UserControl.DataTemplates>
-    
+
     <Grid RowDefinitions="Auto,*" Margin="10 10 0 10 ">
         <StackPanel Grid.Row="0" Orientation="Vertical">
-            <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New"/>
-            <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}" Content="Add Spells"/>
-            <Button IsVisible="{Binding IsSelector}" Command="{Binding CancelCommand}" Content="Cancel"/>
+            <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New" />
+            <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}" Content="Add Spells" />
+            <Button IsVisible="{Binding IsSelector}" Command="{Binding CancelCommand}" Content="Cancel" />
+            <CheckBox IsChecked="{Binding IsCardView}" Content="Cards" />
         </StackPanel>
-        
+
         <ScrollViewer Grid.Row="1">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Margin="0 5">List of Spells: </TextBlock>
-                <ItemsControl ItemsSource="{Binding Spells}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnDefinitions="Auto,*">
-                                <CheckBox Grid.Column="0" IsVisible="{Binding IsSelector}" IsChecked="{Binding IsSelected}" />
-                                <Expander Grid.Column="1" HorizontalAlignment="Stretch" Margin=" 0 3 10 3">
-                                    <Expander.Header>
-                                        <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Spell.Name}"></TextBlock>
-                                            <TextBlock Margin="5 0 " FontWeight="Bold" Text="{Binding Spell.Level}"></TextBlock>
-                                        </StackPanel>
-                                    </Expander.Header>
-                                    <ContentPresenter Content="{Binding}"/>
-                                </Expander>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+            <Panel>
+                <ItemsControl IsVisible="{Binding IsCardView}" ItemsSource="{Binding Spells}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" />
+                            <WrapPanel />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
-            </StackPanel>
+
+                <StackPanel IsVisible="{Binding !IsCardView}" Orientation="Vertical">
+                    <TextBlock Margin="0 5">List of Spells: </TextBlock>
+                    <ItemsControl ItemsSource="{Binding Spells}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <CheckBox Grid.Column="0" IsVisible="{Binding IsSelector}" IsChecked="{Binding IsSelected}" />
+                                    <Expander Grid.Column="1" HorizontalAlignment="Stretch" Margin=" 0 3 10 3">
+                                        <Expander.Header>
+                                            <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Spell.Name}"></TextBlock>
+                                                <TextBlock Margin="5 0 " FontWeight="Bold" Text="{Binding Spell.Level}"></TextBlock>
+                                            </StackPanel>
+                                        </Expander.Header>
+                                        <ContentPresenter Content="{Binding}" />
+                                    </Expander>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+            </Panel>
             <!--<ItemsControl ItemsSource="{Binding Spells}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
