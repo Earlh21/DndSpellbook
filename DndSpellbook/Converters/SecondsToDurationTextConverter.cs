@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Avalonia.Data;
 using Avalonia.Data.Converters;
 
 namespace DndSpellbook.Converters;
@@ -8,7 +9,7 @@ public class SecondsToDurationTextConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not int seconds) return null;
+        if (value is not int seconds) return new BindingNotification(new InvalidCastException(), BindingErrorType.Error, "");
 
         int minute = 60;
         int hour = minute * 60;
