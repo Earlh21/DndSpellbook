@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -101,7 +102,10 @@ public class SpellsViewModel : ViewModelBase, IDialog
         get => spellListsWithNull;
         set => this.RaiseAndSetIfChanged(ref spellListsWithNull, value);
     }
-    
+
+    public PageRequest PageRequest { get; } = new(1, 25);
+    public int[] PageSizes { get; } = [10, 25, 50, 100];
+    public int MaxPage => (int)Math.Ceiling((double)Spells.AllItems.Count / PageRequest.Size);
     public SpellSchool?[] SpellSchools => Enum.GetValues<SpellSchool>().Select(x => (SpellSchool?)x).Prepend(null).ToArray();
 
     public ReactiveCommand<Unit, Unit> NewSpellCommand { get; }
@@ -121,18 +125,13 @@ public class SpellsViewModel : ViewModelBase, IDialog
         IsSelector = asSelector;
         IsCardView = asCardView;
 
-        Spells = CreateFiltered(null);
-
         NewSpellCommand = ReactiveCommand.CreateFromTask(NewSpell);
         DeleteSpellCommand = ReactiveCommand.CreateFromTask<SpellCardViewModel>(DeleteSpell);
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
         ImportSpellsCommand = ReactiveCommand.CreateFromTask(ImportSpells);
         ClearSpellsCommand = ReactiveCommand.CreateFromTask(ClearSpells);
-    }
-
-    private FilteredCollection<SpellCardViewModel> CreateFiltered(SortExpressionComparer<SpellCardViewModel>? sorter)
-    {
+        
         Func<SpellCardViewModel, bool> levelFilter = spell =>
         {
             if (FilterMinLevel != null && spell.Spell.Level < FilterMinLevel) return false;
@@ -155,26 +154,22 @@ public class SpellsViewModel : ViewModelBase, IDialog
         Func<SpellCardViewModel, bool> textFilter = spell =>
         {
             if (String.IsNullOrWhiteSpace(FilterText)) return true;
-
-            var searchWords = FilterText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var word in searchWords)
-            {
-                if (!spell.Spell.Name.Contains(word, StringComparison.OrdinalIgnoreCase) &&
-                    !spell.Spell.Description.Contains(word, StringComparison.OrdinalIgnoreCase)) return false;
-            }
-
-            return true;
+            
+            return spell.Spell.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
+                   spell.Spell.Description.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
+                   spell.Spell.School.ToString().Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
+                   spell.Spell.SpellLists.Any(l => l.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase));
         };
 
-        return new FilteredCollection<SpellCardViewModel>(x => x.Spell.Id,
-                sorter,
-                this.WhenValueChanged(vm => vm.FilterMinLevel).Select(_ => levelFilter),
-                this.WhenValueChanged(vm => vm.FilterMaxLevel).Select(_ => levelFilter),
-                this.WhenValueChanged(vm => vm.FilterSchool).Select(_ => schoolFilter),
-                this.WhenValueChanged(vm => vm.FilterSpellList).Select(_ => listFilter),
-                this.WhenValueChanged(vm => vm.FilterText).Select(_ => textFilter)
-            );
+        Spells = new FilteredCollection<SpellCardViewModel>(x => x.Spell.Id,
+            null,
+            PageRequest.AsObservable(),
+            this.WhenValueChanged(vm => vm.FilterMinLevel).Select(_ => levelFilter),
+            this.WhenValueChanged(vm => vm.FilterMaxLevel).Select(_ => levelFilter),
+            this.WhenValueChanged(vm => vm.FilterSchool).Select(_ => schoolFilter),
+            this.WhenValueChanged(vm => vm.FilterSpellList).Select(_ => listFilter),
+            this.WhenValueChanged(vm => vm.FilterText).Select(_ => textFilter)
+        );
     }
 
     public async Task LoadDataAsync()

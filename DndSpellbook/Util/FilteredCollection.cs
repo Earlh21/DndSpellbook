@@ -13,9 +13,16 @@ public class FilteredCollection<T> where T : notnull
     
     public ReadOnlyObservableCollection<T> View => view;
     public IReadOnlyList<T> AllItems => sourceCache.Items;
+
+    private IObservable<Func<T, bool>>[] filters;
+    private IComparer<T>? sorter;
+    private IObservable<IPageRequest>? pagination;
     
-    public FilteredCollection(Func<T, int> idSelector, SortExpressionComparer<T>? sorter, params IObservable<Func<T, bool>>[] filters)
+    public FilteredCollection(Func<T, int> idSelector, IComparer<T>? sorter, IObservable<IPageRequest>? pagination, params IObservable<Func<T, bool>>[] filters)
     {
+        this.filters = filters;
+        this.sorter = sorter;
+        this.pagination = pagination;
         sourceCache = new(idSelector);
 
         var observable = sourceCache.Connect();
@@ -25,28 +32,42 @@ public class FilteredCollection<T> where T : notnull
             observable = observable.Filter(filter);
         }
 
-        if (sorter == null)
+        if (pagination == null && sorter != null)
         {
             observable.Bind(out view).Subscribe();
+            return;
         }
-        else
+
+        if (pagination != null && sorter == null)
         {
-            observable.SortAndBind(out view, sorter).Subscribe();
+            if (sorter == null)
+            {
+                sorter = SortExpressionComparer<T>.Ascending(x => idSelector(x));
+            }
+
+            observable = observable.SortAndPage(sorter, pagination);
         }
+        else if(pagination != null && sorter != null)
+        {
+            observable = observable.SortAndPage(sorter, pagination);
+        }
+        
+        observable.Bind(out view).Subscribe();
     }
     
-    public FilteredCollection(Func<T, int> idSelector, params IObservable<Func<T, bool>>[] filters)
+    public FilteredCollection(Func<T, int> idSelector, params IObservable<Func<T, bool>>[] filters) : this(idSelector, null, null, filters)
     {
-        sourceCache = new(idSelector);
-
-        var observable = sourceCache.Connect();
         
-        foreach (var filter in filters)
-        {
-            observable = observable.Filter(filter);
-        }
-
-        observable.Bind(out view).Subscribe();
+    }
+    
+    public FilteredCollection<T> GetNewWithSorter(IComparer<T> sorter)
+    {
+        return new(sourceCache.KeySelector, sorter, pagination, filters);
+    }
+    
+    public FilteredCollection<T> GetNewWithPagination(IObservable<IPageRequest> pagination)
+    {
+        return new(sourceCache.KeySelector, sorter, pagination, filters);
     }
 
     public void Remove(T item)

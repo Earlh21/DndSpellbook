@@ -50,6 +50,11 @@
                     <Label Content="List:"/>
                     <ComboBox SelectedValue="{Binding FilterSpellList}" ItemsSource="{Binding SpellListsWithNull}"/>
                 </StackPanel>
+                
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Page Size:"/>
+                    <ComboBox SelectedValue="{Binding PageRequest.Size}" ItemsSource="{Binding PageSizes}"/>
+                </StackPanel>
             </StackPanel>
             
             <Separator/>
@@ -60,7 +65,7 @@
                 <ItemsControl IsVisible="{Binding IsCardView}" ItemsSource="{Binding Spells.View}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical"/>
+                            <WrapPanel/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
@@ -79,7 +84,6 @@
                                                 <TextBlock Margin="5 0 " FontWeight="Bold" Text="{Binding Spell.Level}"></TextBlock>
                                             </StackPanel>
                                         </Expander.Header>
-                                        <ContentPresenter Content="{Binding}" />
                                     </Expander>
                                 </Grid>
                             </DataTemplate>
