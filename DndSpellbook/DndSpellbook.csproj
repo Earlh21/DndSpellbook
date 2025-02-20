@@ -8,6 +8,20 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     </PropertyGroup>
 
+    <!--
+    <PropertyGroup>
+        <PublishAot>true</PublishAot>
+        <InterceptorsNamespaces>$(InterceptorsPreviewNamespaces);Microsoft.EntityFrameworkCore.GeneratedInterceptors</InterceptorsNamespaces>
+        <EFPrecompileQueriesStage>Publish</EFPrecompileQueriesStage>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tasks" Version="9.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>-->
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
