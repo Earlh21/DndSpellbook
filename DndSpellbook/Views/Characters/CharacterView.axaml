@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:DndSpellbook.Views"
              xmlns:models="clr-namespace:DndSpellbook.Data.Models"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Views.CharacterView"
              x:DataType="views:CharacterViewModel"
@@ -11,7 +12,7 @@
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type views:SpellEntryEditor}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Entry.Spell.Name}" />
+                <TextBlock Text="{Binding Entry.Spell.Name}" Width="350"/>
                 <Button Content="Delete"
                         Command="{Binding #Root.((views:CharacterViewModel)DataContext).RemoveEntryCommand}"
                         CommandParameter="{Binding Entry}" />
@@ -31,6 +32,10 @@
                                    Value="{Binding Entry.Uses.Recharge.MaxCharges}"
                                    Minimum="0" ParsingNumberStyle="Integer" />
                 </StackPanel>
+                
+                <ToolTip.Tip>
+                    <controls:SpellCardViewer Spell="{Binding Entry.Spell}" />
+                </ToolTip.Tip>
             </StackPanel>
         </DataTemplate>
     </UserControl.DataTemplates>
