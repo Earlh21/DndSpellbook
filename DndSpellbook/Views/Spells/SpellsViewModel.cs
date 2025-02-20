@@ -25,17 +25,17 @@ public class SpellsViewModel : ViewModelBase, IDialog
     private readonly SpellService spellService;
     private readonly SpellListService spellListService;
 
-    private int? filterMinLevel;
+    private int filterMinLevel = 0;
 
-    public int? FilterMinLevel
+    public int FilterMinLevel
     {
         get => filterMinLevel;
         set => this.RaiseAndSetIfChanged(ref filterMinLevel, value);
     }
 
-    private int? filterMaxLevel;
+    private int filterMaxLevel = 9;
 
-    public int? FilterMaxLevel
+    public int FilterMaxLevel
     {
         get => filterMaxLevel;
         set => this.RaiseAndSetIfChanged(ref filterMaxLevel, value);
@@ -103,7 +103,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
         set => this.RaiseAndSetIfChanged(ref spellListsWithNull, value);
     }
 
-    public PageRequest PageRequest { get; } = new(1, 25);
+    public PageRequest PageRequest { get; } = new(1, 1000);
     public int[] PageSizes { get; } = [10, 25, 50, 100, 1000];
     public int MaxPage => (int)Math.Ceiling((double)Spells.AllItems.Count / PageRequest.Size);
     public SpellSchool?[] SpellSchools => Enum.GetValues<SpellSchool>().Select(x => (SpellSchool?)x).Prepend(null).ToArray();
@@ -162,7 +162,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
         };
 
         Spells = new FilteredCollection<SpellCardViewModel>(x => x.Spell.Id,
-            null,
+            new SpellComparer(),
             PageRequest.AsObservable(),
             this.WhenValueChanged(vm => vm.FilterMinLevel).Select(_ => levelFilter),
             this.WhenValueChanged(vm => vm.FilterMaxLevel).Select(_ => levelFilter),
@@ -232,4 +232,23 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
     public event EventHandler<object>? Closed;
     public event EventHandler? Cancelled;
+    
+    private class SpellComparer : IComparer<SpellCardViewModel>, IComparer<Spell>
+    {
+        public int Compare(Spell? x, Spell? y)
+        {
+            if (x == null && y == null) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
+        
+            if (x.Level == y.Level) return String.Compare(x.Name, y.Name, StringComparison.Ordinal);
+        
+            return x.Level.CompareTo(y.Level);
+        }
+
+        public int Compare(SpellCardViewModel? x, SpellCardViewModel? y)
+        {
+            return Compare(x?.Spell, y?.Spell);
+        }
+    }
 }

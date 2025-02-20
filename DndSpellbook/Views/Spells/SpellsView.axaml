@@ -33,12 +33,16 @@
                 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Min Level:"/>
-                    <NumericUpDown Value="{Binding FilterMinLevel}" Minimum="0" Maximum="9" ParsingNumberStyle="Integer"/>
+                    <NumericUpDown Value="{Binding FilterMinLevel}"
+                                   Minimum="0" Maximum="9"
+                                   Width="140"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Max Level:"/>
-                    <NumericUpDown Value="{Binding FilterMaxLevel}" Minimum="0" Maximum="9" ParsingNumberStyle="Integer"/>
+                    <NumericUpDown Value="{Binding FilterMaxLevel}"
+                                   Minimum="0" Maximum="9"
+                                   Width="140"/>
                     </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
@@ -47,8 +51,9 @@
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="List:"/>
-                    <ComboBox SelectedValue="{Binding FilterSpellList}" ItemsSource="{Binding SpellListsWithNull}"/>
+                    <Label Content="Spell List:"/>
+                    <ComboBox SelectedValue="{Binding FilterSpellList}" ItemsSource="{Binding SpellListsWithNull}"
+                              DisplayMemberBinding="{Binding Name}"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal">
