@@ -12,16 +12,22 @@ public class SpellbookContext : DbContext
     public DbSet<Character> Characters { get; set; }
     public DbSet<SpellList> SpellLists { get; set; }
 
+    public SpellbookContext() : base(new DbContextOptionsBuilder<SpellbookContext>()
+        .UseSqlite("Data Source=data.db")
+        .Options)
+    {
+    }
+
     public SpellbookContext(DbContextOptions<SpellbookContext> options) : base(options)
     {
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         IgnoreReactiveObjectProperties(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
-    
+
     private static void IgnoreReactiveObjectProperties(ModelBuilder modelBuilder)
     {
         var reactiveObjects = modelBuilder.Model.GetEntityTypes()
@@ -35,7 +41,7 @@ public class SpellbookContext : DbContext
             modelBuilder.Entity(entityType).Ignore("Changing");
             modelBuilder.Entity(entityType).Ignore("ThrowExceptions");
         }
-        
+
         var reactiveValidationObjects = modelBuilder.Model.GetEntityTypes()
             .Where(e => !e.IsOwned())
             .Select(e => e.ClrType)
