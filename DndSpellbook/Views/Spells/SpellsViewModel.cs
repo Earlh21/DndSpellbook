@@ -103,7 +103,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
         set => this.RaiseAndSetIfChanged(ref spellListsWithNull, value);
     }
 
-    public PageRequest PageRequest { get; } = new(1, 1000);
+    public PageRequest PageRequest { get; } = new(1, 25);
     public int[] PageSizes { get; } = [10, 25, 50, 100, 1000];
     public int MaxPage => (int)Math.Ceiling((double)Spells.AllItems.Count / PageRequest.Size);
     public SpellSchool?[] SpellSchools => Enum.GetValues<SpellSchool>().Select(x => (SpellSchool?)x).Prepend(null).ToArray();
@@ -170,6 +170,8 @@ public class SpellsViewModel : ViewModelBase, IDialog
             this.WhenValueChanged(vm => vm.FilterSpellList).Select(_ => listFilter),
             this.WhenValueChanged(vm => vm.FilterText).Select(_ => textFilter)
         );
+
+        PageRequest.Size = 1000;
     }
 
     
