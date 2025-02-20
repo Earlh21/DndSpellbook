@@ -172,6 +172,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
         );
     }
 
+    
     public async Task LoadDataAsync()
     {
         var fetchedSpells = await spellService.GetAllAsync();
