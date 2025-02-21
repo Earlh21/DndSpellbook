@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using DynamicData;
 using DynamicData.Binding;
 
@@ -34,16 +35,12 @@ public class FilteredCollection<T> where T : notnull
 
         if (pagination == null && sorter != null)
         {
-            observable.Bind(out view).Subscribe();
+            observable.SortAndBind(out view, sorter).Subscribe();
             return;
         }
-
-        if (pagination != null && sorter == null)
+        else if (pagination != null && sorter == null)
         {
-            if (sorter == null)
-            {
-                sorter = SortExpressionComparer<T>.Ascending(x => idSelector(x));
-            }
+            sorter = SortExpressionComparer<T>.Ascending(x => idSelector(x));
 
             observable = observable.SortAndPage(sorter, pagination);
         }
@@ -54,7 +51,7 @@ public class FilteredCollection<T> where T : notnull
         
         observable.Bind(out view).Subscribe();
     }
-    
+
     public FilteredCollection(Func<T, int> idSelector, params IObservable<Func<T, bool>>[] filters) : this(idSelector, null, null, filters)
     {
         

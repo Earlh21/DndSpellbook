@@ -43,6 +43,6 @@
     <StackPanel Orientation="Vertical">
         <TextBox Width="400" Height="80" Text="{Binding Character.Name}" />
         <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
-        <ItemsControl ItemsSource="{Binding SpellEntries}" />
+        <ItemsControl ItemsSource="{Binding SpellEntries.View}" />
     </StackPanel>
 </UserControl>

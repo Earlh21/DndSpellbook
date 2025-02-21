@@ -132,12 +132,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
         ImportSpellsCommand = ReactiveCommand.CreateFromTask(ImportSpells);
         ClearSpellsCommand = ReactiveCommand.CreateFromTask(ClearSpells);
         
-        Func<SpellCardViewModel, bool> levelFilter = spell =>
-        {
-            if (FilterMinLevel != null && spell.Spell.Level < FilterMinLevel) return false;
-            if (FilterMaxLevel != null && spell.Spell.Level > FilterMaxLevel) return false;
-            return true;
-        };
+        Func<SpellCardViewModel, bool> levelFilter = spell => spell.Spell.Level >= FilterMinLevel && spell.Spell.Level <= FilterMaxLevel;
 
         Func<SpellCardViewModel, bool> schoolFilter = spell =>
         {
@@ -161,7 +156,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
                    spell.Spell.SpellLists.Any(l => l.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase));
         };
 
-        Spells = new FilteredCollection<SpellCardViewModel>(x => x.Spell.Id,
+        spells = new FilteredCollection<SpellCardViewModel>(x => x.Spell.Id,
             new SpellComparer(),
             PageRequest.AsObservable(),
             this.WhenValueChanged(vm => vm.FilterMinLevel).Select(_ => levelFilter),

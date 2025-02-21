@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,6 +11,7 @@ using DndSpellbook.Data.Models.Enums;
 using DndSpellbook.Data.Services;
 using DndSpellbook.Extensions;
 using DndSpellbook.Navigation;
+using DndSpellbook.Util;
 using DynamicData;
 using ReactiveUI;
 
@@ -33,8 +35,13 @@ public class CharacterViewModel : ViewModelBase
     
     public ReactiveCommand<Unit, Unit> AddSpellsCommand { get; }
     public ReactiveCommand<SpellEntry, Unit> RemoveEntryCommand { get; }
-    
-    public ObservableCollection<SpellEntryEditor> SpellEntries { get; } = new();
+
+    private FilteredCollection<SpellEntryEditor> spellEntries;
+    public FilteredCollection<SpellEntryEditor> SpellEntries
+    {
+        get => spellEntries;
+        set => this.RaiseAndSetIfChanged(ref spellEntries, value);
+    }
     
     public RechargeType[] RechargeTypes { get; } = Enum.GetValues<RechargeType>();
     
@@ -47,6 +54,8 @@ public class CharacterViewModel : ViewModelBase
         
         AddSpellsCommand = ReactiveCommand.CreateFromTask(AddSpells);
         RemoveEntryCommand = ReactiveCommand.CreateFromTask<SpellEntry>(RemoveEntry);
+
+        spellEntries = new(se => se.Entry.Id, new SpellEntryComparer(), null);
     }
     
     public async Task LoadDataAsync()
@@ -64,16 +73,30 @@ public class CharacterViewModel : ViewModelBase
             {
                 if (newItem is not SpellEntry spellEntry) continue;
 
-                spellEntry.SubscribeToAllChanges(() => characterService.UpdateAsync(Character));
+                spellEntry.SubscribeToAllChanges(() => EntryChanged(spellEntry));
             }
         };
         
         foreach (var spellEntry in Character.Spells)
         {
-            spellEntry.SubscribeToAllChanges(() => characterService.UpdateAsync(Character));
+            spellEntry.SubscribeToAllChanges(() => EntryChanged(spellEntry));
         }
+
+        SpellEntries.ReplaceAll(Character.Spells.Select(spell => new SpellEntryEditor(spell)));
+    }
+
+    private async Task EntryChanged(SpellEntry entry)
+    {
+        if (Character == null) return;
         
-        SpellEntries.AddRange(Character.Spells.Select(spell => new SpellEntryEditor(spell)));
+        var editor = SpellEntries.AllItems.FirstOrDefault(s => s.Entry == entry);
+        if (editor == null) return;
+        
+        var saveTask = characterService.UpdateAsync(Character);
+        
+        //SpellEntries.AddOrUpdate(editor);
+        
+        await saveTask;
     }
 
     private async Task RemoveEntry(SpellEntry spellEntry)
@@ -81,7 +104,7 @@ public class CharacterViewModel : ViewModelBase
         if(Character == null) return;
         
         Character.Spells.Remove(spellEntry);
-        SpellEntries.Remove(SpellEntries.First(s => s.Entry == spellEntry));
+        SpellEntries.Remove(SpellEntries.AllItems.First(s => s.Entry == spellEntry));
         await characterService.UpdateAsync(Character);
     }
 
@@ -97,8 +120,31 @@ public class CharacterViewModel : ViewModelBase
         var spells = await spellService.GetByIdsAsync(result);
         
         Character.Spells.AddRange(spells.Select(spell => new SpellEntry(spell, Character)));
-        SpellEntries.AddRange(spells.Select(spell => new SpellEntryEditor(new SpellEntry(spell, Character))));
+        SpellEntries.AddOrUpdate(spells.Select(spell => new SpellEntryEditor(new SpellEntry(spell, Character))));
         await characterService.UpdateAsync(Character);
+    }
+
+    private class SpellEntryComparer : IComparer<SpellEntryEditor>, IComparer<SpellEntry>
+    {
+        public int Compare(SpellEntryEditor? x, SpellEntryEditor? y)
+        {
+            return Compare(x?.Entry, y?.Entry);
+        }
+
+        public int Compare(SpellEntry? x, SpellEntry? y)
+        {
+            //Sort by prepared, then level, then name
+            if (x == null && y == null) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
+            
+            if (x.Prepared && !y.Prepared) return -1;
+            if (!x.Prepared && y.Prepared) return 1;
+            
+            if (x.Spell.Level != y.Spell.Level) return x.Spell.Level.CompareTo(y.Spell.Level);
+            
+            return string.Compare(x.Spell.Name, y.Spell.Name, StringComparison.Ordinal);
+        }
     }
 }
 
