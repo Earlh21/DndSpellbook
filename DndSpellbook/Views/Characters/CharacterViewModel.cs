@@ -102,7 +102,7 @@ public class CharacterViewModel : ViewModelBase
         
         var saveTask = characterService.UpdateAsync(Character);
         
-        //SpellEntries.AddOrUpdate(editor);
+        SpellEntries.AddOrUpdate(editor);
         
         await saveTask;
     }

@@ -11,38 +11,66 @@
              x:Name="Root">
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type controls:SpellEntryEditor}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Entry.Spell.Name}" Width="350"/>
-                <Button Content="Delete"
-                        Command="{Binding #Root.((views:CharacterViewModel)DataContext).RemoveEntryCommand}"
-                        CommandParameter="{Binding Entry}" />
-                
-                <CheckBox IsChecked="{Binding Entry.Prepared}" Content="Prepared"/>
+            <Panel>
+                <controls:SpellEntryCard
+                    Margin="15"
+                    IsVisible="{Binding #Root.((views:CharacterViewModel)DataContext).ShowEntriesAsCards}" />
 
-                <CheckBox IsChecked="{Binding Entry.Uses.SpellSlot}" Content="Spell Slot" />
-                <CheckBox IsChecked="{Binding RechargeIsChecked}" Content="Charges" />
+                <StackPanel IsVisible="{Binding !#Root.((views:CharacterViewModel)DataContext).ShowEntriesAsCards}"
+                            Orientation="Horizontal">
+                    <TextBlock Text="{Binding Entry.Spell.Name}" Width="350" />
+                    <Button Content="Delete"
+                            Command="{Binding #Root.((views:CharacterViewModel)DataContext).RemoveEntryCommand}"
+                            CommandParameter="{Binding Entry}" />
 
-                <StackPanel Orientation="Horizontal" IsVisible="{Binding RechargeIsChecked}">
-                    <Label Content="Recharge on:" />
-                    <ComboBox
-                        SelectedItem="{Binding Entry.Uses.Recharge.Type}"
-                        ItemsSource="{Binding #Root.((views:CharacterViewModel)DataContext).RechargeTypes}" />
-                    <Label Content="Max Charges:" />
-                    <NumericUpDown ShowButtonSpinner="False"
-                                   Value="{Binding Entry.Uses.Recharge.MaxCharges}"
-                                   Minimum="0" ParsingNumberStyle="Integer" />
+                    <CheckBox IsChecked="{Binding Entry.Prepared}" Content="Prepared" />
+
+                    <CheckBox IsChecked="{Binding Entry.Uses.SpellSlot}" Content="Spell Slot" />
+                    <CheckBox IsChecked="{Binding RechargeIsChecked}" Content="Charges" />
+
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding RechargeIsChecked}">
+                        <Label Content="Recharge on:" />
+                        <ComboBox
+                            SelectedItem="{Binding Entry.Uses.Recharge.Type}"
+                            ItemsSource="{Binding #Root.((views:CharacterViewModel)DataContext).RechargeTypes}" />
+                        <Label Content="Max Charges:" />
+                        <NumericUpDown ShowButtonSpinner="False"
+                                       Value="{Binding Entry.Uses.Recharge.MaxCharges}"
+                                       Minimum="0" ParsingNumberStyle="Integer" />
+                    </StackPanel>
+
+                    <ToolTip.Tip>
+                        <controls:SpellCardViewer Spell="{Binding Entry.Spell}" />
+                    </ToolTip.Tip>
                 </StackPanel>
-                
-                <ToolTip.Tip>
-                    <controls:SpellCardViewer Spell="{Binding Entry.Spell}" />
-                </ToolTip.Tip>
-            </StackPanel>
+            </Panel>
         </DataTemplate>
     </UserControl.DataTemplates>
 
-    <StackPanel Orientation="Vertical">
-        <TextBox Width="400" Height="80" Text="{Binding Character.Name}" />
-        <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
-        <ItemsControl ItemsSource="{Binding SpellEntries.View}" />
-    </StackPanel>
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <TextBox Width="400" Height="80" Text="{Binding Character.Name}" />
+            <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
+            <CheckBox IsChecked="{Binding ShowEntriesAsCards}" Content="Cards" />
+            <Separator />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1">
+            <Panel>
+                <ItemsControl
+                    IsVisible="{Binding ShowEntriesAsCards}"
+                    ItemsSource="{Binding SpellEntries.View}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <ItemsControl
+                    IsVisible="{Binding !ShowEntriesAsCards}"
+                    ItemsSource="{Binding SpellEntries.View}" />
+            </Panel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
