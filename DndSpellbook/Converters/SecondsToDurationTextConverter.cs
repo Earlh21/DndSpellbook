@@ -11,6 +11,11 @@ public class SecondsToDurationTextConverter : IValueConverter
     {
         if (value is not int seconds) return new BindingNotification(new InvalidCastException(), BindingErrorType.Error, "");
 
+        return Convert(seconds);
+    }
+    
+    public static string Convert(int seconds)
+    {
         int minute = 60;
         int hour = minute * 60;
         int day = hour * 24;

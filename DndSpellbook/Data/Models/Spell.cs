@@ -98,7 +98,8 @@ namespace DndSpellbook.Data.Models
         public Spell(string name) : this()
         {
             Name = name;
-            Range = new Range(RangeType.Touch);
+            Range = new (RangeType.Touch);
+            CastingTime = new (CastingTimeType.Action);
         }
         
         public Spell Clone()

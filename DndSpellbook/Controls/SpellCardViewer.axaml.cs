@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using DndSpellbook.Data.Models;
 using ReactiveUI;
@@ -30,7 +31,7 @@ public partial class SpellCardViewer : UserControl
 
     // IsSelected property
     public static readonly StyledProperty<bool> IsSelectedProperty =
-        AvaloniaProperty.Register<SpellCardViewer, bool>(nameof(IsSelected));
+        AvaloniaProperty.Register<SpellCardViewer, bool>(nameof(IsSelected), defaultBindingMode: BindingMode.TwoWay);
 
     public bool IsSelected
     {

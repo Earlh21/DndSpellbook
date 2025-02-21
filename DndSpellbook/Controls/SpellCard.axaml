@@ -49,8 +49,25 @@
                     </StackPanel>
 
                     <ComboBox SelectedItem="{Binding SpellEditor.EditCopy.School}" ItemsSource="{Binding Schools}" />
-                    <ComboBox SelectedItem="{Binding SpellEditor.EditCopy.CastingTime}"
-                              ItemsSource="{Binding CastingTimes}" />
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton IsChecked="{Binding !SpellEditor.CastingTimeTypeIsTime}">
+                            <ComboBox SelectedValue="{Binding SpellEditor.CastingTimeTypeWithoutTime}"
+                                      IsEnabled="{Binding !SpellEditor.CastingTimeTypeIsTime}"
+                                      ItemsSource="{Binding SpellEditor.CastingTimeTypesWithoutTime}"/>
+                        </RadioButton>
+                        
+                        <RadioButton IsChecked="{Binding SpellEditor.CastingTimeTypeIsTime}">
+                            <StackPanel Orientation="Horizontal">
+                                <NumericUpDown 
+                                    Width="100" ShowButtonSpinner="False"
+                                    IsEnabled="{Binding SpellEditor.CastingTimeTypeIsTime}"
+                                    Value="{Binding SpellEditor.EditCopy.CastingTime.Time}"
+                                    ParsingNumberStyle="Integer"/>
+                                <TextBlock Text=" (s)"/>
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
 
                     <StackPanel Orientation="Vertical">
                         <Separator />

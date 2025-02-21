@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
+             xmlns:views="clr-namespace:DndSpellbook.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DndSpellbook.Controls.SpellEntryCard"
+             x:DataType="controls:SpellEntryEditor">
+    <Border Width="350" Height="500" BorderBrush="Black" BorderThickness="1" Background="LightGray">
+        <StackPanel Orientation="Vertical">
+            <controls:SpellCardViewer Spell="{Binding Entry.Spell}"
+                                      IsSelector="False" />
+            <Separator />
+            <CheckBox IsChecked="{Binding Entry.Prepared}" Content="Prepared" />
+
+            <CheckBox IsChecked="{Binding Entry.Uses.SpellSlot}" Content="Spell Slot" />
+
+            <Separator />
+            <CheckBox IsChecked="{Binding RechargeIsChecked}" Content="Charges" />
+            <StackPanel Orientation="Vertical" IsVisible="{Binding RechargeIsChecked}">
+                <Label Content="Recharge on:" />
+                <ComboBox
+                    SelectedItem="{Binding Entry.Uses.Recharge.Type}"
+                    ItemsSource="{Binding RechargeTypes}" />
+                <Label Content="Max Charges:" />
+                <NumericUpDown ShowButtonSpinner="False"
+                               Value="{Binding Entry.Uses.Recharge.MaxCharges}"
+                               Minimum="0" ParsingNumberStyle="Integer" />
+            </StackPanel>
+            <Separator />
+        </StackPanel>
+    </Border>
+</UserControl>

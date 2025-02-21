@@ -1,7 +1,8 @@
 ﻿namespace DndSpellbook.Data.Models.Enums;
 
-public enum CastingTime
+public enum CastingTimeType
 {
     Action,
-    BonusAction
+    BonusAction,
+    Time
 }

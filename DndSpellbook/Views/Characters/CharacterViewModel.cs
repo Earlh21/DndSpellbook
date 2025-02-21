@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DndSpellbook.Controls;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Models.Enums;
 using DndSpellbook.Data.Services;
@@ -29,6 +30,13 @@ public class CharacterViewModel : ViewModelBase
     {
         get => character;
         set => this.RaiseAndSetIfChanged(ref character, value);
+    }
+
+    private bool showEntriesAsCards;
+    public bool ShowEntriesAsCards
+    {
+        get => showEntriesAsCards;
+        set => this.RaiseAndSetIfChanged(ref showEntriesAsCards, value);
     }
     
     public Interaction<SpellsViewModel, IEnumerable<int>?> AddSpellsInteraction { get; } = new();
@@ -145,35 +153,5 @@ public class CharacterViewModel : ViewModelBase
             
             return string.Compare(x.Spell.Name, y.Spell.Name, StringComparison.Ordinal);
         }
-    }
-}
-
-public class SpellEntryEditor : ReactiveObject
-{
-    public SpellEntry Entry { get; }
-
-    private bool rechargeIsChecked;
-    public bool RechargeIsChecked
-    {
-        get => rechargeIsChecked;
-        set => this.RaiseAndSetIfChanged(ref rechargeIsChecked, value);
-    }
-
-    public SpellEntryEditor(SpellEntry spellEntry)
-    {
-        Entry = spellEntry;
-        RechargeIsChecked = spellEntry.Uses.Recharge != null;
-
-        this.WhenAnyValue(x => x.RechargeIsChecked).Do(val =>
-        {
-            if(val && Entry.Uses.Recharge == null)
-            {
-                Entry.Uses.Recharge = new(RechargeType.ShortRest, 1);
-            }
-            else if(!val && Entry.Uses.Recharge != null)
-            {
-                Entry.Uses.Recharge = null;
-            }
-        }).Subscribe();
     }
 }

@@ -10,7 +10,7 @@
              x:DataType="views:CharacterViewModel"
              x:Name="Root">
     <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type views:SpellEntryEditor}">
+        <DataTemplate DataType="{x:Type controls:SpellEntryEditor}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Entry.Spell.Name}" Width="350"/>
                 <Button Content="Delete"
