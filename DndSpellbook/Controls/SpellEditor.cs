@@ -10,8 +10,8 @@ namespace DndSpellbook.Controls;
 public class SpellEditor : ReactiveObject
 {
     public Spell EditCopy { get; }
-    public CastingTimeEditor CastingTimeEditor { get; }
     public SpellListEntry[] SpellListEntries { get; }
+    public static CastingTimeType[] CastingTimeTypes { get; } = Enum.GetValues<CastingTimeType>();
 
     private bool maxRangeChecked;
 
@@ -80,7 +80,6 @@ public class SpellEditor : ReactiveObject
     public SpellEditor(Spell originalSpell, IEnumerable<SpellList> spellLists)
     {
         EditCopy = originalSpell.Clone();
-        CastingTimeEditor = new CastingTimeEditor(EditCopy.CastingTime);
 
         MinRange = EditCopy.Range.MinRange ?? 0;
         MaxRange = EditCopy.Range.MaxRange ?? 0;
@@ -115,6 +114,30 @@ public class SpellEditor : ReactiveObject
                     MaxRangeChecked = true;
                     LongRangeChecked = true;
                     break;
+            }
+        });
+        
+        EditCopy.CastingTime.WhenAnyValue(c => c.Type).Subscribe(t =>
+        {
+            if (t != CastingTimeType.Reaction)
+            {
+                EditCopy.CastingTime.ReactionText = "";
+            }
+            
+            if (t != CastingTimeType.Time)
+            {
+                EditCopy.CastingTime.Time = null;
+                return;
+            }
+
+            EditCopy.CastingTime.Time ??= 60;
+        });
+
+        EditCopy.CastingTime.WhenAnyValue(c => c.Time).Subscribe(t =>
+        {
+            if (EditCopy.CastingTime.Type == CastingTimeType.Time && t == null)
+            {
+                EditCopy.CastingTime.Time = 60;
             }
         });
 

@@ -15,10 +15,10 @@
 
     <Panel>
         <Button Padding="0"
-            IsVisible="{Binding !IsEditing}"
+                IsVisible="{Binding !IsEditing}"
                 Command="{Binding EditCommand}">
-            <controls:CompactSpellCardViewer 
-                                             Spell="{Binding Spell}">
+            <controls:CompactSpellCardViewer
+                Spell="{Binding Spell}">
                 <ToolTip.Tip>
                     <controls:SpellCardViewer Spell="{Binding Spell}" />
                 </ToolTip.Tip>
@@ -49,36 +49,43 @@
                     </StackPanel>
 
                     <ComboBox SelectedItem="{Binding SpellEditor.EditCopy.School}" ItemsSource="{Binding Schools}" />
-                    
+
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
-                            <RadioButton IsChecked="{Binding SpellEditor.CastingTimeEditor.TypeIsActionBonusAction}">
-                                <ComboBox SelectedValue="{Binding SpellEditor.CastingTimeEditor.TypeWithoutTimeReaction}"
-                                          IsEnabled="{Binding SpellEditor.CastingTimeEditor.TypeIsActionBonusAction}"
-                                          ItemsSource="{Binding SpellEditor.CastingTimeEditor.TypesWithoutTimeReaction}"/>
-                            </RadioButton>
-                        
-                            <RadioButton IsChecked="{Binding SpellEditor.CastingTimeEditor.TypeIsTime}">
-                                <StackPanel Orientation="Horizontal">
-                                    <NumericUpDown 
-                                        Width="100" ShowButtonSpinner="False"
-                                        IsEnabled="{Binding SpellEditor.CastingTimeEditor.TypeIsTime}"
-                                        Value="{Binding SpellEditor.EditCopy.CastingTime.Time}"
-                                        Minimum="0"
-                                        ParsingNumberStyle="Integer"/>
-                                    <TextBlock Text=" (s)"/>
-                                </StackPanel>
-                            </RadioButton>
+                            <ComboBox ItemsSource="{Binding SpellEditor.CastingTimeTypes}"
+                                      SelectedItem="{Binding SpellEditor.EditCopy.CastingTime.Type}" />
+                            
+                            <CheckBox IsChecked="{Binding SpellEditor.EditCopy.CastingTime.Ritual}" Content="Ritual"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{StaticResource Equals}">
+                                    <Binding Path="SpellEditor.EditCopy.CastingTime.Type" />
+                                    <Binding Source="{x:Static enums:CastingTimeType.Time}" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+
+                            <NumericUpDown
+                                Width="100" ShowButtonSpinner="False"
+                                Value="{Binding SpellEditor.EditCopy.CastingTime.Time}"
+                                Minimum="0"
+                                ParsingNumberStyle="Integer" />
+                            <TextBlock Text=" (s)" />
                         </StackPanel>
                         
-                        <RadioButton IsChecked="{Binding SpellEditor.CastingTimeEditor.TypeIsReaction}">
-                            <TextBox
-                                IsEnabled="{Binding SpellEditor.CastingTimeEditor.TypeIsReaction}"
-                                Text="{Binding SpellEditor.CastingTimeEditor.CastingTime.ReactionText}"/>
-                        </RadioButton>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{StaticResource Equals}">
+                                    <Binding Path="SpellEditor.EditCopy.CastingTime.Type" />
+                                    <Binding Source="{x:Static enums:CastingTimeType.Reaction}" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+
+                            <TextBox Text="{Binding SpellEditor.EditCopy.CastingTime.ReactionText}" />
+                        </StackPanel>
                     </StackPanel>
                     
-
                     <StackPanel Orientation="Vertical">
                         <Separator />
 

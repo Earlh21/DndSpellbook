@@ -102,7 +102,7 @@ public class CastingTime : ReactiveObject
             if (Time == 0) return "Instant";
             
             var timeText = SecondsToDurationTextConverter.Convert(Time.Value);
-            return Ritual ? $"{timeText}, Ritual" : $"{timeText} minutes";
+            return Ritual ? $"{timeText}, Ritual" : timeText;
         }
 
         return "";
