@@ -57,5 +57,8 @@
         <DependentUpon>SpellCard.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Controls\SpellEntryCard.axaml.cs">
+        <DependentUpon>SpellEntryCard.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>
