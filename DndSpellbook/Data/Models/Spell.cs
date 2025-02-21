@@ -99,7 +99,7 @@ namespace DndSpellbook.Data.Models
         {
             Name = name;
             Range = new (RangeType.Touch);
-            CastingTime = new (CastingTimeType.Action);
+            CastingTime = CastingTime.CreateAction();
         }
         
         public Spell Clone()

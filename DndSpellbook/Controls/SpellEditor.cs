@@ -10,6 +10,7 @@ namespace DndSpellbook.Controls;
 public class SpellEditor : ReactiveObject
 {
     public Spell EditCopy { get; }
+    public CastingTimeEditor CastingTimeEditor { get; }
     public SpellListEntry[] SpellListEntries { get; }
 
     private bool maxRangeChecked;
@@ -76,30 +77,10 @@ public class SpellEditor : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref areaRadius, value);
     }
 
-    public bool CastingTimeTypeIsTime
-    {
-        get => EditCopy.CastingTime.Type == CastingTimeType.Time;
-        set
-        {
-            EditCopy.CastingTime.Type = value ? CastingTimeType.Time : CastingTimeType.Action;
-            this.RaisePropertyChanged();
-        }
-    }
-
-    public CastingTimeType CastingTimeTypeWithoutTime
-    {
-        get => EditCopy.CastingTime.Type == CastingTimeType.Time ? CastingTimeType.Action : EditCopy.CastingTime.Type;
-        set
-        {
-            EditCopy.CastingTime.Type = value;
-        }
-    }
-
-    public static CastingTimeType[] CastingTimeTypesWithoutTime { get; } = Enum.GetValues<CastingTimeType>().Where(x => x != CastingTimeType.Time).ToArray();
-
     public SpellEditor(Spell originalSpell, IEnumerable<SpellList> spellLists)
     {
         EditCopy = originalSpell.Clone();
+        CastingTimeEditor = new CastingTimeEditor(EditCopy.CastingTime);
 
         MinRange = EditCopy.Range.MinRange ?? 0;
         MaxRange = EditCopy.Range.MaxRange ?? 0;
@@ -134,31 +115,6 @@ public class SpellEditor : ReactiveObject
                     MaxRangeChecked = true;
                     LongRangeChecked = true;
                     break;
-            }
-        });
-
-        EditCopy.CastingTime.WhenAnyValue(c => c.Type).Subscribe(t =>
-        {
-            if (t != CastingTimeType.Time)
-            {
-                EditCopy.CastingTime.Time = null;
-                return;
-            }
-
-            if (EditCopy.CastingTime.Time == null)
-            {
-                EditCopy.CastingTime.Time = 60;
-            }
-            
-            this.RaisePropertyChanged(nameof(CastingTimeTypeIsTime));
-            this.RaisePropertyChanged(nameof(CastingTimeTypeWithoutTime));
-        });
-
-        EditCopy.CastingTime.WhenAnyValue(c => c.Time).Subscribe(t =>
-        {
-            if (EditCopy.CastingTime.Type == CastingTimeType.Time && t == null)
-            {
-                EditCopy.CastingTime.Time = 60;
             }
         });
 

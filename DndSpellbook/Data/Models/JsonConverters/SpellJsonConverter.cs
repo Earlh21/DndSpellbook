@@ -34,7 +34,6 @@ public class SpellJsonConverter : JsonConverter<Spell>
 
             if (root.TryGetProperty("castingTime", out var castingTimeProp))
             {
-                // Assuming CastingTime is a simple type or already supports Json conversion
                 spell.CastingTime = JsonSerializer.Deserialize<CastingTime>(castingTimeProp.GetRawText(), options);
             }
 
