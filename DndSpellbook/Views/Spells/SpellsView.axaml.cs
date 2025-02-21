@@ -32,7 +32,7 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
             interaction.SetOutput(path);
         });
 
-        Task.Run(() => vm.LoadDataAsync());
+        Task.Run(vm.LoadDataAsync);
     }
     
     private async Task<string?> OpenImportSpellsFile()

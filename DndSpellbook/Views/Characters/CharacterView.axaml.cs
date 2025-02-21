@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
@@ -32,6 +33,6 @@ public partial class CharacterView : ReactiveUserControl<CharacterViewModel>
             ic.SetOutput(result);
         });
         
-        vm.LoadDataAsync();
+        Task.Run(vm.LoadDataAsync);
     }
 }

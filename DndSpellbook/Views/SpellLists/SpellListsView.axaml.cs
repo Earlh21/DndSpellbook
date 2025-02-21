@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia.ReactiveUI;
 
 namespace DndSpellbook.Views;
@@ -16,6 +17,6 @@ public partial class SpellListsView : ReactiveUserControl<SpellListsViewModel>
         
         if(DataContext is not SpellListsViewModel vm) return;
 
-        vm.LoadDataAsync();
+        Task.Run(vm.LoadDataAsync);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -19,6 +20,6 @@ public partial class CharactersView : ReactiveUserControl<CharactersViewModel>
         
         if (DataContext is not CharactersViewModel vm) return;
         
-        vm.LoadDataAsync();
+        Task.Run(vm.LoadDataAsync);
     }
 }

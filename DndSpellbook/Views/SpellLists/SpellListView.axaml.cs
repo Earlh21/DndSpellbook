@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using DndSpellbook.Windows;
@@ -29,6 +30,6 @@ public partial class SpellListView : ReactiveUserControl<SpellListViewModel>
             ic.SetOutput(result);
         });
         
-        vm.LoadDataAsync();
+        Task.Run(vm.LoadDataAsync);
     }
 }
