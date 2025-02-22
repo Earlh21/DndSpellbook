@@ -53,12 +53,21 @@
       <Compile Update="Windows\DialogWindow.axaml.cs">
         <DependentUpon>DialogWindow.axaml</DependentUpon>
       </Compile>
-      <Compile Update="Controls\SpellCard.axaml.cs">
+      <Compile Update="Controls\Spells\CompactSpellCardViewer.axaml.cs">
+        <DependentUpon>CompactSpellCardViewer.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Spells\SpellCard.axaml.cs">
         <DependentUpon>SpellCard.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Controls\SpellEntryCard.axaml.cs">
+      <Compile Update="Controls\Spells\SpellCardViewer.axaml.cs">
+        <DependentUpon>SpellCardViewer.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Spells\SpellEntryCard.axaml.cs">
         <DependentUpon>SpellEntryCard.axaml</DependentUpon>
+        <SubType>Code</SubType>
       </Compile>
     </ItemGroup>
 </Project>
