@@ -28,5 +28,6 @@ public class PageRequest : ReactiveObject, IPageRequest
         Size = size;
     }
     
+    //For some reason, must return a new PageRequest instead of returning this for the DynamicData paging to work
     public IObservable<IPageRequest> AsObservable() => this.WhenAnyPropertyChanged().Select(_ => new PageRequest(Page, Size));
 }
