@@ -12,44 +12,46 @@
             <Setter Property="FontSize" Value="14" />
         </Style>
     </UserControl.Styles>
-    
-    <StackPanel Orientation="Vertical">
-        <Grid ColumnDefinitions="*,Auto">
-            <TextBlock Grid.Column="0" Text="{Binding #Root.Spell.Name}" TextWrapping="WrapWithOverflow" />
 
-            <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
-                <CheckBox IsVisible="{Binding #Root.IsSelector}" IsChecked="{Binding #Root.IsSelected}" />
-                <Button x:Name="EditButton" Content="E"
-                        IsVisible="{Binding #Root.EditCommand, Converter={x:Static ObjectConverters.IsNotNull}}"
-                        Command="{Binding #Root.EditCommand}" />
-                <Button x:Name="DeleteButton" Content="D"
-                        IsVisible="{Binding #Root.DeleteCommand, Converter={x:Static ObjectConverters.IsNotNull}}"
-                        Command="{Binding #Root.DeleteCommand}"
-                        CommandParameter="{Binding #Root.Spell}" />
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0" Text="{Binding #Root.Spell.Name}" TextWrapping="WrapWithOverflow" />
+
+                <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
+                    <CheckBox IsVisible="{Binding #Root.IsSelector}" IsChecked="{Binding #Root.IsSelected}" />
+                    <Button x:Name="EditButton" Content="E"
+                            IsVisible="{Binding #Root.EditCommand, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            Command="{Binding #Root.EditCommand}" />
+                    <Button x:Name="DeleteButton" Content="D"
+                            IsVisible="{Binding #Root.DeleteCommand, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            Command="{Binding #Root.DeleteCommand}"
+                            CommandParameter="{Binding #Root.Spell}" />
+                </StackPanel>
+            </Grid>
+
+            <Separator />
+
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Level {0}, {1}">
+                        <Binding Path="#Root.Spell.Level" />
+                        <Binding Path="#Root.Spell.School" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <TextBlock Text="{Binding #Root.Spell.CastingTime.DisplayString, StringFormat='Casting Time: {0}'}" />
+            <TextBlock Text="{Binding #Root.Spell.Range.DisplayString}" />
+            <TextBlock Text="{Binding #Root.Spell.Duration, Converter={StaticResource SecondsToDurationText}}" />
+
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Verbal}" Content="V" />
+                <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Somatic}" Content="S" />
+                <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Material}" Content="M" />
             </StackPanel>
-        </Grid>
-        
-        <Separator/>
 
-        <TextBlock>
-            <TextBlock.Text>
-                <MultiBinding StringFormat="Level {0}, {1}">
-                    <Binding Path="#Root.Spell.Level" />
-                    <Binding Path="#Root.Spell.School" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-
-        <TextBlock Text="{Binding #Root.Spell.CastingTime.DisplayString, StringFormat='Casting Time: {0}'}" />
-        <TextBlock Text="{Binding #Root.Spell.Range.DisplayString}" />
-        <TextBlock Text="{Binding #Root.Spell.Duration, Converter={StaticResource SecondsToDurationText}}" />
-
-        <StackPanel Orientation="Horizontal">
-            <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Verbal}" Content="V" />
-            <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Somatic}" Content="S" />
-            <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Material}" Content="M" />
+            <mdxaml:MarkdownScrollViewer Markdown="{Binding #Root.Spell.Description}" />
         </StackPanel>
-
-        <mdxaml:MarkdownScrollViewer Markdown="{Binding #Root.Spell.Description}"/>
-    </StackPanel>
+    </ScrollViewer>
 </UserControl>

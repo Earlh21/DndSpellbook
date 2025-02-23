@@ -3,110 +3,99 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:DndSpellbook.Views"
-             xmlns:models="clr-namespace:DndSpellbook.Data.Models"
              xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Views.CharacterView"
              x:DataType="views:CharacterViewModel"
              x:Name="Root">
-    <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type controls:SpellEntryEditor}">
-            <Panel>
-                <controls:SpellEntryCard
-                    Margin="15"
-                    IsVisible="{Binding #Root.((views:CharacterViewModel)DataContext).ShowEntriesAsCards}" />
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Panel Grid.Row="0" Background="{StaticResource Color5}">
+            <StackPanel Orientation="Vertical"
+                        Margin="0,0,0,5">
 
-                <StackPanel IsVisible="{Binding !#Root.((views:CharacterViewModel)DataContext).ShowEntriesAsCards}"
-                            Orientation="Horizontal">
-                    <TextBlock Text="{Binding Entry.Spell.Name}" Width="350" />
-                    <Button Content="Delete"
-                            Command="{Binding #Root.((views:CharacterViewModel)DataContext).RemoveEntryCommand}"
-                            CommandParameter="{Binding Entry}" />
+                <Grid ColumnDefinitions="Auto,Auto,*" Margin="5,0,5,0">
+                    <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Stretch"
+                                Spacing="5" Margin="0,0,0,5">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Name" />
+                            <TextBox Text="{Binding Character.Name}" Width="300" />
+                        </StackPanel>
 
-                    <CheckBox IsChecked="{Binding Entry.Prepared}" Content="Prepared" />
-
-                    <CheckBox IsChecked="{Binding Entry.Uses.SpellSlot}" Content="Spell Slot" />
-                    <CheckBox IsChecked="{Binding RechargeIsChecked}" Content="Charges" />
-
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding RechargeIsChecked}">
-                        <Label Content="Recharge on:" />
-                        <ComboBox
-                            SelectedItem="{Binding Entry.Uses.Recharge.Type}"
-                            ItemsSource="{Binding #Root.((views:CharacterViewModel)DataContext).RechargeTypes}" />
-                        <Label Content="Max Charges:" />
-                        <NumericUpDown ShowButtonSpinner="False"
-                                       Value="{Binding Entry.Uses.Recharge.MaxCharges}"
-                                       Minimum="0" ParsingNumberStyle="Integer" />
+                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Bottom">
+                            <Button Content="Long Rest" Command="{Binding LongRestCommand}" />
+                            <Button Content="Short Rest" />
+                        </StackPanel>
                     </StackPanel>
 
-                    <ToolTip.Tip>
-                        <controls:SpellCardViewer Spell="{Binding Entry.Spell}" />
-                    </ToolTip.Tip>
+                    <Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="1" Fill="DimGray" Margin="5,0,5,0" />
+
+                    <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Auto">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level1Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level1Used}"
+                                                        Text="Level 1:" />
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level2Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level2Used}"
+                                                        Text="Level 2:" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical">
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level3Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level3Used}"
+                                                        Text="Level 3:" />
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level4Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level4Used}"
+                                                        Text="Level 4:" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical">
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level5Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level5Used}"
+                                                        Text="Level 5:" />
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level6Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level6Used}"
+                                                        Text="Level 6:" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical">
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level7Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level7Used}"
+                                                        Text="Level 7:" />
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level8Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level8Used}"
+                                                        Text="Level 8:" />
+
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical">
+                                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level9Max}"
+                                                        UsedPips="{Binding Character.SpellSlots.Level9Used}"
+                                                        Text="Level 9:" />
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Separator Margin="0,0,0,5" />
+
+                <StackPanel Orientation="Horizontal" Spacing="10" Margin="5,0,5,0">
+                    <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
+                    <CheckBox IsChecked="{Binding ShowEntriesAsCards}" Content="Cards" />
                 </StackPanel>
-            </Panel>
-        </DataTemplate>
-    </UserControl.DataTemplates>
-
-    <Grid RowDefinitions="Auto,*">
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Grid.Row="0" Orientation="Vertical">
-                <TextBox Width="400" Height="80" Text="{Binding Character.Name}" />
-                <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
-                <CheckBox IsChecked="{Binding ShowEntriesAsCards}" Content="Cards" />
-                <Separator />
             </StackPanel>
+        </Panel>
 
-            <StackPanel Orientation="Vertical">
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level1Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level1Used}" Text="Level 1:" />
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level2Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level2Used}" Text="Level 2:" />
-            </StackPanel>
-
-            <StackPanel Orientation="Vertical">
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level3Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level3Used}" Text="Level 3:" />
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level4Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level4Used}" Text="Level 4:" />
-            </StackPanel>
-
-            <StackPanel Orientation="Vertical">
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level5Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level5Used}" Text="Level 5:" />
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level6Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level6Used}" Text="Level 6:" />
-            </StackPanel>
-
-            <StackPanel Orientation="Vertical">
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level7Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level7Used}" Text="Level 7:" />
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level8Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level8Used}" Text="Level 8:" />
-
-            </StackPanel>
-
-            <StackPanel Orientation="Vertical">
-                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level9Max}"
-                                        UsedPips="{Binding Character.SpellSlots.Level9Used}" Text="Level 9:" />
-            </StackPanel>
-        </StackPanel>
 
         <ScrollViewer Grid.Row="1">
-            <Panel>
-                <ItemsControl
-                    IsVisible="{Binding ShowEntriesAsCards}"
-                    ItemsSource="{Binding SpellEntries.View}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-
-                <ItemsControl
-                    IsVisible="{Binding !ShowEntriesAsCards}"
-                    ItemsSource="{Binding SpellEntries.View}" />
-            </Panel>
+            <ItemsControl ItemsSource="{Binding SpellEntryEditors.View}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:SpellEntryRow SpellEntryEditor="{Binding}"
+                                                DeleteCommand="{Binding #Root.((views:CharacterViewModel)DataContext).RemoveEntryCommand}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
     </Grid>
 </UserControl>

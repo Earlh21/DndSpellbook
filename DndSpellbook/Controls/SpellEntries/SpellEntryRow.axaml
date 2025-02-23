@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:DndSpellbook.Views"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DndSpellbook.Controls.SpellEntryRow"
+             x:Name="Root">
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Name}" Width="350" />
+        <Button Content="Delete"
+                Command="{Binding #Root.DeleteCommand}"
+                CommandParameter="{Binding #Root.SpellEntryEditor}" />
+
+        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Prepared}" Content="Prepared" />
+
+        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Uses.SpellSlot}" Content="Spell Slot" />
+        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.RechargeIsChecked}" Content="Charges" />
+
+        <StackPanel Orientation="Horizontal" IsVisible="{Binding #Root.SpellEntryEditor.RechargeIsChecked}">
+            <Label Content="Recharge on:" />
+            <ComboBox
+                SelectedItem="{Binding #Root.SpellEntryEditor.Entry.Uses.Recharge.Type}"
+                ItemsSource="{Binding #Root.SpellEntryEditor.RechargeTypes}" />
+            <Label Content="Max Charges:" />
+            <NumericUpDown ShowButtonSpinner="False"
+                           Value="{Binding #Root.SpellEntryEditor.Entry.Uses.Recharge.MaxCharges}"
+                           Minimum="0" ParsingNumberStyle="Integer" />
+        </StackPanel>
+
+        <ToolTip.Tip>
+            <controls:SpellCardViewer Spell="{Binding #Root.SpellEntryEditor.Entry.Spell}" />
+        </ToolTip.Tip>
+    </StackPanel>
+</UserControl>

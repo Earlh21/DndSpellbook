@@ -79,7 +79,7 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
         SpellsViewContainer.Content = cardsView ?? new SpellCardsView
         {
             DataContext = DataContext,
-            Margin = new(0,20,0,0)
+            Margin = new(0,30,0,0)
         };
     }
     
@@ -95,7 +95,7 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
         SpellsViewContainer.Content = expandersView ?? new SpellExpandersView
         {
             DataContext = DataContext,
-            Margin = new(0,30,0,0)
+            Margin = new(5,30,5,0)
         };
     }
 }

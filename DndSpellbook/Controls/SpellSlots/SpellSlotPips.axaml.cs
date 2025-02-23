@@ -44,6 +44,7 @@ public partial class SpellSlotPips : UserControl
     public SpellSlotPips()
     {
         InitializeComponent();
+        PipButton.AddHandler(PointerPressedEvent, PipButton_OnPointerPressed, handledEventsToo: true);
 
         AddPip();
 
@@ -77,11 +78,6 @@ public partial class SpellSlotPips : UserControl
         PipsPanel.Children.RemoveAt(PipsPanel.Children.Count - 1);
     }
 
-    private void PipButton_OnTapped(object? sender, TappedEventArgs e)
-    {
-        UsedPips = Math.Min(UsedPips + 1, MaxPips);
-    }
-
     private void UpButton_OnTapped(object? sender, TappedEventArgs e)
     {
         MaxPips++;
@@ -90,5 +86,24 @@ public partial class SpellSlotPips : UserControl
     private void DownButton_OnTapped(object? sender, TappedEventArgs e)
     {
         MaxPips = Math.Max(MaxPips - 1, 0);
+    }
+
+    private void PipButton_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is not Control control) return;
+        var point = e.GetCurrentPoint(control);
+
+        if (point.Properties.IsLeftButtonPressed)
+        {
+            UsedPips = Math.Min(UsedPips + 1, MaxPips);
+        }
+        else if (point.Properties.IsRightButtonPressed)
+        {
+            UsedPips = Math.Max(UsedPips - 1, 0);
+        }
+        else if (point.Properties.IsMiddleButtonPressed)
+        {
+            UsedPips = 0;
+        }
     }
 }

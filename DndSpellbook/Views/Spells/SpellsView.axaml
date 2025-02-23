@@ -9,22 +9,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="views:SpellsViewModel"
              x:Class="DndSpellbook.Views.SpellsView">
-    <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type controls:SpellCardViewModel}">
-            <controls:SpellCard DataContext="{Binding}" Margin="15" />
-        </DataTemplate>
-    </UserControl.DataTemplates>
-
     <Grid RowDefinitions="Auto,*">
         <StackPanel Grid.Row="0" Orientation="Vertical" Background="{StaticResource Color5}">
             <StackPanel IsVisible="{Binding IsPaneOpen}" Orientation="Horizontal" Margin="10" Spacing="10">
-                <StackPanel.Styles>
-                    <Style Selector="Label">
-                        <Setter Property="FontSize" Value="12" />
-                        <Setter Property="Foreground" Value="Black" />
-                    </Style>
-                </StackPanel.Styles>
-
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Vertical">
                         <Label Content="Search" />
@@ -90,10 +77,10 @@
                         <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New" />
                         <Button Command="{Binding ImportSpellsCommand}" Content="Import" />
                         <Button Command="{Binding ClearSpellsCommand}" Content="Delete all" />
-                        <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}"
+                        <Button IsVisible="{Binding IsSelector}" Command="{Binding ReturnSpellsCommand}"
                                 Content="Add Spells" />
                         <Button IsVisible="{Binding IsSelector}" Foreground="White"
-                                Command="{Binding CancelCommand}"
+                                Command="{Binding ReturnNoSpellsCommand}"
                                 Content="Cancel" />
                         <Button Background="Transparent"
                                 Command="{Binding TogglePaneCommand}">
@@ -108,7 +95,7 @@
             </Grid>
 
             <ScrollViewer x:Name="SpellsViewContainer">
-                <views:SpellExpandersView DataContext="{Binding}" Margin="0,30,0,0" />
+                <views:SpellExpandersView DataContext="{Binding}" Margin="5,30,5,0" />
             </ScrollViewer>
         </Panel>
     </Grid>

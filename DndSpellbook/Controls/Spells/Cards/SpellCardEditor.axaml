@@ -5,7 +5,7 @@
              xmlns:controls="clr-namespace:DndSpellbook.Controls"
              xmlns:enums="clr-namespace:DndSpellbook.Data.Models.Enums"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="DndSpellbook.Controls.Spells.SpellCardEditor"
+             x:Class="DndSpellbook.Controls.SpellCardEditor"
              x:Name="Root">
     <Border Width="350" Height="500"
                 BorderBrush="Black" BorderThickness="1" Background="LightGray">

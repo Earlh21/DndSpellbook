@@ -56,17 +56,13 @@ public class FilteredCollection<T> where T : notnull
     {
         
     }
-    
-    public FilteredCollection<T> GetNewWithSorter(IComparer<T> sorter)
-    {
-        return new(sourceCache.KeySelector, sorter, pagination, filters);
-    }
-    
-    public FilteredCollection<T> GetNewWithPagination(IObservable<IPageRequest> pagination)
-    {
-        return new(sourceCache.KeySelector, sorter, pagination, filters);
-    }
 
+    public T? Get(int key)
+    {
+        var optional = sourceCache.Lookup(key);
+        return optional.HasValue ? optional.Value : default;
+    }
+    
     public void Remove(T item)
     {
         sourceCache.Remove(item);

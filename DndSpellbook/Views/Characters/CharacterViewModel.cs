@@ -10,9 +10,9 @@ using DndSpellbook.Controls;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Models.Enums;
 using DndSpellbook.Data.Services;
-using DndSpellbook.Extensions;
 using DndSpellbook.Navigation;
 using DndSpellbook.Util;
+using DndSpellbook.Util.Extensions;
 using DynamicData;
 using ReactiveUI;
 
@@ -43,15 +43,14 @@ public class CharacterViewModel : ViewModelBase
     
     public ReactiveCommand<Unit, Unit> AddSpellsCommand { get; }
     public ReactiveCommand<SpellEntry, Unit> RemoveEntryCommand { get; }
+    public ReactiveCommand<Unit, Unit> LongRestCommand { get; }
 
-    private FilteredCollection<SpellEntryEditor> spellEntries;
-    public FilteredCollection<SpellEntryEditor> SpellEntries
+    private FilteredCollection<SpellEntryEditor> spellEntryEditors;
+    public FilteredCollection<SpellEntryEditor> SpellEntryEditors
     {
-        get => spellEntries;
-        set => this.RaiseAndSetIfChanged(ref spellEntries, value);
+        get => spellEntryEditors;
+        set => this.RaiseAndSetIfChanged(ref spellEntryEditors, value);
     }
-    
-    public RechargeType[] RechargeTypes { get; } = Enum.GetValues<RechargeType>();
     
     public CharacterViewModel(Navigator navigator, CharacterService characterService, SpellService spellService, int characterId)
     {
@@ -62,8 +61,9 @@ public class CharacterViewModel : ViewModelBase
         
         AddSpellsCommand = ReactiveCommand.CreateFromTask(AddSpells);
         RemoveEntryCommand = ReactiveCommand.CreateFromTask<SpellEntry>(RemoveEntry);
+        LongRestCommand = ReactiveCommand.Create(LongRest);
 
-        spellEntries = new(se => se.Entry.Id, new SpellEntryComparer(), null);
+        spellEntryEditors = new(se => se.Entry.Id, new SpellEntryComparer(), null);
     }
     
     public async Task LoadDataAsync()
@@ -90,19 +90,19 @@ public class CharacterViewModel : ViewModelBase
             spellEntry.SubscribeToAllChanges(() => EntryChanged(spellEntry));
         }
 
-        SpellEntries.ReplaceAll(Character.Spells.Select(spell => new SpellEntryEditor(spell)));
+        SpellEntryEditors.ReplaceAll(Character.Spells.Select(spell => new SpellEntryEditor(spell)));
     }
 
     private async Task EntryChanged(SpellEntry entry)
     {
         if (Character == null) return;
-        
-        var editor = SpellEntries.AllItems.FirstOrDefault(s => s.Entry == entry);
+
+        var editor = SpellEntryEditors.Get(entry.Id);
         if (editor == null) return;
         
         var saveTask = characterService.UpdateAsync(Character);
         
-        SpellEntries.AddOrUpdate(editor);
+        SpellEntryEditors.AddOrUpdate(editor);
         
         await saveTask;
     }
@@ -112,7 +112,7 @@ public class CharacterViewModel : ViewModelBase
         if(Character == null) return;
         
         Character.Spells.Remove(spellEntry);
-        SpellEntries.Remove(SpellEntries.AllItems.First(s => s.Entry == spellEntry));
+        SpellEntryEditors.RemoveKey(spellEntry.Id);
         await characterService.UpdateAsync(Character);
     }
 
@@ -126,10 +126,27 @@ public class CharacterViewModel : ViewModelBase
         if (result == null) return;
 
         var spells = await spellService.GetByIdsAsync(result);
+        var newEntries = spells.Select(spell => new SpellEntry(spell, Character)).ToArray();
         
-        Character.Spells.AddRange(spells.Select(spell => new SpellEntry(spell, Character)));
-        SpellEntries.AddOrUpdate(spells.Select(spell => new SpellEntryEditor(new SpellEntry(spell, Character))));
+        Character.Spells.AddRange(newEntries);
         await characterService.UpdateAsync(Character);
+        
+        SpellEntryEditors.AddOrUpdate(newEntries.Select(spellEntry => new SpellEntryEditor(spellEntry)));
+    }
+
+    private void LongRest()
+    {
+        if (Character == null) return;
+        
+        Character.SpellSlots.Level1Used = 0;
+        Character.SpellSlots.Level2Used = 0;
+        Character.SpellSlots.Level3Used = 0;
+        Character.SpellSlots.Level4Used = 0;
+        Character.SpellSlots.Level5Used = 0;
+        Character.SpellSlots.Level6Used = 0;
+        Character.SpellSlots.Level7Used = 0;
+        Character.SpellSlots.Level8Used = 0;
+        Character.SpellSlots.Level9Used = 0;
     }
 
     private class SpellEntryComparer : IComparer<SpellEntryEditor>, IComparer<SpellEntry>

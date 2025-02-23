@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Services;
 
-namespace DndSpellbook.Import;
+namespace DndSpellbook.Util;
 
 public record ImportResult(Spell[] NewSpells, SpellList[] NewSpellLists, string[] Issues);
 

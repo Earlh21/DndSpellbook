@@ -3,10 +3,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:DndSpellbook.Views"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Views.SpellCardsView"
              x:DataType="views:SpellsViewModel">
-    <ItemsControl IsVisible="{Binding IsCardView}" ItemsSource="{Binding Spells.View}">
+    <ItemsControl IsVisible="{Binding IsCardView}" ItemsSource="{Binding Cards.View}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <controls:SpellCard DataContext="{Binding}" Margin="15" />
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <WrapPanel />

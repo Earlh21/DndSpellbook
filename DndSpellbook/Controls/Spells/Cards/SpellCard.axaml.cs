@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Avalonia.Controls;
-using DndSpellbook.Controls.Spells;
 using DynamicData.Binding;
 
 namespace DndSpellbook.Controls;

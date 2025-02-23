@@ -3,34 +3,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:DndSpellbook.Views"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Views.SpellExpandersView"
              x:DataType="views:SpellsViewModel">
-    <StackPanel IsVisible="{Binding !IsCardView}" Orientation="Vertical">
-        <ItemsControl ItemsSource="{Binding Spells.View}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid ColumnDefinitions="Auto,*">
-                        <CheckBox Grid.Column="0" IsVisible="{Binding IsSelector}"
-                                  IsChecked="{Binding IsSelected}" />
-                        <Expander Grid.Column="1" HorizontalAlignment="Stretch" Margin=" 0 3 10 3">
-                            <Expander.Header>
-                                <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Spell.Name}"></TextBlock>
-                                    <TextBlock Margin="5 0 " FontWeight="Bold"
-                                               Text="{Binding Spell.Level}">
-                                    </TextBlock>
-                                </StackPanel>
-                            </Expander.Header>
-                        </Expander>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-    </StackPanel>
+    <ItemsControl IsVisible="{Binding !IsCardView}" ItemsSource="{Binding Expanders.View}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <controls:SpellExpander HorizontalAlignment="Stretch" DataContext="{Binding}" />
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" Spacing="5" />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+    </ItemsControl>
 </UserControl>

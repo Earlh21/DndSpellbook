@@ -59,15 +59,13 @@ public class SpellCardViewModel : ReactiveObject
     public ReactiveCommand<Spell, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
-    
-    private ReactiveCommand<SpellCardViewModel, Unit> deleteCommand;
 
     public SpellCardViewModel(
         Spell spell,
         SpellList[] allSpellLists,
         SpellService spellService,
         bool asSelector,
-        ReactiveCommand<SpellCardViewModel, Unit> deleteCommand)
+        ReactiveCommand<Spell, Unit> deleteCommand)
     {
         Spell = spell;
         Spell.Range = Spell.Range;
@@ -75,7 +73,7 @@ public class SpellCardViewModel : ReactiveObject
         
         this.allSpellLists = allSpellLists;
         this.spellService = spellService;
-        this.deleteCommand = deleteCommand;
+        DeleteCommand = deleteCommand;
 
         isEditing = this.WhenAnyValue(x => x.SpellEditor)
             .Select(e => e != null)
@@ -89,11 +87,6 @@ public class SpellCardViewModel : ReactiveObject
             Edit,
             this.WhenAnyValue(x => x.IsEditing, e => !e)
         );
-        
-        DeleteCommand = ReactiveCommand.Create<Spell>(
-            Delete,
-            this.WhenAnyValue(x => x.IsEditing, e => !e)
-        );
 
         SaveCommand = ReactiveCommand.CreateFromTask(
             Save,
@@ -104,11 +97,6 @@ public class SpellCardViewModel : ReactiveObject
             Cancel,
             this.WhenAnyValue(x => x.IsEditing)
         );
-    }
-
-    private void Delete(Spell _)
-    {
-        deleteCommand.Execute(this);
     }
 
     private void Edit()

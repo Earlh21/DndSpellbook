@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:enums="clr-namespace:DndSpellbook.Data.Models.Enums"
              xmlns:controls="clr-namespace:DndSpellbook.Controls"
-             xmlns:spells="clr-namespace:DndSpellbook.Controls.Spells"
+             xmlns:spells="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellCard"
              x:DataType="controls:SpellCardViewModel">
@@ -15,7 +15,6 @@
     </UserControl.DataTemplates>
 
     <Panel x:Name="MainPanel">
-        <!--TODO: this doesn't need to be a command, just use event handler, also change it to a CanEdit property-->
         <Button Padding="0"
                 IsVisible="{Binding !IsEditing}"
                 Command="{Binding EditCommand}">

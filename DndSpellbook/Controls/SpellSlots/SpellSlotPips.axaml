@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DndSpellbook.Controls.SpellSlotPips"
+             x:Name="Root">
+    <StackPanel Orientation="Horizontal" Height="40">
+        <Button x:Name="PipButton" Background="Transparent">
+            <Button.Styles>
+                <Style Selector="Button > ContentPresenter">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </Button.Styles>
+            
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock Text="{Binding #Root.Text}" VerticalAlignment="Center"/>
+                <StackPanel x:Name="PipsPanel" Orientation="Horizontal" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+        <Grid VerticalAlignment="Stretch" RowDefinitions="*,*">
+            <Grid.Styles>
+                <Style Selector="Button">
+                    <Setter Property="MinHeight" Value="0"/>
+                    <Setter Property="FontSize" Value="10"/>
+                </Style>
+            </Grid.Styles>
+            
+            <Button Grid.Row="0" x:Name="UpButton" Tapped="UpButton_OnTapped">
+                <materialIcons:MaterialIcon Kind="ChevronUp"/>
+            </Button>
+            <Button Grid.Row="1" x:Name="DownButton" Tapped="DownButton_OnTapped">
+                <materialIcons:MaterialIcon Kind="ChevronDown"/>
+            </Button>
+        </Grid>
+    </StackPanel>
+</UserControl>

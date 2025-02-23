@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Models.Enums;
-using Range = DndSpellbook.Data.Models.Range;
+
+namespace DndSpellbook.Data.Models.JsonConverters;
 
 public class SpellJsonConverter : JsonConverter<Spell>
 {

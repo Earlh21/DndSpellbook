@@ -1,8 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 
-namespace DndSpellbook.Controls.Spells;
+namespace DndSpellbook.Controls;
 
 public partial class SpellExpander : UserControl
 {

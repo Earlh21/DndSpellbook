@@ -1,9 +1,8 @@
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 
-namespace DndSpellbook.Controls.Spells;
+namespace DndSpellbook.Controls;
 
 public partial class SpellCardEditor : UserControl
 {

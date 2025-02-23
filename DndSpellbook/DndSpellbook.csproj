@@ -75,5 +75,13 @@
         <DependentUpon>SpellCardViewer.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Controls\Spells\Expanders\SpellExpander.axaml.cs">
+        <DependentUpon>SpellExpander.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\SpellSlots\SpellSlotPips.axaml.cs">
+        <DependentUpon>SpellSlotPips.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

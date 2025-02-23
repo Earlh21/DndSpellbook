@@ -26,5 +26,18 @@
     <Application.Styles>
         <FluentTheme />
         <materialIcons:MaterialIconStyles />
+        
+        <Style Selector="Label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+        
+        <Style Selector="Separator">
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+        
+        <Style Selector="Rectangle">
+            <Setter Property="Margin" Value="0"/>
+        </Style>
     </Application.Styles>
 </Application>

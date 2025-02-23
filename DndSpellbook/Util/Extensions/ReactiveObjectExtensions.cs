@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ReactiveUI;
 
-namespace DndSpellbook.Extensions;
+namespace DndSpellbook.Util.Extensions;
 
 public static class ReactiveObjectExtensions
 {
