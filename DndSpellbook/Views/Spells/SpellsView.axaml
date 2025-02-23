@@ -89,7 +89,7 @@
                         <Button Command="{Binding ClearSpellsCommand}" Content="Delete all" />
                         <Button IsVisible="{Binding IsSelector}" Command="{Binding ReturnSpellsCommand}"
                                 Content="Add Spells" />
-                        <Button IsVisible="{Binding IsSelector}" Foreground="White"
+                        <Button IsVisible="{Binding IsSelector}"
                                 Command="{Binding ReturnNoSpellsCommand}"
                                 Content="Cancel" />
                         <Button Background="Transparent"

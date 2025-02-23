@@ -249,7 +249,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
         SpellLists = new(fetchedSpellLists);
         SpellListsWithNull = new(fetchedSpellLists.Prepend(null));
 
-        PageRequest.Size = 200;
+        PageRequest.Size = 50;
     }
 
     private void TogglePaneOpen()

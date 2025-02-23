@@ -17,7 +17,14 @@
     <Panel x:Name="MainPanel">
         <Button Padding="0"
                 IsVisible="{Binding !IsEditing}"
-                Command="{Binding EditCommand}">
+                Command="{Binding EditCommand}"
+                Background="Transparent">
+            <Button.Styles>
+                <Style Selector="Button:pointerover > ContentPresenter">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </Button.Styles>
+            
             <controls:CompactSpellCardViewer
                 Spell="{Binding Spell}">
                 <ToolTip.Tip>
