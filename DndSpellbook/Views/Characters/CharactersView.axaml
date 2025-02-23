@@ -4,28 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:DndSpellbook.Data.Models"
              xmlns:views="clr-namespace:DndSpellbook.Views"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Views.CharactersView"
              x:Name="Root"
              x:DataType="views:CharactersViewModel">
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type models:Character}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Name, StringFormat='Name: {0}'}" />
-                <Button Content="Delete"
-                        Command="{Binding #Root.((views:CharactersViewModel)DataContext).DeleteCharacterCommand}"
-                        CommandParameter="{Binding}" />
-                <Button Content="Edit"
-                        Command="{Binding #Root.((views:CharactersViewModel)DataContext).EditCharacterCommand}"
-                        CommandParameter="{Binding}" />
-            </StackPanel>
+            <Button Height="80" HorizontalAlignment="Stretch" Padding="0" BorderThickness="0"
+                    Command="{Binding #Root.((views:CharactersViewModel)DataContext).EditCharacterCommand}"
+                    CommandParameter="{Binding}">
+                <Panel>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="UniformToFill" Source="/Assets/Banners/wizard_banner.jpg"/>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Name}"
+                               FontSize="32"
+                               Foreground="White"/>
+                </Panel>
+            </Button>
         </DataTemplate>
     </UserControl.DataTemplates>
     
-    <StackPanel Orientation="Vertical">
-        <Button Content="New"
-                Command="{Binding NewCharacterCommand}"/>
-        <Separator/>
-        <ItemsControl ItemsSource="{Binding Characters}"/>
-    </StackPanel>
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical">
+            <ItemsControl ItemsSource="{Binding Characters}"/>
+            <Button Height="80" HorizontalAlignment="Stretch" BorderThickness="0"
+                    Command="{Binding NewCharacterCommand}">
+                <materialIcons:MaterialIcon Kind="Add"/> 
+            </Button>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

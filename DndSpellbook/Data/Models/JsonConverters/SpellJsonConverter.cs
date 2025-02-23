@@ -56,6 +56,9 @@ public class SpellJsonConverter : JsonConverter<Spell>
 
             if (root.TryGetProperty("description", out var descriptionProp))
                 spell.Description = descriptionProp.GetString();
+            
+            if(root.TryGetProperty("atHigherLevels", out var atHigherLevelsProp))
+                spell.AtHigherLevels = atHigherLevelsProp.GetString();
 
             return spell;
         }
@@ -76,6 +79,7 @@ public class SpellJsonConverter : JsonConverter<Spell>
         writer.WriteBoolean("somatic", value.Somatic);
         writer.WriteBoolean("material", value.Material);
         writer.WriteString("description", value.Description);
+        writer.WriteString("atHigherLevels", value.AtHigherLevels);
         writer.WriteEndObject();
     }
 }

@@ -85,6 +85,13 @@ namespace DndSpellbook.Data.Models
         }
         private string description = "";
 
+        private string? atHigherLevels;
+        public string? AtHigherLevels
+        {
+            get => atHigherLevels;
+            set => this.RaiseAndSetIfChanged(ref atHigherLevels, value);
+        }
+
         public ObservableCollection<SpellList> SpellLists { get; } = new();
 
         private Spell()

@@ -193,7 +193,8 @@
                         </Button.Flyout>
                     </Button>
 
-                    <TextBox Text="{Binding SpellEditor.EditCopy.Description}" AcceptsReturn="True"
+                    <TextBox Text="{Binding SpellEditor.EditCopy.Description}"
+                             AcceptsReturn="True"
                              TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </ScrollViewer>

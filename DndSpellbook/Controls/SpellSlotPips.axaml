@@ -6,8 +6,16 @@
              x:Class="DndSpellbook.Controls.SpellSlotPips"
              x:Name="Root">
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding #Root.Text}"/>
-        <StackPanel x:Name="PipsPanel" Orientation="Horizontal"/>
-        <Button ></Button>
+        <Button x:Name="PipButton" Tapped="PipButton_OnTapped">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding #Root.Text}" />
+                <StackPanel x:Name="PipsPanel" Orientation="Horizontal" />
+            </StackPanel>
+        </Button>
+
+        <Grid VerticalAlignment="Stretch" RowDefinitions="*,*">
+            <Button Grid.Row="0" x:Name="UpButton" Content="▲" Tapped="UpButton_OnTapped" />
+            <Button Grid.Row="1" x:Name="DownButton" Content="▼" Tapped="DownButton_OnTapped" />
+        </Grid>
     </StackPanel>
 </UserControl>

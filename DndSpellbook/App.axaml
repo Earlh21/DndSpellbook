@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DndSpellbook.App"
              xmlns:local="using:DndSpellbook"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:converters="clr-namespace:DndSpellbook.Converters"
              RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
@@ -14,9 +15,16 @@
         <converters:SecondsToDurationTextConverter x:Key="SecondsToDurationText" />
         <converters:EqualsConverter x:Key="Equals"/>
         <converters:SpellSchoolIconConverter x:Key="SpellSchoolToIcon"/>
+        
+        <SolidColorBrush Color="#461220" x:Key="Color1"/>
+        <SolidColorBrush Color="#8C2F39" x:Key="Color2"/>
+        <SolidColorBrush Color="#B23A48" x:Key="Color3"/>
+        <SolidColorBrush Color="#FCB9B2" x:Key="Color4"/>
+        <SolidColorBrush Color="#FED0BB" x:Key="Color5"/>
     </Application.Resources>
 
     <Application.Styles>
         <FluentTheme />
+        <materialIcons:MaterialIconStyles />
     </Application.Styles>
 </Application>

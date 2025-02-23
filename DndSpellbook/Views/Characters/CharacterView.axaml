@@ -48,11 +48,47 @@
     </UserControl.DataTemplates>
 
     <Grid RowDefinitions="Auto,*">
-        <StackPanel Grid.Row="0" Orientation="Vertical">
-            <TextBox Width="400" Height="80" Text="{Binding Character.Name}" />
-            <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
-            <CheckBox IsChecked="{Binding ShowEntriesAsCards}" Content="Cards" />
-            <Separator />
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <TextBox Width="400" Height="80" Text="{Binding Character.Name}" />
+                <Button Command="{Binding AddSpellsCommand}" Content="Add Spells" />
+                <CheckBox IsChecked="{Binding ShowEntriesAsCards}" Content="Cards" />
+                <Separator />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level1Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level1Used}" Text="Level 1:" />
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level2Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level2Used}" Text="Level 2:" />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level3Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level3Used}" Text="Level 3:" />
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level4Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level4Used}" Text="Level 4:" />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level5Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level5Used}" Text="Level 5:" />
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level6Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level6Used}" Text="Level 6:" />
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level7Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level7Used}" Text="Level 7:" />
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level8Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level8Used}" Text="Level 8:" />
+
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <controls:SpellSlotPips MaxPips="{Binding Character.SpellSlots.Level9Max}"
+                                        UsedPips="{Binding Character.SpellSlots.Level9Used}" Text="Level 9:" />
+            </StackPanel>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1">

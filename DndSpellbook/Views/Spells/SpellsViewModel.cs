@@ -166,7 +166,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
             this.WhenValueChanged(vm => vm.FilterText).Select(_ => textFilter)
         );
 
-        PageRequest.Size = 1000;
+        PageRequest.Size = 100;
     }
 
     
