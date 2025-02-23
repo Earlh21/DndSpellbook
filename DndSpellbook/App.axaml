@@ -4,7 +4,7 @@
              xmlns:local="using:DndSpellbook"
              xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:converters="clr-namespace:DndSpellbook.Converters"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Light">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>

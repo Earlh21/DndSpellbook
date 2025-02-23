@@ -11,7 +11,10 @@ public class SpellEditor : ReactiveObject
 {
     public Spell EditCopy { get; }
     public SpellListEntry[] SpellListEntries { get; }
+    
     public static CastingTimeType[] CastingTimeTypes { get; } = Enum.GetValues<CastingTimeType>();
+    public static RangeType[] RangeTypes { get; } = Enum.GetValues<RangeType>();
+    public static SpellSchool[] Schools { get; } = Enum.GetValues<SpellSchool>();
 
     private bool maxRangeChecked;
 

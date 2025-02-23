@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:enums="clr-namespace:DndSpellbook.Data.Models.Enums"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
+             xmlns:spells="clr-namespace:DndSpellbook.Controls.Spells"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DndSpellbook.Controls.SpellCard"
+             x:DataType="controls:SpellCardViewModel">
+    <UserControl.DataTemplates>
+        <DataTemplate DataType="{x:Type controls:SpellListEntry}">
+            <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding SpellList.Name}" />
+        </DataTemplate>
+    </UserControl.DataTemplates>
+
+    <Panel x:Name="MainPanel">
+        <!--TODO: this doesn't need to be a command, just use event handler, also change it to a CanEdit property-->
+        <Button Padding="0"
+                IsVisible="{Binding !IsEditing}"
+                Command="{Binding EditCommand}">
+            <controls:CompactSpellCardViewer
+                Spell="{Binding Spell}">
+                <ToolTip.Tip>
+                    <controls:SpellCardViewer Spell="{Binding Spell}" />
+                </ToolTip.Tip>
+            </controls:CompactSpellCardViewer>
+        </Button>
+    </Panel>
+</UserControl>

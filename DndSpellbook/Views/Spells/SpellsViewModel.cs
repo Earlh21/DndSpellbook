@@ -104,7 +104,8 @@ public class SpellsViewModel : ViewModelBase, IDialog
     }
 
     public PageRequest PageRequest { get; } = new(1, 25);
-    public int[] PageSizes { get; } = [10, 25, 50, 100, 1000];
+    public static int[] PageSizes { get; } = [10, 25, 50, 100, 1000];
+    public static int[] Levels { get; } = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     public int MaxPage => (int)Math.Ceiling((double)Spells.AllItems.Count / PageRequest.Size);
     public SpellSchool?[] SpellSchools => Enum.GetValues<SpellSchool>().Select(x => (SpellSchool?)x).Prepend(null).ToArray();
 
@@ -195,9 +196,8 @@ public class SpellsViewModel : ViewModelBase, IDialog
         var spell = new Spell("Name");
         var spellCard = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector,
             DeleteSpellCommand);
-        Spells.AddOrUpdate(spellCard);
-
         await spellService.AddAsync(spell);
+        Spells.AddOrUpdate(spellCard);
     }
 
     private async Task ImportSpells()

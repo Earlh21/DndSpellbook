@@ -55,20 +55,24 @@
       <Compile Update="Windows\DialogWindow.axaml.cs">
         <DependentUpon>DialogWindow.axaml</DependentUpon>
       </Compile>
-      <Compile Update="Controls\Spells\CompactSpellCardViewer.axaml.cs">
+      <Compile Update="Controls\SpellEntries\SpellEntryCard.axaml.cs">
+        <DependentUpon>SpellEntryCard.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Controls\Spells\Cards\CompactSpellCardViewer.axaml.cs">
         <DependentUpon>CompactSpellCardViewer.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Controls\Spells\SpellCard.axaml.cs">
+      <Compile Update="Controls\Spells\Cards\SpellCard.axaml.cs">
         <DependentUpon>SpellCard.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Controls\Spells\SpellCardViewer.axaml.cs">
-        <DependentUpon>SpellCardViewer.axaml</DependentUpon>
+      <Compile Update="Controls\Spells\Cards\SpellCardEditor.axaml.cs">
+        <DependentUpon>SpellCardEditor.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Controls\Spells\SpellEntryCard.axaml.cs">
-        <DependentUpon>SpellEntryCard.axaml</DependentUpon>
+      <Compile Update="Controls\Spells\Cards\SpellCardViewer.axaml.cs">
+        <DependentUpon>SpellCardViewer.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

@@ -1,74 +1,55 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:enums="clr-namespace:DndSpellbook.Data.Models.Enums"
              xmlns:controls="clr-namespace:DndSpellbook.Controls"
+             xmlns:enums="clr-namespace:DndSpellbook.Data.Models.Enums"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="DndSpellbook.Controls.SpellCard"
-             x:DataType="controls:SpellCardViewModel">
-    <UserControl.DataTemplates>
-        <DataTemplate DataType="{x:Type controls:SpellListEntry}">
-            <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding SpellList.Name}" />
-        </DataTemplate>
-    </UserControl.DataTemplates>
-
-    <Panel>
-        <Button Padding="0"
-                IsVisible="{Binding !IsEditing}"
-                Command="{Binding EditCommand}">
-            <controls:CompactSpellCardViewer
-                Spell="{Binding Spell}">
-                <ToolTip.Tip>
-                    <controls:SpellCardViewer Spell="{Binding Spell}" />
-                </ToolTip.Tip>
-            </controls:CompactSpellCardViewer>
-        </Button>
-
-        <Border IsVisible="{Binding IsEditing}"
-                Width="350" Height="500"
+             x:Class="DndSpellbook.Controls.Spells.SpellCardEditor"
+             x:Name="Root">
+    <Border Width="350" Height="500"
                 BorderBrush="Black" BorderThickness="1" Background="LightGray">
             <ScrollViewer>
                 <StackPanel Margin="5" Orientation="Vertical">
                     <Grid ColumnDefinitions="*,Auto">
                         <TextBox Grid.Column="0"
-                                 Text="{Binding SpellEditor.EditCopy.Name}" TextWrapping="WrapWithOverflow" />
+                                 Text="{Binding #Root.SpellEditor.EditCopy.Name}" TextWrapping="WrapWithOverflow" />
 
                         <StackPanel Grid.Column="1" Margin="10,0,10,0" Orientation="Horizontal">
                             <Button x:Name="SaveButton" Content="S"
-                                    Command="{Binding SaveCommand}" />
+                                    Command="{Binding #Root.SaveCommand}" />
                             <Button x:Name="CancelButton" Content="C"
-                                    Command="{Binding CancelCommand}" />
+                                    Command="{Binding #Root.CancelCommand}" />
                         </StackPanel>
                     </Grid>
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Level: " />
-                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding SpellEditor.EditCopy.Level}"
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding #Root.SpellEditor.EditCopy.Level}"
                                        Minimum="0" Maximum="9" ParsingNumberStyle="Integer" />
                     </StackPanel>
 
-                    <ComboBox SelectedItem="{Binding SpellEditor.EditCopy.School}" ItemsSource="{Binding Schools}" />
+                    <ComboBox SelectedItem="{Binding #Root.SpellEditor.EditCopy.School}" ItemsSource="{Binding #Root.SpellEditor.Schools}" />
 
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
-                            <ComboBox ItemsSource="{Binding SpellEditor.CastingTimeTypes}"
-                                      SelectedItem="{Binding SpellEditor.EditCopy.CastingTime.Type}" />
+                            <ComboBox ItemsSource="{Binding #Root.SpellEditor.CastingTimeTypes}"
+                                      SelectedItem="{Binding #Root.SpellEditor.EditCopy.CastingTime.Type}" />
                             
-                            <CheckBox IsChecked="{Binding SpellEditor.EditCopy.CastingTime.Ritual}" Content="Ritual"/>
+                            <CheckBox IsChecked="{Binding #Root.SpellEditor.EditCopy.CastingTime.Ritual}" Content="Ritual"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <StackPanel.IsVisible>
                                 <MultiBinding Converter="{StaticResource Equals}">
-                                    <Binding Path="SpellEditor.EditCopy.CastingTime.Type" />
+                                    <Binding Path="#Root.SpellEditor.EditCopy.CastingTime.Type" />
                                     <Binding Source="{x:Static enums:CastingTimeType.Time}" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
 
                             <NumericUpDown
                                 Width="100" ShowButtonSpinner="False"
-                                Value="{Binding SpellEditor.EditCopy.CastingTime.Time}"
+                                Value="{Binding #Root.SpellEditor.EditCopy.CastingTime.Time}"
                                 Minimum="0"
                                 ParsingNumberStyle="Integer" />
                             <TextBlock Text=" (s)" />
@@ -77,12 +58,12 @@
                         <StackPanel Orientation="Horizontal">
                             <StackPanel.IsVisible>
                                 <MultiBinding Converter="{StaticResource Equals}">
-                                    <Binding Path="SpellEditor.EditCopy.CastingTime.Type" />
+                                    <Binding Path="#Root.SpellEditor.EditCopy.CastingTime.Type" />
                                     <Binding Source="{x:Static enums:CastingTimeType.Reaction}" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
 
-                            <TextBox Text="{Binding SpellEditor.EditCopy.CastingTime.ReactionText}" />
+                            <TextBox Text="{Binding #Root.SpellEditor.EditCopy.CastingTime.ReactionText}" />
                         </StackPanel>
                     </StackPanel>
                     
@@ -91,14 +72,14 @@
 
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Range:" />
-                            <ComboBox SelectedItem="{Binding SpellEditor.EditCopy.Range.Type}"
-                                      ItemsSource="{Binding RangeTypes}" />
+                            <ComboBox SelectedItem="{Binding #Root.SpellEditor.EditCopy.Range.Type}"
+                                      ItemsSource="{Binding #Root.SpellEditor.RangeTypes}" />
                         </StackPanel>
 
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
                             <Grid.IsVisible>
                                 <MultiBinding Converter="{StaticResource Equals}">
-                                    <Binding Path="SpellEditor.EditCopy.Range.Type" />
+                                    <Binding Path="#Root.SpellEditor.EditCopy.Range.Type" />
                                     <Binding Source="{x:Static enums:RangeType.Fixed}" />
                                 </MultiBinding>
                             </Grid.IsVisible>
@@ -106,30 +87,30 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="Max Range (ft):" />
                             <NumericUpDown Grid.Row="0" Grid.Column="1"
                                            ShowButtonSpinner="False"
-                                           Value="{Binding SpellEditor.EditCopy.Range.MaxRange}"
+                                           Value="{Binding #Root.SpellEditor.EditCopy.Range.MaxRange}"
                                            Minimum="0" ParsingNumberStyle="Integer" />
 
                             <CheckBox Grid.Row="1" Grid.Column="0" Content="Min Range (ft):"
-                                      IsChecked="{Binding SpellEditor.MinRangeChecked}" />
+                                      IsChecked="{Binding #Root.SpellEditor.MinRangeChecked}" />
                             <NumericUpDown Grid.Row="1" Grid.Column="1"
-                                           IsEnabled="{Binding SpellEditor.MinRangeChecked}"
+                                           IsEnabled="{Binding #Root.SpellEditor.MinRangeChecked}"
                                            ShowButtonSpinner="False"
-                                           Value="{Binding SpellEditor.EditCopy.Range.MinRange}"
+                                           Value="{Binding #Root.SpellEditor.EditCopy.Range.MinRange}"
                                            Minimum="0" ParsingNumberStyle="Integer" />
 
                             <CheckBox Grid.Row="2" Grid.Column="0" Content="Area Radius (ft)"
-                                      IsChecked="{Binding SpellEditor.AreaRadiusChecked}" />
+                                      IsChecked="{Binding #Root.SpellEditor.AreaRadiusChecked}" />
                             <NumericUpDown Grid.Row="2" Grid.Column="1"
-                                           IsEnabled="{Binding SpellEditor.AreaRadiusChecked}"
+                                           IsEnabled="{Binding #Root.SpellEditor.AreaRadiusChecked}"
                                            ShowButtonSpinner="False"
-                                           Value="{Binding SpellEditor.EditCopy.Range.AreaRadius}"
+                                           Value="{Binding #Root.SpellEditor.EditCopy.Range.AreaRadius}"
                                            Minimum="0" ParsingNumberStyle="Integer" />
                         </Grid>
 
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
                             <Grid.IsVisible>
                                 <MultiBinding Converter="{StaticResource Equals}">
-                                    <Binding Path="SpellEditor.EditCopy.Range.Type" />
+                                    <Binding Path="#Root.SpellEditor.EditCopy.Range.Type" />
                                     <Binding Source="{x:Static enums:RangeType.Ranged}" />
                                 </MultiBinding>
                             </Grid.IsVisible>
@@ -137,29 +118,29 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="Normal Range (ft):" />
                             <NumericUpDown Grid.Row="0" Grid.Column="1"
                                            ShowButtonSpinner="False"
-                                           Value="{Binding SpellEditor.EditCopy.Range.MaxRange}"
+                                           Value="{Binding #Root.SpellEditor.EditCopy.Range.MaxRange}"
                                            Minimum="0" ParsingNumberStyle="Integer" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="Long Range (ft):" />
                             <NumericUpDown Grid.Row="1" Grid.Column="1"
                                            ShowButtonSpinner="False"
-                                           Value="{Binding SpellEditor.EditCopy.Range.LongRange}"
+                                           Value="{Binding #Root.SpellEditor.EditCopy.Range.LongRange}"
                                            Minimum="0" ParsingNumberStyle="Integer" />
 
                             <CheckBox Grid.Row="2" Grid.Column="0" Content="Min Range (ft):"
-                                      IsChecked="{Binding SpellEditor.MinRangeChecked}" />
+                                      IsChecked="{Binding #Root.SpellEditor.MinRangeChecked}" />
                             <NumericUpDown Grid.Row="2" Grid.Column="1"
-                                           IsEnabled="{Binding SpellEditor.MinRangeChecked}"
+                                           IsEnabled="{Binding #Root.SpellEditor.MinRangeChecked}"
                                            ShowButtonSpinner="False"
-                                           Value="{Binding SpellEditor.EditCopy.Range.MinRange}"
+                                           Value="{Binding #Root.SpellEditor.EditCopy.Range.MinRange}"
                                            Minimum="0" ParsingNumberStyle="Integer" />
 
                             <CheckBox Grid.Row="3" Grid.Column="0" Content="Area Radius (ft)"
-                                      IsChecked="{Binding SpellEditor.AreaRadiusChecked}" />
+                                      IsChecked="{Binding #Root.SpellEditor.AreaRadiusChecked}" />
                             <NumericUpDown Grid.Row="3" Grid.Column="1"
-                                           IsEnabled="{Binding SpellEditor.AreaRadiusChecked}"
+                                           IsEnabled="{Binding #Root.SpellEditor.AreaRadiusChecked}"
                                            ShowButtonSpinner="False"
-                                           Value="{Binding SpellEditor.EditCopy.Range.AreaRadius}"
+                                           Value="{Binding #Root.SpellEditor.EditCopy.Range.AreaRadius}"
                                            Minimum="0" ParsingNumberStyle="Integer" />
                         </Grid>
                         <Separator />
@@ -167,21 +148,21 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Duration (s):" />
-                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding SpellEditor.EditCopy.Duration}"
+                        <NumericUpDown ShowButtonSpinner="False" Value="{Binding #Root.SpellEditor.EditCopy.Duration}"
                                        Minimum="0" ParsingNumberStyle="Integer" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding SpellEditor.EditCopy.Verbal}" Content="V" />
-                        <CheckBox IsChecked="{Binding SpellEditor.EditCopy.Somatic}" Content="S" />
-                        <CheckBox IsChecked="{Binding SpellEditor.EditCopy.Material}" Content="M" />
+                        <CheckBox IsChecked="{Binding #Root.SpellEditor.EditCopy.Verbal}" Content="V" />
+                        <CheckBox IsChecked="{Binding #Root.SpellEditor.EditCopy.Somatic}" Content="S" />
+                        <CheckBox IsChecked="{Binding #Root.SpellEditor.EditCopy.Material}" Content="M" />
                     </StackPanel>
 
                     <Button Content="Spell Lists">
                         <Button.Flyout>
                             <Flyout>
                                 <ScrollViewer>
-                                    <ItemsControl ItemsSource="{Binding SpellEditor.SpellListEntries}">
+                                    <ItemsControl ItemsSource="{Binding #Root.SpellEditor.SpellListEntries}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Vertical" />
@@ -193,11 +174,10 @@
                         </Button.Flyout>
                     </Button>
 
-                    <TextBox Text="{Binding SpellEditor.EditCopy.Description}"
+                    <TextBox Text="{Binding #Root.SpellEditor.EditCopy.Description}"
                              AcceptsReturn="True"
                              TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </ScrollViewer>
         </Border>
-    </Panel>
 </UserControl>

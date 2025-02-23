@@ -10,59 +10,85 @@
              x:Class="DndSpellbook.Views.SpellsView">
     <UserControl.DataTemplates>
         <DataTemplate DataType="{x:Type controls:SpellCardViewModel}">
-            <controls:SpellCard DataContext="{Binding}" Margin="15"/>
+            <controls:SpellCard DataContext="{Binding}" Margin="15" />
         </DataTemplate>
     </UserControl.DataTemplates>
 
-    <Grid RowDefinitions="Auto,*" Margin="10 10 0 10 ">
-        <StackPanel Grid.Row="0" Orientation="Vertical">
-            <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New" />
-            <Button Command="{Binding ImportSpellsCommand}" Content="Import"/>
-            <Button Command="{Binding ClearSpellsCommand}" Content="Delete all"/>
-            <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}" Content="Add Spells" />
-            <Button IsVisible="{Binding IsSelector}" Command="{Binding CancelCommand}" Content="Cancel" />
-            <CheckBox IsChecked="{Binding IsCardView}" Content="Cards" />
-            
-            <Separator/>
-            
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Orientation="Vertical" Background="{StaticResource Color5}">
             <StackPanel Orientation="Horizontal">
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Search:"/>
-                    <TextBox Text="{Binding FilterText}" Width="200"/>
-                </StackPanel>
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Min Level:"/>
-                    <NumericUpDown Value="{Binding FilterMinLevel}"
-                                   Minimum="0" Maximum="9"
-                                   Width="140"/>
-                </StackPanel>
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Max Level:"/>
-                    <NumericUpDown Value="{Binding FilterMaxLevel}"
-                                   Minimum="0" Maximum="9"
-                                   Width="140"/>
+                <StackPanel.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="Foreground" Value="Black" />
+                    </Style>
+                </StackPanel.Styles>
+
+                <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New" />
+                <Button Command="{Binding ImportSpellsCommand}" Content="Import" />
+                <Button Command="{Binding ClearSpellsCommand}" Content="Delete all" />
+                <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}"
+                        Content="Add Spells" />
+                <Button IsVisible="{Binding IsSelector}" Foreground="White" Command="{Binding CancelCommand}"
+                        Content="Cancel" />
+            </StackPanel>
+
+            <Separator />
+
+            <StackPanel Orientation="Horizontal" Margin="10" Spacing="10">
+                <StackPanel.Styles>
+                    <Style Selector="Label">
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="Foreground" Value="Black" />
+                    </Style>
+                </StackPanel.Styles>
+
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Search" />
+                        <TextBox Text="{Binding FilterText}" Width="400" />
                     </StackPanel>
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="School:"/>
-                    <ComboBox SelectedValue="{Binding FilterSchool}" ItemsSource="{Binding SpellSchools}"/>
+
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Page Size" />
+                            <ComboBox SelectedValue="{Binding PageRequest.Size}" ItemsSource="{Binding PageSizes}" />
+                        </StackPanel>
+
+                        <CheckBox VerticalAlignment="Bottom" IsChecked="{Binding IsCardView}" Content="Cards" />
+                    </StackPanel>
                 </StackPanel>
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Spell List:"/>
-                    <ComboBox SelectedValue="{Binding FilterSpellList}" ItemsSource="{Binding SpellListsWithNull}"
-                              DisplayMemberBinding="{Binding Name}"/>
+
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Min Level" />
+                        <ComboBox SelectedValue="{Binding FilterMinLevel}"
+                                  ItemsSource="{Binding Levels}"
+                                  Width="70" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Max Level" />
+                        <ComboBox SelectedValue="{Binding FilterMaxLevel}"
+                                  ItemsSource="{Binding Levels}"
+                                  Width="70" />
+                    </StackPanel>
                 </StackPanel>
-                
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Page Size:"/>
-                    <ComboBox SelectedValue="{Binding PageRequest.Size}" ItemsSource="{Binding PageSizes}"/>
+
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="School" />
+                        <ComboBox SelectedValue="{Binding FilterSchool}" ItemsSource="{Binding SpellSchools}"
+                                  Width="180" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Spell List" />
+                        <ComboBox SelectedValue="{Binding FilterSpellList}" ItemsSource="{Binding SpellListsWithNull}"
+                                  DisplayMemberBinding="{Binding Name}"
+                                  Width="180" />
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
-            
-            <Separator/>
         </StackPanel>
 
         <ScrollViewer Grid.Row="1">
@@ -70,18 +96,18 @@
                 <ItemsControl IsVisible="{Binding IsCardView}" ItemsSource="{Binding Spells.View}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel/>
+                            <WrapPanel />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
 
                 <StackPanel IsVisible="{Binding !IsCardView}" Orientation="Vertical">
-                    <TextBlock Margin="0 5">List of Spells: </TextBlock>
                     <ItemsControl ItemsSource="{Binding Spells.View}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid ColumnDefinitions="Auto,*">
-                                    <CheckBox Grid.Column="0" IsVisible="{Binding IsSelector}" IsChecked="{Binding IsSelected}" />
+                                    <CheckBox Grid.Column="0" IsVisible="{Binding IsSelector}"
+                                              IsChecked="{Binding IsSelected}" />
                                     <Expander Grid.Column="1" HorizontalAlignment="Stretch" Margin=" 0 3 10 3">
                                         <Expander.Header>
                                             <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
@@ -101,26 +127,6 @@
                     </ItemsControl>
                 </StackPanel>
             </StackPanel>
-            <!--<ItemsControl ItemsSource="{Binding Spells}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Expander>
-                            <Expander.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0 0 20 0" Text="{Binding Spell.Name}" />
-                                    <TextBlock>: Level </TextBlock>
-                                    <TextBlock Text="{Binding Spell.Level}" />
-                                </StackPanel>
-                            </Expander.Header>
-                        </Expander>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl> -->
         </ScrollViewer>
     </Grid>
 </UserControl>
