@@ -51,10 +51,6 @@ public class SpellCardViewModel : ReactiveObject
     readonly ObservableAsPropertyHelper<bool> isEditing;
     public bool IsEditing => isEditing.Value;
 
-    public SpellSchool[] Schools { get; }
-    public CastingTimeType[] CastingTimeTypes { get; }
-    public RangeType[] RangeTypes { get; }
-
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
     public ReactiveCommand<Spell, Unit> DeleteCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
@@ -64,8 +60,8 @@ public class SpellCardViewModel : ReactiveObject
         Spell spell,
         SpellList[] allSpellLists,
         SpellService spellService,
-        bool asSelector,
-        ReactiveCommand<Spell, Unit> deleteCommand)
+        ReactiveCommand<Spell, Unit> deleteCommand,
+        bool asSelector = false)
     {
         Spell = spell;
         Spell.Range = Spell.Range;
@@ -78,10 +74,6 @@ public class SpellCardViewModel : ReactiveObject
         isEditing = this.WhenAnyValue(x => x.SpellEditor)
             .Select(e => e != null)
             .ToProperty(this, x => x.IsEditing);
-
-        Schools = Enum.GetValues<SpellSchool>();
-        CastingTimeTypes = Enum.GetValues<CastingTimeType>();
-        RangeTypes = Enum.GetValues<RangeType>();
 
         EditCommand = ReactiveCommand.Create(
             Edit,

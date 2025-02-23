@@ -47,6 +47,11 @@
 
     <Grid ColumnDefinitions="200,*">
         <StackPanel Grid.Column="0" Background="{StaticResource Color1}" Orientation="Vertical">
+            <StackPanel Margin="5,5,5,20">
+                <Image Margin="10" Source="/Assets/dndspellbook_icon.png" Stretch="Uniform" Width="128" Height="128"/>
+                <TextBlock Text="Spellbook" FontSize="22" Foreground="{StaticResource Color4}" FontWeight="DemiBold" HorizontalAlignment="Center"/>
+            </StackPanel>
+            
             <Button Classes="sidebar-button" Command="{Binding NavigateCommand}" CommandParameter="spells"
                     Content="Spells"/>
             <Button Classes="sidebar-button" Command="{Binding NavigateCommand}" CommandParameter="characters"

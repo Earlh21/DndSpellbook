@@ -6,18 +6,31 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellExpander"
              x:DataType="controls:SpellExpanderViewModel">
-        <Expander HorizontalAlignment="Stretch">
-            <Expander.Header>
-                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
-                    <TextBlock FontWeight="Bold"
-                               Text="{Binding Spell.Level}"/>
-                    <Image Width="32" Height="32"
-                           Source="{Binding Spell.School, Converter={StaticResource SpellSchoolToIcon}}"
-                           Margin="0,0,5,0"/>
-                    <CheckBox IsVisible="{Binding IsSelector}"
-                              IsChecked="{Binding IsSelected}" />
-                    <TextBlock Text="{Binding Spell.Name}"/>
+    <Expander HorizontalAlignment="Stretch">
+        <Expander.Header>
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
+                <TextBlock FontWeight="Bold"
+                           Text="{Binding Spell.Level}" />
+                <Image Width="32" Height="32"
+                       Source="{Binding Spell.School, Converter={StaticResource SpellSchoolToIcon}}"
+                       Margin="0,0,5,0" />
+                <CheckBox IsVisible="{Binding IsSelector}"
+                          IsChecked="{Binding IsSelected}" />
+                <TextBlock Text="{Binding Spell.Name}" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                    <Button Content="Edit" Command="{Binding EditCommand}" />
+                    <Button Content="Delete"
+                            Command="{Binding DeleteCommand}"
+                            CommandParameter="{Binding Spell}" />
                 </StackPanel>
-            </Expander.Header>
-        </Expander>
+            </StackPanel>
+        </Expander.Header>
+
+        <Panel>
+            <controls:SpellExpanderViewer IsVisible="{Binding !IsEditing}" Spell="{Binding Spell}" />
+            <controls:SpellCardEditor IsVisible="{Binding IsEditing}" SpellEditor="{Binding SpellEditor}"
+                                      SaveCommand="{Binding SaveCommand}" CancelCommand="{Binding CancelCommand}" />
+        </Panel>
+    </Expander>
 </UserControl>

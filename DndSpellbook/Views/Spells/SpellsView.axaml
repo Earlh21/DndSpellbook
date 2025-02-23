@@ -48,13 +48,23 @@
                     <StackPanel Orientation="Vertical">
                         <Label Content="School" />
                         <ComboBox SelectedValue="{Binding FilterSchool}" ItemsSource="{Binding SpellSchools}"
+                                  DisplayMemberBinding="{Binding FallbackValue=''}"
                                   Width="180" />
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical">
                         <Label Content="Spell List" />
                         <ComboBox SelectedValue="{Binding FilterSpellList}" ItemsSource="{Binding SpellListsWithNull}"
-                                  DisplayMemberBinding="{Binding Name}"
+                                  DisplayMemberBinding="{Binding Name, FallbackValue=''}"
+                                  Width="180" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Damage Type" />
+                        <ComboBox SelectedValue="{Binding FilterDamageType}" ItemsSource="{Binding DamageTypes}"
+                                  DisplayMemberBinding="{Binding FallbackValue=''}"
                                   Width="180" />
                     </StackPanel>
                 </StackPanel>
@@ -85,7 +95,7 @@
                         <Button Background="Transparent"
                                 Command="{Binding TogglePaneCommand}">
                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock FontSize="12" Text="Filters"/>
+                                <TextBlock FontSize="12" Text="Filters" />
                                 <materialIcons:MaterialIcon IsVisible="{Binding IsPaneOpen}" Kind="ChevronUp" />
                                 <materialIcons:MaterialIcon IsVisible="{Binding !IsPaneOpen}" Kind="ChevronDown" />
                             </StackPanel>

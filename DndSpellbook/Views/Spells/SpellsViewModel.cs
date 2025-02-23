@@ -13,9 +13,12 @@ using DndSpellbook.Data.Models.Enums;
 using DndSpellbook.Data.Services;
 using DndSpellbook.Navigation;
 using DndSpellbook.Util;
+using DynamicData;
 using DynamicData.Binding;
+using DynamicData.PLinq;
 using ReactiveUI;
 using Splat;
+using PageRequest = DndSpellbook.Util.PageRequest;
 
 namespace DndSpellbook.Views;
 
@@ -63,6 +66,13 @@ public class SpellsViewModel : ViewModelBase, IDialog
         get => filterSpellList;
         set => this.RaiseAndSetIfChanged(ref filterSpellList, value);
     }
+    
+    private DamageType? filterDamageType;
+    public DamageType? FilterDamageType
+    {
+        get => filterDamageType;
+        set => this.RaiseAndSetIfChanged(ref filterDamageType, value);
+    }
 
     private string filterText = "";
 
@@ -88,21 +98,11 @@ public class SpellsViewModel : ViewModelBase, IDialog
         set => this.RaiseAndSetIfChanged(ref isCardView, value);
     }
 
-    private FilteredCollection<SpellCardViewModel> cards;
+    private SourceCache<SpellExpanderViewModel, int> Expanders { get; } = new(x => x.Spell.Id);
+    public ReadOnlyObservableCollection<SpellExpanderViewModel> ExpandersView { get; }
 
-    public FilteredCollection<SpellCardViewModel> Cards
-    {
-        get => cards;
-        set => this.RaiseAndSetIfChanged(ref cards, value);
-    }
-
-    private FilteredCollection<SpellExpanderViewModel> expanders;
-
-    public FilteredCollection<SpellExpanderViewModel> Expanders
-    {
-        get => expanders;
-        set => this.RaiseAndSetIfChanged(ref expanders, value);
-    }
+    private SourceCache<SpellCardViewModel, int> Cards { get; } = new(x => x.Spell.Id);
+    public ReadOnlyObservableCollection<SpellCardViewModel> CardsView { get; }
 
     private ObservableCollection<SpellList> spellLists = new();
 
@@ -120,13 +120,15 @@ public class SpellsViewModel : ViewModelBase, IDialog
         set => this.RaiseAndSetIfChanged(ref spellListsWithNull, value);
     }
 
-    public PageRequest PageRequest { get; } = new(1, 25);
-    public static int[] PageSizes { get; } = [10, 25, 50, 100, 1000];
+    public PageRequest PageRequest { get; } = new(1, 100);
+    public static int[] PageSizes { get; } = [50, 200, 1000];
     public static int[] Levels { get; } = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    public int MaxPage => (int)Math.Ceiling((double)Cards.AllItems.Count / PageRequest.Size);
+    public int MaxPage => (int)Math.Ceiling((double)Cards.Items.Count / PageRequest.Size);
 
     public SpellSchool?[] SpellSchools =>
         Enum.GetValues<SpellSchool>().Select(x => (SpellSchool?)x).Prepend(null).ToArray();
+    public DamageType?[] DamageTypes =>
+        Enum.GetValues<DamageType>().Select(x => (DamageType?)x).Prepend(null).ToArray();
 
     public ReactiveCommand<Unit, Unit> NewSpellCommand { get; }
     public ReactiveCommand<Unit, Unit> TogglePaneCommand { get; }
@@ -137,6 +139,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public ReactiveCommand<Unit, Unit> ClearSpellsCommand { get; }
 
     public Interaction<Unit, string?> OpenImportSpellsFile { get; } = new();
+    public Interaction<Unit, bool> DeleteSpellsConfirmation { get; } = new();
 
     public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false,
         bool asCardView = false)
@@ -155,27 +158,48 @@ public class SpellsViewModel : ViewModelBase, IDialog
         ClearSpellsCommand = ReactiveCommand.CreateFromTask(ClearSpells);
 
 
-        Func<Spell, bool> levelFilter = spell => spell.Level >= FilterMinLevel && spell.Level <= FilterMaxLevel;
-        Func<SpellCardViewModel, bool> cardLevelFilter = card => levelFilter(card.Spell);
-        Func<SpellExpanderViewModel, bool> expanderLevelFilter = expander => levelFilter(expander.Spell);
+        Func<SpellCardViewModel, bool> cardLevelFilter = card => LevelFilter(card.Spell);
+        Func<SpellExpanderViewModel, bool> expanderLevelFilter = expander => LevelFilter(expander.Spell);
 
-        Func<Spell, bool> schoolFilter = spell =>
-        {
-            if (FilterSchool != null && spell.School != FilterSchool) return false;
-            return true;
-        };
-        Func<SpellCardViewModel, bool> cardSchoolFilter = card => schoolFilter(card.Spell);
-        Func<SpellExpanderViewModel, bool> expanderSchoolFilter = expander => schoolFilter(expander.Spell);
+        Func<SpellCardViewModel, bool> cardSchoolFilter = card => SchoolFilter(card.Spell);
+        Func<SpellExpanderViewModel, bool> expanderSchoolFilter = expander => SchoolFilter(expander.Spell);
 
-        Func<Spell, bool> listFilter = spell =>
-        {
-            if (FilterSpellList != null && !spell.SpellLists.Contains(FilterSpellList)) return false;
-            return true;
-        };
-        Func<SpellCardViewModel, bool> cardListFilter = card => listFilter(card.Spell);
-        Func<SpellExpanderViewModel, bool> expanderListFilter = expander => listFilter(expander.Spell);
+        Func<SpellCardViewModel, bool> cardListFilter = card => ListFilter(card.Spell);
+        Func<SpellExpanderViewModel, bool> expanderListFilter = expander => ListFilter(expander.Spell);
 
-        Func<Spell, bool> textFilter = spell =>
+        Func<SpellCardViewModel, bool> damageTypeFilter = card => DamageTypeFilter(card.Spell);
+        Func<SpellExpanderViewModel, bool> damageTypeFilterExpander = expander => DamageTypeFilter(expander.Spell);
+        
+        Func<SpellCardViewModel, bool> cardTextFilter = card => TextFilter(card.Spell);
+        Func<SpellExpanderViewModel, bool> expanderTextFilter = expander => TextFilter(expander.Spell);
+
+        Expanders.Connect()
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterText).Select(_ => expanderTextFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterMinLevel).Select(_ => expanderLevelFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterMaxLevel).Select(_ => expanderLevelFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterSchool).Select(_ => expanderSchoolFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterDamageType).Select(_ => damageTypeFilterExpander))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterSpellList).Select(_ => expanderListFilter))
+            .SortAndPage(new SpellComparer(), PageRequest.AsObservable())
+            .Bind(out var expandersView)
+            .Subscribe();
+
+        Cards.Connect()
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterText).Select(_ => cardTextFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterMinLevel).Select(_ => cardLevelFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterMaxLevel).Select(_ => cardLevelFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterSchool).Select(_ => cardSchoolFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterDamageType).Select(_ => damageTypeFilter))
+            .Filter(this.WhenPropertyChanged(vm => vm.FilterSpellList).Select(_ => cardListFilter))
+            .SortAndPage(new SpellComparer(), PageRequest.AsObservable())
+            .Bind(out var cardsView)
+            .Subscribe();
+
+        ExpandersView = expandersView;
+        CardsView = cardsView;
+        return;
+
+        bool TextFilter(Spell spell)
         {
             if (String.IsNullOrWhiteSpace(FilterText)) return true;
 
@@ -183,32 +207,28 @@ public class SpellsViewModel : ViewModelBase, IDialog
                    spell.Description.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
                    spell.School.ToString().Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
                    spell.SpellLists.Any(l => l.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase));
-        };
-        Func<SpellCardViewModel, bool> cardTextFilter = card => textFilter(card.Spell);
-        Func<SpellExpanderViewModel, bool> expanderTextFilter = expander => textFilter(expander.Spell);
+        }
 
-        cards = new(x => x.Spell.Id,
-            new SpellComparer(),
-            PageRequest.AsObservable(),
-            this.WhenValueChanged(vm => vm.FilterMinLevel).Select(_ => cardLevelFilter),
-            this.WhenValueChanged(vm => vm.FilterMaxLevel).Select(_ => cardLevelFilter),
-            this.WhenValueChanged(vm => vm.FilterSchool).Select(_ => cardSchoolFilter),
-            this.WhenValueChanged(vm => vm.FilterSpellList).Select(_ => cardListFilter),
-            this.WhenValueChanged(vm => vm.FilterText).Select(_ => cardTextFilter)
-        );
+        bool LevelFilter(Spell spell) => spell.Level >= FilterMinLevel && spell.Level <= FilterMaxLevel;
 
-        expanders = new(x => x.Spell.Id,
-            new SpellComparer(),
-            PageRequest.AsObservable(),
-            this.WhenValueChanged(vm => vm.FilterText).Select(_ => expanderTextFilter),
-            this.WhenValueChanged(vm => vm.FilterMinLevel).Select(_ => expanderLevelFilter),
-            this.WhenValueChanged(vm => vm.FilterMaxLevel).Select(_ => expanderLevelFilter),
-            this.WhenValueChanged(vm => vm.FilterSchool).Select(_ => expanderSchoolFilter),
-            this.WhenValueChanged(vm => vm.FilterSpellList).Select(_ => expanderListFilter),
-            this.WhenValueChanged(vm => vm.FilterText).Select(_ => expanderTextFilter)
-        );
+        bool SchoolFilter(Spell spell)
+        {
+            if (FilterSchool != null && spell.School != FilterSchool) return false;
+            return true;
+        }
 
-        PageRequest.Size = 100;
+        bool ListFilter(Spell spell)
+        {
+            if (FilterSpellList != null && !spell.SpellLists.Contains(FilterSpellList)) return false;
+            return true;
+        }
+        
+        bool DamageTypeFilter(Spell spell)
+        {
+            if (FilterDamageType == null) return true;
+            
+            return spell.Description.Contains(FilterDamageType.ToString()!, StringComparison.OrdinalIgnoreCase);
+        }
     }
 
     public async Task LoadDataAsync()
@@ -218,12 +238,18 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
         var spellListArray = fetchedSpellLists.ToArray();
 
-        Cards.ReplaceAll(fetchedSpells.Select(s =>
-            new SpellCardViewModel(s, spellListArray, spellService, IsSelector, DeleteSpellCommand)));
-        Expanders.ReplaceAll(fetchedSpells.Select(s => new SpellExpanderViewModel(s, IsSelector)));
+        Cards.Clear();
+        Cards.AddOrUpdate(fetchedSpells.Select(s =>
+            new SpellCardViewModel(s, spellListArray, spellService, DeleteSpellCommand, IsSelector)));
+
+        Expanders.Clear();
+        Expanders.AddOrUpdate(fetchedSpells.Select(s =>
+            new SpellExpanderViewModel(s, spellListArray, spellService, DeleteSpellCommand, IsSelector)));
 
         SpellLists = new(fetchedSpellLists);
         SpellListsWithNull = new(fetchedSpellLists.Prepend(null));
+
+        PageRequest.Size = 200;
     }
 
     private void TogglePaneOpen()
@@ -243,11 +269,11 @@ public class SpellsViewModel : ViewModelBase, IDialog
         var spell = new Spell("Name");
         await spellService.AddAsync(spell);
 
-        var card = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, IsSelector,
-            DeleteSpellCommand);
+        var card = new SpellCardViewModel(spell, spellLists.ToArray(), spellService, DeleteSpellCommand, IsSelector);
         Cards.AddOrUpdate(card);
 
-        var expander = new SpellExpanderViewModel(spell, IsSelector);
+        var expander = new SpellExpanderViewModel(spell, spellLists.ToArray(), spellService, DeleteSpellCommand,
+            IsSelector);
         Expanders.AddOrUpdate(expander);
     }
 
@@ -262,12 +288,16 @@ public class SpellsViewModel : ViewModelBase, IDialog
         await spellService.AddAsync(data.NewSpells);
 
         Cards.AddOrUpdate(data.NewSpells.Select(s =>
-            new SpellCardViewModel(s, spellLists.ToArray(), spellService, IsSelector, DeleteSpellCommand)));
-        Expanders.AddOrUpdate(data.NewSpells.Select(s => new SpellExpanderViewModel(s, IsSelector)));
+            new SpellCardViewModel(s, spellLists.ToArray(), spellService, DeleteSpellCommand, IsSelector)));
+        Expanders.AddOrUpdate(data.NewSpells.Select(s => new SpellExpanderViewModel(s, spellLists.ToArray(),
+            spellService,
+            DeleteSpellCommand, IsSelector)));
     }
 
     private async Task ClearSpells()
     {
+        if(!await DeleteSpellsConfirmation.Handle(Unit.Default)) return;
+        
         await spellService.ClearAsync();
         await LoadDataAsync();
     }
@@ -276,11 +306,11 @@ public class SpellsViewModel : ViewModelBase, IDialog
     {
         if (IsCardView)
         {
-            Closed?.Invoke(this, Cards.AllItems.Where(s => s.IsSelected).Select(s => s.Spell.Id));
+            Closed?.Invoke(this, Cards.Items.Where(s => s.IsSelected).Select(s => s.Spell.Id));
         }
         else
         {
-            Closed?.Invoke(this, Expanders.AllItems.Where(s => s.IsSelected).Select(s => s.Spell.Id));
+            Closed?.Invoke(this, Expanders.Items.Where(s => s.IsSelected).Select(s => s.Spell.Id));
         }
     }
 

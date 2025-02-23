@@ -6,7 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:DataType="views:MainViewModel"
         x:Class="DndSpellbook.Windows.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/dndspellbook_icon.ico"
         Title="DndSpellbook">
     <views:MainView DataContext="{Binding}" />
 </Window>

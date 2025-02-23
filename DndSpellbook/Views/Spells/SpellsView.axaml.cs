@@ -9,6 +9,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using DynamicData.Binding;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 using ReactiveUI;
 
 namespace DndSpellbook.Views;
@@ -35,6 +37,24 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
         {
             var path = await OpenImportSpellsFile();
             interaction.SetOutput(path);
+        });
+
+        vm.DeleteSpellsConfirmation.RegisterHandler(async interaction =>
+        {
+            if (TopLevel.GetTopLevel(this) is not Window window)
+            {
+                interaction.SetOutput(false);
+                return;
+            }
+
+            var result = await MessageBoxManager
+                .GetMessageBoxStandard(
+                    "Delete All Spells",
+                    "Are you sure want to delete all spells?",
+                    ButtonEnum.YesNo
+                ).ShowWindowDialogAsync(window) == ButtonResult.Yes;
+            
+            interaction.SetOutput(result);
         });
 
         vm.WhenPropertyChanged(x => x.IsCardView).Subscribe(_ =>

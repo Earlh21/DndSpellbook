@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using DynamicData;
 using DynamicData.Binding;
 
@@ -10,9 +9,8 @@ namespace DndSpellbook.Util;
 public class FilteredCollection<T> where T : notnull
 {
     private readonly SourceCache<T, int> sourceCache;
-    private ReadOnlyObservableCollection<T> view;
     
-    public ReadOnlyObservableCollection<T> View => view;
+    public ReadOnlyObservableCollection<T> View { get; }
     public IReadOnlyList<T> AllItems => sourceCache.Items;
 
     private IObservable<Func<T, bool>>[] filters;
@@ -35,7 +33,8 @@ public class FilteredCollection<T> where T : notnull
 
         if (pagination == null && sorter != null)
         {
-            observable.SortAndBind(out view, sorter).Subscribe();
+            observable.SortAndBind(out var view, sorter).Subscribe();
+            View = view;
             return;
         }
         else if (pagination != null && sorter == null)
@@ -49,7 +48,8 @@ public class FilteredCollection<T> where T : notnull
             observable = observable.SortAndPage(sorter, pagination);
         }
         
-        observable.Bind(out view).Subscribe();
+        observable.Bind(out var view2).Subscribe();
+        View = view2;
     }
 
     public FilteredCollection(Func<T, int> idSelector, params IObservable<Func<T, bool>>[] filters) : this(idSelector, null, null, filters)

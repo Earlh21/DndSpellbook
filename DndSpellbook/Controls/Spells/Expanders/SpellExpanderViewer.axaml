@@ -1,0 +1,41 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mdxaml="https://github.com/whistyun/Markdown.Avalonia.Tight"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DndSpellbook.Controls.SpellExpanderViewer"
+             x:Name="Root">
+    <StackPanel Margin="10" Orientation="Vertical">
+        <TextBlock Text="{Binding #Root.Spell.Name}"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   Margin="5" />
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <TextBlock Text="Level: " FontWeight="Bold" />
+            <TextBlock Text="{Binding #Root.Spell.Level}" Margin="0,0,10,0" />
+            <TextBlock Text="School: " FontWeight="Bold" />
+            <TextBlock Text="{Binding #Root.Spell.School}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <StackPanel Width="200">
+                <TextBlock Text="Casting Time:" FontWeight="Bold" />
+                <TextBlock Text="{Binding #Root.Spell.CastingTime}" />
+                <TextBlock Text="Range:" FontWeight="Bold" Margin="0,10,0,0" />
+                <TextBlock Text="{Binding #Root.Spell.Range}" />
+            </StackPanel>
+            <StackPanel Width="200" Margin="20,0,0,0">
+                <TextBlock Text="Components:" FontWeight="Bold" />
+                <StackPanel Orientation="Horizontal" Spacing="3">
+                    <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Verbal}" Content="V" />
+                    <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Somatic}" Content="S" />
+                    <CheckBox IsEnabled="False" IsChecked="{Binding #Root.Spell.Material}" Content="M" />
+                </StackPanel>
+                <TextBlock Text="Duration:" FontWeight="Bold" Margin="0,10,0,0" />
+                <TextBlock Text="{Binding #Root.Spell.Duration}" />
+            </StackPanel>
+        </StackPanel>
+        <mdxaml:MarkdownScrollViewer Margin="5" MaxWidth="400" HorizontalAlignment="Left"
+                                     Markdown="{Binding #Root.Spell.Description}" />
+    </StackPanel>
+</UserControl>

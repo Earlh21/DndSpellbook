@@ -19,7 +19,6 @@ public partial class SpellCardViewer : UserControl
         set => SetValue(SpellProperty, value);
     }
 
-    // IsSelector property
     public static readonly StyledProperty<bool> IsSelectorProperty =
         AvaloniaProperty.Register<SpellCardViewer, bool>(nameof(IsSelector));
 
@@ -29,7 +28,6 @@ public partial class SpellCardViewer : UserControl
         set => SetValue(IsSelectorProperty, value);
     }
 
-    // IsSelected property
     public static readonly StyledProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<SpellCardViewer, bool>(nameof(IsSelected), defaultBindingMode: BindingMode.TwoWay);
 
