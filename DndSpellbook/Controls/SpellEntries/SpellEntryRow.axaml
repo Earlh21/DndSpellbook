@@ -7,8 +7,12 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellEntryRow"
              x:Name="Root">
-    <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Name}" Width="350" />
+    <StackPanel Orientation="Horizontal" Spacing="5">
+        <Image Width="32" Height="32"
+               Source="{Binding #Root.SpellEntryEditor.Entry.Spell.School, Converter={StaticResource SpellSchoolToIcon}}"/>
+        <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Level}" FontWeight="Bold"
+                   Margin="0,0,5,0"/>
+        <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Name}" Width="250" />
         <Button Content="Delete"
                 Command="{Binding #Root.DeleteCommand}"
                 CommandParameter="{Binding #Root.SpellEntryEditor}" />

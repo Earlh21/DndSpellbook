@@ -300,9 +300,10 @@ public class SpellsViewModel : ViewModelBase, IDialog
             if (x == null) return -1;
             if (y == null) return 1;
 
-            if (x.Level == y.Level) return String.Compare(x.Name, y.Name, StringComparison.Ordinal);
+            if (x.Level != y.Level) return x.Level.CompareTo(y.Level);
+            //if(x.School != y.School) return x.School.CompareTo(y.School);
 
-            return x.Level.CompareTo(y.Level);
+            return String.Compare(x.Name, y.Name, StringComparison.Ordinal);
         }
 
         public int Compare(SpellCardViewModel? x, SpellCardViewModel? y)

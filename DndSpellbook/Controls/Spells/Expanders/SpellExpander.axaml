@@ -9,11 +9,14 @@
         <Expander HorizontalAlignment="Stretch">
             <Expander.Header>
                 <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
+                    <TextBlock FontWeight="Bold"
+                               Text="{Binding Spell.Level}"/>
+                    <Image Width="32" Height="32"
+                           Source="{Binding Spell.School, Converter={StaticResource SpellSchoolToIcon}}"
+                           Margin="0,0,5,0"/>
                     <CheckBox IsVisible="{Binding IsSelector}"
                               IsChecked="{Binding IsSelected}" />
                     <TextBlock Text="{Binding Spell.Name}"/>
-                    <TextBlock FontWeight="Bold"
-                               Text="{Binding Spell.Level}"/>
                 </StackPanel>
             </Expander.Header>
         </Expander>
