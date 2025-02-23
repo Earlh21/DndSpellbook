@@ -25,6 +25,13 @@ public class SpellsViewModel : ViewModelBase, IDialog
     private readonly SpellService spellService;
     private readonly SpellListService spellListService;
 
+    private bool isPaneOpen = true;
+    public bool IsPaneOpen
+    {
+        get => isPaneOpen;
+        set => this.RaiseAndSetIfChanged(ref isPaneOpen, value);
+    }
+    
     private int filterMinLevel = 0;
 
     public int FilterMinLevel
@@ -110,6 +117,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public SpellSchool?[] SpellSchools => Enum.GetValues<SpellSchool>().Select(x => (SpellSchool?)x).Prepend(null).ToArray();
 
     public ReactiveCommand<Unit, Unit> NewSpellCommand { get; }
+    public ReactiveCommand<Unit, Unit> TogglePaneCommand { get; }
     public ReactiveCommand<SpellCardViewModel, Unit> DeleteSpellCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
@@ -127,11 +135,13 @@ public class SpellsViewModel : ViewModelBase, IDialog
         IsCardView = asCardView;
 
         NewSpellCommand = ReactiveCommand.CreateFromTask(NewSpell);
+        TogglePaneCommand = ReactiveCommand.Create(TogglePaneOpen);
         DeleteSpellCommand = ReactiveCommand.CreateFromTask<SpellCardViewModel>(DeleteSpell);
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
         ImportSpellsCommand = ReactiveCommand.CreateFromTask(ImportSpells);
         ClearSpellsCommand = ReactiveCommand.CreateFromTask(ClearSpells);
+        
         
         Func<SpellCardViewModel, bool> levelFilter = spell => spell.Spell.Level >= FilterMinLevel && spell.Spell.Level <= FilterMaxLevel;
 
@@ -169,7 +179,6 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
         PageRequest.Size = 100;
     }
-
     
     public async Task LoadDataAsync()
     {
@@ -183,6 +192,11 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
         SpellLists = new(fetchedSpellLists);
         SpellListsWithNull = new(fetchedSpellLists.Prepend(null));
+    }
+
+    private void TogglePaneOpen()
+    {
+        IsPaneOpen = !IsPaneOpen;
     }
 
     private async Task DeleteSpell(SpellCardViewModel spell)

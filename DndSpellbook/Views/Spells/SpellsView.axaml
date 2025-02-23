@@ -5,6 +5,7 @@
              xmlns:models="clr-namespace:DndSpellbook.Data.Models"
              xmlns:views="clr-namespace:DndSpellbook.Views"
              xmlns:controls="clr-namespace:DndSpellbook.Controls"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="views:SpellsViewModel"
              x:Class="DndSpellbook.Views.SpellsView">
@@ -16,25 +17,7 @@
 
     <Grid RowDefinitions="Auto,*">
         <StackPanel Grid.Row="0" Orientation="Vertical" Background="{StaticResource Color5}">
-            <StackPanel Orientation="Horizontal">
-                <StackPanel.Styles>
-                    <Style Selector="Button">
-                        <Setter Property="Foreground" Value="Black" />
-                    </Style>
-                </StackPanel.Styles>
-
-                <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New" />
-                <Button Command="{Binding ImportSpellsCommand}" Content="Import" />
-                <Button Command="{Binding ClearSpellsCommand}" Content="Delete all" />
-                <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}"
-                        Content="Add Spells" />
-                <Button IsVisible="{Binding IsSelector}" Foreground="White" Command="{Binding CancelCommand}"
-                        Content="Cancel" />
-            </StackPanel>
-
-            <Separator />
-
-            <StackPanel Orientation="Horizontal" Margin="10" Spacing="10">
+            <StackPanel IsVisible="{Binding IsPaneOpen}" Orientation="Horizontal" Margin="10" Spacing="10">
                 <StackPanel.Styles>
                     <Style Selector="Label">
                         <Setter Property="FontSize" Value="12" />
@@ -91,42 +74,42 @@
             </StackPanel>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1">
-            <StackPanel>
-                <ItemsControl IsVisible="{Binding IsCardView}" ItemsSource="{Binding Spells.View}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+        <Panel Grid.Row="1">
+            <Grid VerticalAlignment="Top" ZIndex="1" ColumnDefinitions="3*,Auto,1*">
+                <Border Grid.Column="1"
+                        CornerRadius="0,0,10,10"
+                        BorderThickness="0"
+                        Background="{StaticResource Color5}">
+                    <StackPanel Orientation="Horizontal" Spacing="5" Margin="10,0,10,0">
+                        <StackPanel.Styles>
+                            <Style Selector="Button">
+                                <Setter Property="Foreground" Value="Black" />
+                            </Style>
+                        </StackPanel.Styles>
 
-                <StackPanel IsVisible="{Binding !IsCardView}" Orientation="Vertical">
-                    <ItemsControl ItemsSource="{Binding Spells.View}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,*">
-                                    <CheckBox Grid.Column="0" IsVisible="{Binding IsSelector}"
-                                              IsChecked="{Binding IsSelected}" />
-                                    <Expander Grid.Column="1" HorizontalAlignment="Stretch" Margin=" 0 3 10 3">
-                                        <Expander.Header>
-                                            <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Spell.Name}"></TextBlock>
-                                                <TextBlock Margin="5 0 " FontWeight="Bold" Text="{Binding Spell.Level}"></TextBlock>
-                                            </StackPanel>
-                                        </Expander.Header>
-                                    </Expander>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
-            </StackPanel>
-        </ScrollViewer>
+                        <Button Margin="0 5" Command="{Binding NewSpellCommand}" Content="New" />
+                        <Button Command="{Binding ImportSpellsCommand}" Content="Import" />
+                        <Button Command="{Binding ClearSpellsCommand}" Content="Delete all" />
+                        <Button IsVisible="{Binding IsSelector}" Command="{Binding SaveCommand}"
+                                Content="Add Spells" />
+                        <Button IsVisible="{Binding IsSelector}" Foreground="White"
+                                Command="{Binding CancelCommand}"
+                                Content="Cancel" />
+                        <Button Background="Transparent"
+                                Command="{Binding TogglePaneCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock FontSize="12" Text="Filters"/>
+                                <materialIcons:MaterialIcon IsVisible="{Binding IsPaneOpen}" Kind="ChevronUp" />
+                                <materialIcons:MaterialIcon IsVisible="{Binding !IsPaneOpen}" Kind="ChevronDown" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <ScrollViewer x:Name="SpellsViewContainer">
+                <views:SpellExpandersView DataContext="{Binding}" Margin="0,30,0,0" />
+            </ScrollViewer>
+        </Panel>
     </Grid>
 </UserControl>

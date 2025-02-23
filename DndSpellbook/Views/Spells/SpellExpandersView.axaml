@@ -1,0 +1,36 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:DndSpellbook.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DndSpellbook.Views.SpellExpandersView"
+             x:DataType="views:SpellsViewModel">
+    <StackPanel IsVisible="{Binding !IsCardView}" Orientation="Vertical">
+        <ItemsControl ItemsSource="{Binding Spells.View}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="Auto,*">
+                        <CheckBox Grid.Column="0" IsVisible="{Binding IsSelector}"
+                                  IsChecked="{Binding IsSelected}" />
+                        <Expander Grid.Column="1" HorizontalAlignment="Stretch" Margin=" 0 3 10 3">
+                            <Expander.Header>
+                                <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Spell.Name}"></TextBlock>
+                                    <TextBlock Margin="5 0 " FontWeight="Bold"
+                                               Text="{Binding Spell.Level}">
+                                    </TextBlock>
+                                </StackPanel>
+                            </Expander.Header>
+                        </Expander>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

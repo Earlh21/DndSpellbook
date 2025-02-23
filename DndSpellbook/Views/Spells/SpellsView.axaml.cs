@@ -8,16 +8,21 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using DynamicData.Binding;
 using ReactiveUI;
 
 namespace DndSpellbook.Views;
 
 public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
 {
+    private SpellExpandersView? expandersView;
+    private SpellCardsView? cardsView;
+    
     public SpellsView()
     {
         this.WhenActivated(disposables => { });
         AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
     }
 
     protected override void OnDataContextChanged(EventArgs e)
@@ -30,6 +35,18 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
         {
             var path = await OpenImportSpellsFile();
             interaction.SetOutput(path);
+        });
+
+        vm.WhenPropertyChanged(x => x.IsCardView).Subscribe(_ =>
+        {
+            if (vm.IsCardView)
+            {
+                SetCardsView();
+            }
+            else
+            {
+                SetExpandersView();
+            }
         });
 
         Task.Run(vm.LoadDataAsync);
@@ -48,5 +65,37 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
 
         var files = await storage.OpenFilePickerAsync(options);
         return files.FirstOrDefault()?.TryGetLocalPath();
+    }
+
+    private void SetCardsView()
+    {
+        if (SpellsViewContainer.Content is SpellCardsView) return;
+        
+        if (SpellsViewContainer.Content is SpellExpandersView expandersView)
+        {
+            this.expandersView = expandersView;
+        }
+        
+        SpellsViewContainer.Content = cardsView ?? new SpellCardsView
+        {
+            DataContext = DataContext,
+            Margin = new(0,20,0,0)
+        };
+    }
+    
+    private void SetExpandersView()
+    {
+        if (SpellsViewContainer.Content is SpellExpandersView) return;
+        
+        if (SpellsViewContainer.Content is SpellCardsView cardsView)
+        {
+            this.cardsView = cardsView;
+        }
+        
+        SpellsViewContainer.Content = expandersView ?? new SpellExpandersView
+        {
+            DataContext = DataContext,
+            Margin = new(0,30,0,0)
+        };
     }
 }
