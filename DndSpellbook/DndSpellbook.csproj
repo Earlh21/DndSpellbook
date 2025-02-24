@@ -85,5 +85,8 @@
         <DependentUpon>SpellSlotPips.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Controls\LabelBox.axaml.cs">
+        <DependentUpon>LabelBox.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>
