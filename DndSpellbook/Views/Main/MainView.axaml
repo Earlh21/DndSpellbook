@@ -61,11 +61,6 @@
         </StackPanel>
 
         <reactiveUi:RoutedViewHost Grid.Column="1" Router="{Binding Router}" PageTransition="{x:Null}" Background="{StaticResource Color2}">
-            <reactiveUi:RoutedViewHost.DefaultContent>
-                <TextBlock Text="Default content"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
-            </reactiveUi:RoutedViewHost.DefaultContent>
             <reactiveUi:RoutedViewHost.ViewLocator>
                 <dndSpellbook:ViewLocator />
             </reactiveUi:RoutedViewHost.ViewLocator>

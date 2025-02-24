@@ -22,7 +22,9 @@
                 <TextBlock Text="{Binding Spell.Name}" />
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-                    <Button Content="Edit" Command="{Binding EditCommand}" />
+                    <Button Content="Edit" Command="{Binding EditCommand}" IsVisible="{Binding !IsEditing}"/>
+                    <Button Content="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsEditing}"/>
+                    <Button Content="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding IsEditing}"/>
                     <Button Content="Delete"
                             Command="{Binding DeleteCommand}"
                             CommandParameter="{Binding Spell}" />
@@ -32,8 +34,7 @@
 
         <Panel>
             <controls:SpellExpanderViewer IsVisible="{Binding !IsEditing}" Spell="{Binding Spell}" />
-            <controls:SpellCardEditor IsVisible="{Binding IsEditing}" SpellEditor="{Binding SpellEditor}"
-                                      SaveCommand="{Binding SaveCommand}" CancelCommand="{Binding CancelCommand}" />
+            <controls:SpellExpanderEditor SpellEditor="{Binding SpellEditor}" IsVisible="{Binding IsEditing}"/>
         </Panel>
     </Expander>
 </UserControl>
