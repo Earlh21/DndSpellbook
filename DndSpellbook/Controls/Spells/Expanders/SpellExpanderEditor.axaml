@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:enums="clr-namespace:DndSpellbook.Data.Models.Enums"
+             xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellExpanderEditor"
              x:Name="Root">
@@ -12,19 +13,23 @@
                      Text="{Binding #Root.SpellEditor.EditCopy.Name}" TextWrapping="WrapWithOverflow" />
         </Grid>
 
-        <StackPanel Orientation="Horizontal">
-            <Label Content="Level: " />
-            <NumericUpDown ShowButtonSpinner="False" Value="{Binding #Root.SpellEditor.EditCopy.Level}"
-                           Minimum="0" Maximum="9" ParsingNumberStyle="Integer" />
-        </StackPanel>
+        <controls:LabelComboBox Label="Level"
+                                Width="70"
+                                SelectedValue="{Binding #Root.SpellEditor.EditCopy.Level}"
+                                ItemsSource="{Binding #Root.SpellEditor.Levels}" />
 
-        <ComboBox SelectedItem="{Binding #Root.SpellEditor.EditCopy.School}"
-                  ItemsSource="{Binding #Root.SpellEditor.Schools}" />
+        <controls:LabelComboBox Label="School"
+                                Width="180"
+                                SelectedValue="{Binding #Root.SpellEditor.EditCopy.School}"
+                                ItemsSource="{Binding #Root.SpellEditor.Schools}" />
 
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <ComboBox ItemsSource="{Binding #Root.SpellEditor.CastingTimeTypes}"
-                          SelectedItem="{Binding #Root.SpellEditor.EditCopy.CastingTime.Type}" />
+                <controls:LabelComboBox Label="Casting Time"
+                                        Width="100"
+                                        SelectedValue="{Binding #Root.SpellEditor.EditCopy.CastingTime.Type}"
+                                        ItemsSource="{Binding #Root.SpellEditor.CastingTimeTypes}"
+                                        />
 
                 <CheckBox IsChecked="{Binding #Root.SpellEditor.EditCopy.CastingTime.Ritual}" Content="Ritual" />
             </StackPanel>
@@ -45,16 +50,17 @@
                 <TextBlock Text=" (s)" />
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal">
-                <StackPanel.IsVisible>
+            <controls:LabelBox Label="Reaction"
+                               Width="400"
+                               AllowsReturn="True"
+                               Text="{Binding #Root.SpellEditor.EditCopy.CastingTime.ReactionText}">
+                <controls:LabelBox.IsVisible>
                     <MultiBinding Converter="{StaticResource Equals}">
                         <Binding Path="#Root.SpellEditor.EditCopy.CastingTime.Type" />
                         <Binding Source="{x:Static enums:CastingTimeType.Reaction}" />
                     </MultiBinding>
-                </StackPanel.IsVisible>
-
-                <TextBox Text="{Binding #Root.SpellEditor.EditCopy.CastingTime.ReactionText}" />
-            </StackPanel>
+                </controls:LabelBox.IsVisible>
+            </controls:LabelBox>
         </StackPanel>
 
         <StackPanel Orientation="Vertical">
@@ -65,6 +71,11 @@
                 <ComboBox SelectedItem="{Binding #Root.SpellEditor.EditCopy.Range.Type}"
                           ItemsSource="{Binding #Root.SpellEditor.RangeTypes}" />
             </StackPanel>
+            
+            <controls:LabelComboBox Label="Range"
+                                    Width="180"
+                                    SelectedValue="{Binding #Root.SpellEditor.EditCopy.Range.Type}"
+                                    ItemsSource="{Binding #Root.SpellEditor.RangeTypes}" />
 
             <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">
                 <Grid.IsVisible>
@@ -166,6 +177,7 @@
 
         <TextBox Text="{Binding #Root.SpellEditor.EditCopy.Description}"
                  AcceptsReturn="True"
+                 Width="400"
                  TextWrapping="WrapWithOverflow" />
     </StackPanel>
 </UserControl>

@@ -15,6 +15,7 @@ public class SpellEditor : ReactiveObject
     public static CastingTimeType[] CastingTimeTypes { get; } = Enum.GetValues<CastingTimeType>();
     public static RangeType[] RangeTypes { get; } = Enum.GetValues<RangeType>();
     public static SpellSchool[] Schools { get; } = Enum.GetValues<SpellSchool>();
+    public static int[] Levels { get; } = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     private bool maxRangeChecked;
 
