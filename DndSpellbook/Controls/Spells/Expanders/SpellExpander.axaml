@@ -5,8 +5,11 @@
              xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellExpander"
-             x:DataType="controls:SpellExpanderViewModel">
-    <Expander HorizontalAlignment="Stretch">
+             x:DataType="controls:SpellExpanderViewModel"
+             x:Name="Root"
+             BorderBrush="Goldenrod" BorderThickness="1"
+             CornerRadius="15">
+    <Expander HorizontalAlignment="Stretch" CornerRadius="15">
         <Expander.Header>
             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
                 <TextBlock FontWeight="Bold"

@@ -17,6 +17,9 @@
         <converters:SpellSchoolIconConverter x:Key="SpellSchoolToIcon"/>
         <converters:SpellDescToColorConverter x:Key="SpellDescriptionToColor"/>
         <converters:SpellDescToBrushConverter x:Key="SpellDescriptionToBrush"/>
+        <converters:SpellSchoolBackgroundConverter x:Key="SpellSchoolToBackground"/>
+        <converters:IntToRomanNumeralConverter x:Key="IntToRomanNumeral"/>
+        <converters:LevelToBrushConverter x:Key="LevelToBrush"/>
         
         <SolidColorBrush Color="#461220" x:Key="Color1"/>
         <SolidColorBrush Color="#8C2F39" x:Key="Color2"/>

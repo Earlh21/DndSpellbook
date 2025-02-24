@@ -9,11 +9,14 @@
              x:Name="Root">
     <Border Width="224" Height="128"
             BorderThickness="1" BorderBrush="Goldenrod"
-            CornerRadius="15"
-            Background="DimGray">
+            CornerRadius="15">
+        <Border.Background>
+            <ImageBrush Source="{Binding #Root.Spell.School, Converter={StaticResource SpellSchoolToBackground}}"/>
+        </Border.Background>
+        
         <Panel>
-            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="30,30,0,0"
-                       Text="{Binding #Root.Spell.Level}" FontSize="16" Foreground="White" />
+            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0"
+                       Text="{Binding #Root.Spell.Level}" FontSize="24" Foreground="White"/>
 
             <Button VerticalAlignment="Top" HorizontalAlignment="Right"
                     Content="D"

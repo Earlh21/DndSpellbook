@@ -43,6 +43,7 @@ public partial class App : Application
         }
         
         SpellSchoolIconConverter.LoadImages();
+        SpellSchoolBackgroundConverter.LoadImages();
 
         base.OnFrameworkInitializationCompleted();
     }

@@ -60,7 +60,7 @@
                     Content="Spell Lists" />
         </StackPanel>
 
-        <reactiveUi:RoutedViewHost Grid.Column="1" Router="{Binding Router}" PageTransition="{x:Null}">
+        <reactiveUi:RoutedViewHost Grid.Column="1" Router="{Binding Router}" PageTransition="{x:Null}" Background="{StaticResource Color2}">
             <reactiveUi:RoutedViewHost.DefaultContent>
                 <TextBlock Text="Default content"
                            HorizontalAlignment="Center"
