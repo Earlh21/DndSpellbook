@@ -248,6 +248,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
     public async Task LoadDataAsync()
     {
+        await Task.Delay(3000);
         var fetchedSpells = await spellService.GetAllAsync();
         var fetchedSpellLists = await spellListService.GetAllAsync();
 

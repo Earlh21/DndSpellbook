@@ -9,7 +9,9 @@
              x:Name="Root"
              BorderBrush="Goldenrod" BorderThickness="1"
              CornerRadius="15">
-    <Expander HorizontalAlignment="Stretch" CornerRadius="15">
+    <Expander HorizontalAlignment="Stretch" CornerRadius="15" 
+              IsExpanded="{Binding IsExpanded, Mode=TwoWay}" 
+              x:Name="MainExpander">
         <Expander.Header>
             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
                 <TextBlock FontWeight="Bold"
@@ -31,10 +33,7 @@
                 </StackPanel>
             </StackPanel>
         </Expander.Header>
-
-        <Panel>
-            <controls:SpellExpanderViewer IsVisible="{Binding !IsEditing}" Spell="{Binding Spell}" />
-            <controls:SpellExpanderEditor SpellEditor="{Binding SpellEditor}" IsVisible="{Binding IsEditing}"/>
-        </Panel>
+        
+        <!-- Content will be added dynamically -->
     </Expander>
 </UserControl>

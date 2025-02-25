@@ -23,6 +23,14 @@ public class SpellExpanderViewModel : ReactiveObject
         get => isSelected;
         set => this.RaiseAndSetIfChanged(ref isSelected, value);
     }
+    
+    private bool isExpanded;
+    
+    public bool IsExpanded
+    {
+        get => isExpanded;
+        set => this.RaiseAndSetIfChanged(ref isExpanded, value);
+    }
 
     private Spell spell;
 
@@ -86,6 +94,8 @@ public class SpellExpanderViewModel : ReactiveObject
     private void Edit()
     {
         SpellEditor = new(Spell.Clone(), allSpellLists);
+        // Ensure expander is open when editing
+        IsExpanded = true;
     }
 
     private async Task Save()
