@@ -8,13 +8,13 @@ namespace DndSpellbook.Controls;
 
 public partial class LabelComboBox : UserControl
 {
-    public static readonly StyledProperty<object?> SelectedValueProperty =
-        AvaloniaProperty.Register<LabelComboBox, object?>(nameof(SelectedValue), defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<object?> SelectedItemProperty =
+        AvaloniaProperty.Register<LabelComboBox, object?>(nameof(SelectedItem), defaultBindingMode: BindingMode.TwoWay);
 
-    public object? SelectedValue
+    public object? SelectedItem
     {
-        get => GetValue(SelectedValueProperty);
-        set => SetValue(SelectedValueProperty, value);
+        get => GetValue(SelectedItemProperty);
+        set => SetValue(SelectedItemProperty, value);
     }
     
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =

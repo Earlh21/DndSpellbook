@@ -77,6 +77,11 @@ namespace DndSpellbook.Data.Models
             LongRange = longRange;
             AreaRadius = areaRadius;
         }
+        
+        public Range Clone()
+        {
+            return new Range(Type, MinRange, MaxRange, LongRange, AreaRadius);
+        }
 
         public override string ToString()
         {

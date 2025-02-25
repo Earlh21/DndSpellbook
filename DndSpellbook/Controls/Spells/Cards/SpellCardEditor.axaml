@@ -29,11 +29,11 @@
                                        Minimum="0" Maximum="9" ParsingNumberStyle="Integer" />
                     </StackPanel>
 
-                    <ComboBox SelectedItem="{Binding #Root.SpellEditor.EditCopy.School}" ItemsSource="{Binding #Root.SpellEditor.Schools}" />
+                    <ComboBox SelectedItem="{Binding #Root.SpellEditor.EditCopy.School}" ItemsSource="{Binding #Root.Schools}" />
 
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
-                            <ComboBox ItemsSource="{Binding #Root.SpellEditor.CastingTimeTypes}"
+                            <ComboBox ItemsSource="{Binding #Root.CastingTimeTypes}"
                                       SelectedItem="{Binding #Root.SpellEditor.EditCopy.CastingTime.Type}" />
                             
                             <CheckBox IsChecked="{Binding #Root.SpellEditor.EditCopy.CastingTime.Ritual}" Content="Ritual"/>
@@ -73,7 +73,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Range:" />
                             <ComboBox SelectedItem="{Binding #Root.SpellEditor.EditCopy.Range.Type}"
-                                      ItemsSource="{Binding #Root.SpellEditor.RangeTypes}" />
+                                      ItemsSource="{Binding #Root.RangeTypes}" />
                         </StackPanel>
 
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto">

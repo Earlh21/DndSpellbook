@@ -20,7 +20,7 @@
 
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <StackPanel Orientation="Vertical">
-                            <Label Content="Page Size" />
+                            <Label Content="Limit" />
                             <ComboBox SelectedValue="{Binding PageRequest.Size}" ItemsSource="{Binding PageSizes}" />
                         </StackPanel>
 

@@ -116,8 +116,8 @@ namespace DndSpellbook.Data.Models
             {
                 Level = Level,
                 School = School,
-                CastingTime = CastingTime,
-                Range = Range,
+                CastingTime = CastingTime.Clone(),
+                Range = Range.Clone(),
                 Duration = Duration,
                 Verbal = Verbal,
                 Somatic = Somatic,

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 
 namespace DndSpellbook.Controls;
 
@@ -24,7 +25,7 @@ public partial class LabelBox : UserControl
         get => GetValue(LabelProperty);
         set => SetValue(LabelProperty, value);
     }
-    
+
     private static readonly StyledProperty<bool> AllowsReturnProperty =
         AvaloniaProperty.Register<LabelBox, bool>(nameof(AllowsReturn), defaultValue: false);
 
@@ -32,6 +33,15 @@ public partial class LabelBox : UserControl
     {
         get => GetValue(AllowsReturnProperty);
         set => SetValue(AllowsReturnProperty, value);
+    }
+
+    private static readonly StyledProperty<TextWrapping> TextWrappingProperty =
+        AvaloniaProperty.Register<LabelBox, TextWrapping>(nameof(TextWrapping), defaultValue: TextWrapping.NoWrap);
+
+    public TextWrapping TextWrapping
+    {
+        get => GetValue(TextWrappingProperty);
+        set => SetValue(TextWrappingProperty, value);
     }
 
     public LabelBox()

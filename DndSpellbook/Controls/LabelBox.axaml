@@ -7,6 +7,6 @@
              x:Name="Root">
     <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
         <Label Content="{Binding #Root.Label}"/>
-        <TextBox HorizontalAlignment="Stretch" Text="{Binding #Root.Text}"/>
+        <TextBox HorizontalAlignment="Stretch" Text="{Binding #Root.Text}" TextWrapping="{Binding #Root.TextWrapping}"/>
     </StackPanel>
 </UserControl>

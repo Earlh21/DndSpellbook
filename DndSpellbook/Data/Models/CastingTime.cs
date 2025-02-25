@@ -81,6 +81,11 @@ public class CastingTime : ReactiveObject
         return new CastingTime(CastingTimeType.Time, time, ritual: ritual);
     }
 
+    public CastingTime Clone()
+    {
+        return new CastingTime(Type, Time, ReactionText, Ritual);
+    }
+    
     public override string ToString()
     {
         if (Type == CastingTimeType.Reaction) return ReactionText ?? "";

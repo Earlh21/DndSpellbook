@@ -121,7 +121,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
     }
 
     public PageRequest PageRequest { get; } = new(1, 100);
-    public static int[] PageSizes { get; } = [50, 200, 1000];
+    public static int[] PageSizes { get; } = [50, 200, 1000, 2000];
     public static int[] Levels { get; } = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     public int MaxPage => (int)Math.Ceiling((double)Cards.Items.Count / PageRequest.Size);
 
@@ -137,9 +137,18 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public ReactiveCommand<Unit, Unit> ReturnNoSpellsCommand { get; }
     public ReactiveCommand<Unit, Unit> ImportSpellsCommand { get; }
     public ReactiveCommand<Unit, Unit> ClearSpellsCommand { get; }
+    
+    public ReactiveCommand<Unit, Unit> CreateTestSpellCommand { get; }
 
     public Interaction<Unit, string?> OpenImportSpellsFile { get; } = new();
     public Interaction<Unit, bool> DeleteSpellsConfirmation { get; } = new();
+
+    private SpellEditor? testSpell;
+    public SpellEditor? TestSpell
+    {
+        get => testSpell;
+        set => this.RaiseAndSetIfChanged(ref testSpell, value);
+    }
 
     public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false,
         bool asCardView = false)
@@ -156,7 +165,8 @@ public class SpellsViewModel : ViewModelBase, IDialog
         ReturnNoSpellsCommand = ReactiveCommand.Create(ReturnNoSpells);
         ImportSpellsCommand = ReactiveCommand.CreateFromTask(ImportSpells);
         ClearSpellsCommand = ReactiveCommand.CreateFromTask(ClearSpells);
-
+        
+        CreateTestSpellCommand = ReactiveCommand.Create(CreateTestSpell);
 
         Func<SpellCardViewModel, bool> cardLevelFilter = card => LevelFilter(card.Spell);
         Func<SpellExpanderViewModel, bool> expanderLevelFilter = expander => LevelFilter(expander.Spell);
@@ -231,6 +241,11 @@ public class SpellsViewModel : ViewModelBase, IDialog
         }
     }
 
+    private void CreateTestSpell()
+    {
+        TestSpell = new SpellEditor(new Spell("Test Spell") { School = SpellSchool.Abjuration}, spellLists);
+    }
+
     public async Task LoadDataAsync()
     {
         var fetchedSpells = await spellService.GetAllAsync();
@@ -250,6 +265,8 @@ public class SpellsViewModel : ViewModelBase, IDialog
         SpellListsWithNull = new(fetchedSpellLists.Prepend(null));
 
         PageRequest.Size = 50;
+        
+        
     }
 
     private void TogglePaneOpen()

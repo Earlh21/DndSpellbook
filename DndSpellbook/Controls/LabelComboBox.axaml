@@ -8,7 +8,7 @@
     <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
         <Label Content="{Binding #Root.Label}"/>
         <ComboBox HorizontalAlignment="Stretch"
-                  SelectedValue="{Binding #Root.SelectedValue}"
+                  SelectedItem="{Binding #Root.SelectedItem}"
                   ItemsSource="{Binding #Root.ItemsSource}"/>
     </StackPanel>
 </UserControl>
