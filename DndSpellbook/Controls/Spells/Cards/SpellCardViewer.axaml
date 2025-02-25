@@ -42,7 +42,7 @@
             </TextBlock>
 
             <TextBlock Text="{Binding #Root.Spell.CastingTime.DisplayString, StringFormat='Casting Time: {0}'}" />
-            <TextBlock Text="{Binding #Root.Spell.Range.DisplayString}" />
+            <TextBlock Text="{Binding #Root.Spell.Range.DisplayString, StringFormat='Range: {0}'}" />
             <TextBlock Text="{Binding #Root.Spell.Duration, Converter={StaticResource SecondsToDurationText}}" />
 
             <StackPanel Orientation="Horizontal">

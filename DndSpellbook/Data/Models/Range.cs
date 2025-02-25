@@ -88,8 +88,8 @@ namespace DndSpellbook.Data.Models
             if (Type == RangeType.Fixed)
             {
                 string range = MinRange == null
-                    ? $"Range: {MaxRange ?? 0} ft."
-                    : $"Range: {MinRange}-{MaxRange ?? 0} ft.";
+                    ? $"{MaxRange ?? 0} ft."
+                    : $"{MinRange}-{MaxRange ?? 0} ft.";
 
                 if (AreaRadius != null)
                 {
@@ -103,8 +103,8 @@ namespace DndSpellbook.Data.Models
             if (Type == RangeType.Ranged)
             {
                 string range = MinRange == null
-                    ? $"Range: {MaxRange ?? 0} ({LongRange} long) ft."
-                    : $"Range: {MinRange}-{MaxRange ?? 0} ({LongRange} long) ft.";
+                    ? $"{MaxRange ?? 0} ({LongRange} long) ft."
+                    : $"{MinRange}-{MaxRange ?? 0} ({LongRange} long) ft.";
 
                 if (AreaRadius != null)
                 {
