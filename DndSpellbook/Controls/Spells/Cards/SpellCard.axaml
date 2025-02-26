@@ -32,5 +32,7 @@
                 </ToolTip.Tip>
             </controls:CompactSpellCardViewer>
         </Button>
+        
+        <!--Content added dynamically-->
     </Panel>
 </UserControl>

@@ -7,20 +7,34 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellEntryRow"
              x:Name="Root">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="Label">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="ComboBox">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </UserControl.Styles>
+
     <StackPanel Orientation="Horizontal" Spacing="5">
         <Image Width="32" Height="32"
-               Source="{Binding #Root.SpellEntryEditor.Entry.Spell.School, Converter={StaticResource SpellSchoolToIcon}}"/>
+               Source="{Binding #Root.SpellEntryEditor.Entry.Spell.School, Converter={StaticResource SpellSchoolToIcon}}" />
         <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Level}" FontWeight="Bold"
-                   Margin="0,0,5,0"/>
+                   Margin="0,0,5,0" />
         <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Name}" Width="250" />
         <Button Content="Delete"
                 Command="{Binding #Root.DeleteCommand}"
                 CommandParameter="{Binding #Root.SpellEntryEditor}" />
 
-        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Prepared}" Content="Prepared" />
+        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Prepared}" Content="Prepared" Foreground="White"/>
 
-        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Uses.SpellSlot}" Content="Spell Slot" />
-        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.RechargeIsChecked}" Content="Charges" />
+        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Uses.SpellSlot}" Content="Spell Slot" Foreground="White" />
+        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.RechargeIsChecked}" Content="Charges" Foreground="White"/>
 
         <StackPanel Orientation="Horizontal" IsVisible="{Binding #Root.SpellEntryEditor.RechargeIsChecked}">
             <Label Content="Recharge on:" />

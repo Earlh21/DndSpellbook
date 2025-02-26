@@ -13,6 +13,7 @@
               IsExpanded="{Binding IsExpanded, Mode=TwoWay}" 
               x:Name="MainExpander">
         <Expander.Header>
+            
             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
                 <TextBlock FontWeight="Bold"
                            Text="{Binding Spell.Level}" />
@@ -34,6 +35,6 @@
             </StackPanel>
         </Expander.Header>
         
-        <!-- Content will be added dynamically -->
+        <!--Content added dynamically-->
     </Expander>
 </UserControl>

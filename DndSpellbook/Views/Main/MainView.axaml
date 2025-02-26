@@ -5,8 +5,6 @@
              xmlns:reactiveUi="http://reactiveui.net"
              xmlns:views="clr-namespace:DndSpellbook.Views"
              xmlns:dndSpellbook="clr-namespace:DndSpellbook"
-             xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
-             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="views:MainViewModel"
              x:Class="DndSpellbook.Views.MainView">
