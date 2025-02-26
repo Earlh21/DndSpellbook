@@ -47,8 +47,8 @@ public class CharacterViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> LongRestCommand { get; }
     public ReactiveCommand<Unit, Unit> LoadDataCommand { get; }
 
-    private FilteredCollection<SpellEntryEditor> spellEntryEditors;
-    public FilteredCollection<SpellEntryEditor> SpellEntryEditors
+    private FilteredCollection<SpellEntryEditor>? spellEntryEditors;
+    public FilteredCollection<SpellEntryEditor>? SpellEntryEditors
     {
         get => spellEntryEditors;
         set => this.RaiseAndSetIfChanged(ref spellEntryEditors, value);
@@ -65,8 +65,6 @@ public class CharacterViewModel : ViewModelBase
         RemoveEntryCommand = ReactiveCommand.CreateFromTask<SpellEntry>(RemoveEntry);
         LongRestCommand = ReactiveCommand.Create(LongRest);
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
-
-        spellEntryEditors = new(se => se.Entry.Id, new SpellEntryComparer(), null);
     }
     
     public async Task LoadDataAsync()
@@ -93,12 +91,17 @@ public class CharacterViewModel : ViewModelBase
             spellEntry.SubscribeToAllChanges(() => EntryChanged(spellEntry));
         }
 
+        //If SpellEntryEditors is non-nullable and set in the constructor, there's an odd bug
+        //Only reproducible on Release config: open the character, close, then open again, and entries will be duplicated.
+        //I still don't understand the cause and this is definitely not the right way to solve the bug... but it happens to solve it so... priorities
+        SpellEntryEditors = new(se => se.Entry.Id, new SpellEntryComparer(), null);
         SpellEntryEditors.ReplaceAll(Character.Spells.Select(spell => new SpellEntryEditor(spell)));
     }
 
     private async Task EntryChanged(SpellEntry entry)
     {
         if (Character == null) return;
+        if (SpellEntryEditors == null) return;
 
         var editor = SpellEntryEditors.Get(entry.Id);
         if (editor == null) return;
@@ -113,6 +116,7 @@ public class CharacterViewModel : ViewModelBase
     private async Task RemoveEntry(SpellEntry spellEntry)
     {
         if(Character == null) return;
+        if (SpellEntryEditors == null) return;
         
         Character.Spells.Remove(spellEntry);
         SpellEntryEditors.RemoveKey(spellEntry.Id);
@@ -122,6 +126,7 @@ public class CharacterViewModel : ViewModelBase
     private async Task AddSpells()
     {
         if (Character == null) return;
+        if (SpellEntryEditors == null) return;
         
         var vm = navigator.BuildSpellsViewModel(true);
         var result = await AddSpellsInteraction.Handle(vm).FirstAsync();
