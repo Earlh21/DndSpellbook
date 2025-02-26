@@ -1,27 +1,35 @@
 ﻿using System;
+
 using System.Linq;
+
 using System.Reactive.Linq;
+
 using System.Threading.Tasks;
+
 using Avalonia;
+
 using Avalonia.Controls;
+
 using Avalonia.Interactivity;
+
 using Avalonia.Markup.Xaml;
+
 using Avalonia.Platform.Storage;
+
 using Avalonia.ReactiveUI;
+
 using DynamicData.Binding;
+
 using MsBox.Avalonia;
+
 using MsBox.Avalonia.Enums;
+
 using ReactiveUI;
-
-
 namespace DndSpellbook.Views;
-
 public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
-
 {
     private SpellExpandersView? expandersView;
     private SpellCardsView? cardsView;
-
 
     public SpellsView()
     {
@@ -29,7 +37,6 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
         AvaloniaXamlLoader.Load(this);
         InitializeComponent();
     }
-
 
     protected override void OnDataContextChanged(EventArgs e)
     {
@@ -56,7 +63,6 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
                     "Are you sure want to delete all spells?",
                     ButtonEnum.YesNo
                 ).ShowWindowDialogAsync(window) == ButtonResult.Yes;
-            
             interaction.SetOutput(result);
         });
         
@@ -71,17 +77,15 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
                 SetExpandersView();
             }
         });
-        
-        _ = vm.LoadDataAsync();
-        //Task.Run(() => vm.LoadDataAsync());
-    }
 
+        Task.Run(() => vm.LoadDataAsync());
+    }
 
     private async Task<string?> OpenImportSpellsFile()
     {
         var storage = TopLevel.GetTopLevel(this)?.StorageProvider;
         if (storage == null) return null;
-
+        
         var options = new FilePickerOpenOptions
         {
             AllowMultiple = false,
@@ -92,7 +96,6 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
         return files.FirstOrDefault()?.TryGetLocalPath();
     }
 
-
     private void SetCardsView()
     {
         if (SpellsViewContainer.Content is SpellCardsView) return;
@@ -101,15 +104,14 @@ public partial class SpellsView : ReactiveUserControl<SpellsViewModel>
         {
             this.expandersView = expandersView;
         }
-        
+
         SpellsViewContainer.Content = cardsView ?? new SpellCardsView
         {
             DataContext = DataContext,
             Margin = new(0, 30, 0, 0)
         };
     }
-
-
+    
     private void SetExpandersView()
     {
         if (SpellsViewContainer.Content is SpellExpandersView) return;

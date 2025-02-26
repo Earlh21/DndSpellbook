@@ -45,6 +45,7 @@ public class CharacterViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> AddSpellsCommand { get; }
     public ReactiveCommand<SpellEntry, Unit> RemoveEntryCommand { get; }
     public ReactiveCommand<Unit, Unit> LongRestCommand { get; }
+    public ReactiveCommand<Unit, Unit> LoadDataCommand { get; }
 
     private FilteredCollection<SpellEntryEditor> spellEntryEditors;
     public FilteredCollection<SpellEntryEditor> SpellEntryEditors
@@ -63,6 +64,7 @@ public class CharacterViewModel : ViewModelBase
         AddSpellsCommand = ReactiveCommand.CreateFromTask(AddSpells);
         RemoveEntryCommand = ReactiveCommand.CreateFromTask<SpellEntry>(RemoveEntry);
         LongRestCommand = ReactiveCommand.Create(LongRest);
+        LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
 
         spellEntryEditors = new(se => se.Entry.Id, new SpellEntryComparer(), null);
     }

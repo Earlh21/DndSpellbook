@@ -139,6 +139,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
     public ReactiveCommand<Unit, Unit> ClearSpellsCommand { get; }
     
     public ReactiveCommand<Unit, Unit> CreateTestSpellCommand { get; }
+    public ReactiveCommand<Unit, Unit> LoadDataCommand { get; }
 
     public Interaction<Unit, string?> OpenImportSpellsFile { get; } = new();
     public Interaction<Unit, bool> DeleteSpellsConfirmation { get; } = new();
@@ -167,6 +168,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
         ClearSpellsCommand = ReactiveCommand.CreateFromTask(ClearSpells);
         
         CreateTestSpellCommand = ReactiveCommand.Create(CreateTestSpell);
+        LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
 
         Func<SpellCardViewModel, bool> cardLevelFilter = card => LevelFilter(card.Spell);
         Func<SpellExpanderViewModel, bool> expanderLevelFilter = expander => LevelFilter(expander.Spell);
@@ -248,7 +250,6 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
     public async Task LoadDataAsync()
     {
-        await Task.Delay(3000);
         var fetchedSpells = await spellService.GetAllAsync();
         var fetchedSpellLists = await spellListService.GetAllAsync();
 
