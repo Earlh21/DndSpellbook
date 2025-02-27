@@ -6,7 +6,8 @@
              xmlns:views="clr-namespace:DndSpellbook.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellEntryCard"
-             x:DataType="controls:SpellEntryEditor">
+             x:DataType="controls:SpellEntryEditor"
+             x:Name="Root">
     <Border Width="350" Height="500" BorderBrush="Black" BorderThickness="1" Background="LightGray">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
@@ -20,14 +21,16 @@
                 <Separator />
                 <CheckBox IsChecked="{Binding RechargeIsChecked}" Content="Charges" />
                 <StackPanel Orientation="Vertical" IsVisible="{Binding RechargeIsChecked}">
-                    <Label Content="Recharge on:" />
-                    <ComboBox
-                        SelectedItem="{Binding Entry.Uses.Recharge.Type}"
-                        ItemsSource="{Binding RechargeTypes}" />
-                    <Label Content="Max Charges:" />
-                    <NumericUpDown ShowButtonSpinner="False"
-                                   Value="{Binding Entry.Uses.Recharge.MaxCharges}"
-                                   Minimum="0" ParsingNumberStyle="Integer" />
+                    <controls:LabelComboBox Label="Recharge on"
+                                            SelectedItem="{Binding Entry.Uses.Recharge.Type}"
+                                            ItemsSource="{Binding #Root.RechargeTypes}" />
+
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="Max Charges" />
+                        <NumericUpDown ShowButtonSpinner="False"
+                                       Value="{Binding Entry.Uses.Recharge.MaxCharges}"
+                                       Minimum="0" ParsingNumberStyle="Integer" />
+                    </StackPanel>
                 </StackPanel>
                 <Separator />
             </StackPanel>

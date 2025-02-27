@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Media;
 using ReactiveUI;
 
 namespace DndSpellbook.Controls;
@@ -60,17 +60,35 @@ public partial class SpellSlotPips : UserControl
                 RemovePip();
             }
         });
+
+        this.WhenAnyValue(x => x.UsedPips).Subscribe(_ => UpdateAllPips());
+    }
+
+    private void UpdateAllPips()
+    {
+        for (int i = 0; i < PipsPanel.Children.Count; i++)
+        {
+            if (PipsPanel.Children[i] is SpellSlotPip pip)
+            {
+                pip.IsFilled = i < (MaxPips - UsedPips);
+            }
+        }
     }
 
     private void AddPip()
     {
-        var checkbox = new CheckBox { IsEnabled = false };
+        var pip = new SpellSlotPip
+        {
+            Width = 24, Height = 24,
+            BorderBrush = new SolidColorBrush(Colors.Goldenrod),
+            BorderThickness = new(2),
+            CornerRadius = new(6)
+        };
+        
         int index = PipsPanel.Children.Count;
+        pip.IsFilled = index < (MaxPips - UsedPips);
 
-        this.WhenAnyValue(x => x.UsedPips).Subscribe(usedPips => checkbox.IsChecked = index < usedPips);
-        checkbox.IsChecked = index < UsedPips;
-
-        PipsPanel.Children.Add(checkbox);
+        PipsPanel.Children.Add(pip);
     }
 
     private void RemovePip()

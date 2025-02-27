@@ -9,32 +9,43 @@
              x:Name="Root"
              BorderBrush="Goldenrod" BorderThickness="1"
              CornerRadius="15">
-    <Expander HorizontalAlignment="Stretch" CornerRadius="15" 
-              IsExpanded="{Binding IsExpanded, Mode=TwoWay}" 
+    <Expander HorizontalAlignment="Stretch" CornerRadius="15"
+              IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
               x:Name="MainExpander">
         <Expander.Header>
-            
-            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
-                <TextBlock FontWeight="Bold"
-                           Text="{Binding Spell.Level}" />
-                <Image Width="32" Height="32"
-                       Source="{Binding Spell.School, Converter={StaticResource SpellSchoolToIcon}}"
-                       Margin="0,0,5,0" />
-                <CheckBox IsVisible="{Binding IsSelector}"
-                          IsChecked="{Binding IsSelected}" />
-                <TextBlock Text="{Binding Spell.Name}" />
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10"
+                            Margin="4">
+                    <TextBlock FontWeight="Bold"
+                               Text="{Binding Spell.Level}"
+                               VerticalAlignment="Center" />
+                    <Image Width="32" Height="32"
+                           Source="{Binding Spell.School, Converter={StaticResource SpellSchoolToIcon}}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,5,0" />
+                    <CheckBox IsVisible="{Binding IsSelector}"
+                              IsChecked="{Binding IsSelected}"
+                              VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Spell.Name}"
+                               VerticalAlignment="Center" />
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-                    <Button Content="Edit" Command="{Binding EditCommand}" IsVisible="{Binding !IsEditing}"/>
-                    <Button Content="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsEditing}"/>
-                    <Button Content="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding IsEditing}"/>
-                    <Button Content="Delete"
+                </StackPanel>
+
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10"
+                            VerticalAlignment="Center">
+                    <Button Content="Edit" Command="{Binding EditCommand}" IsVisible="{Binding !IsEditing}" />
+                    <Button Content="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsEditing}" />
+                    <Button Content="Cancel" Command="{Binding CancelCommand}" IsVisible="{Binding IsEditing}" />
+                    <Button Content="Delete" Margin="20,0,0,0"
                             Command="{Binding DeleteCommand}"
                             CommandParameter="{Binding Spell}" />
                 </StackPanel>
-            </StackPanel>
+            </Grid>
+
+
         </Expander.Header>
-        
+
         <!--Content added dynamically-->
     </Expander>
 </UserControl>

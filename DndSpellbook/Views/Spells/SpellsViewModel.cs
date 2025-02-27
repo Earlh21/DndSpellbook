@@ -7,6 +7,7 @@ using System.Net.Mime;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DndSpellbook.Controls;
 using DndSpellbook.Data.Models;
 using DndSpellbook.Data.Models.Enums;
@@ -26,6 +27,7 @@ public class SpellsViewModel : ViewModelBase, IDialog
 {
     private readonly SpellService spellService;
     private readonly SpellListService spellListService;
+    private readonly VariableService variableService;
 
     private bool isPaneOpen = true;
 
@@ -150,13 +152,13 @@ public class SpellsViewModel : ViewModelBase, IDialog
         set => this.RaiseAndSetIfChanged(ref testSpell, value);
     }
 
-    public SpellsViewModel(SpellService spellService, SpellListService spellListService, bool asSelector = false,
-        bool asCardView = false)
+    public SpellsViewModel(SpellService spellService, SpellListService spellListService, VariableService variableService,
+        bool asSelector = false)
     {
         this.spellService = spellService;
         this.spellListService = spellListService;
+        this.variableService = variableService;
         IsSelector = asSelector;
-        IsCardView = asCardView;
 
         NewSpellCommand = ReactiveCommand.CreateFromTask(NewSpell);
         TogglePaneCommand = ReactiveCommand.Create(TogglePaneOpen);
@@ -248,6 +250,17 @@ public class SpellsViewModel : ViewModelBase, IDialog
 
     public async Task LoadDataAsync()
     {
+        var showAsCards = await variableService.GetBoolAsync("ShowSpellsAsCards");
+        if (showAsCards == null) await variableService.SetBoolAsync("ShowSpellsAsCards", true);
+
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if(showAsCards != null) IsCardView = showAsCards.Value;
+        
+            this.WhenAnyValue(x => x.IsCardView)
+                .Subscribe(x => variableService.SetBoolAsync("ShowSpellsAsCards", x));
+        });
+        
         var fetchedSpells = await spellService.GetAllAsync();
         var fetchedSpellLists = await spellListService.GetAllAsync();
 
@@ -265,8 +278,6 @@ public class SpellsViewModel : ViewModelBase, IDialog
         SpellListsWithNull = new(fetchedSpellLists.Prepend(null));
 
         PageRequest.Size = 50;
-        
-        
     }
 
     private void TogglePaneOpen()

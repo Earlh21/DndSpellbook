@@ -9,7 +9,6 @@ namespace DndSpellbook.Controls;
 public class SpellEntryEditor : ReactiveObject
 {
     public SpellEntry Entry { get; }
-    public RechargeType[] RechargeTypes { get; } = Enum.GetValues<RechargeType>(); 
 
     private bool rechargeIsChecked;
     public bool RechargeIsChecked

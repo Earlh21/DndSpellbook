@@ -6,49 +6,56 @@
              xmlns:controls="clr-namespace:DndSpellbook.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DndSpellbook.Controls.SpellEntryRow"
+             BorderBrush="Goldenrod" BorderThickness="1" CornerRadius="15"
              x:Name="Root">
-    <UserControl.Styles>
-        <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
+    <Border HorizontalAlignment="Stretch"
+            CornerRadius="15"
+            Background="#ccffffff">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="5">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <Image Width="32" Height="32"
+                       VerticalAlignment="Center"
+                       Source="{Binding #Root.SpellEntryEditor.Entry.Spell.School, Converter={StaticResource SpellSchoolToIcon}}" />
+                <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Level}" FontWeight="Bold"
+                           Margin="0,0,5,0"
+                           VerticalAlignment="Center" />
+                <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Name}" Width="250"
+                           VerticalAlignment="Center" />
 
-        <Style Selector="Label">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
+                <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Prepared}"
+                          VerticalAlignment="Center" Content="Prepared" />
 
-        <Style Selector="ComboBox">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-    </UserControl.Styles>
+                <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Uses.SpellSlot}"
+                          VerticalAlignment="Center" Content="Spell Slot" />
+                <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.RechargeIsChecked}"
+                          VerticalAlignment="Center" Content="Charges" />
 
-    <StackPanel Orientation="Horizontal" Spacing="5">
-        <Image Width="32" Height="32"
-               Source="{Binding #Root.SpellEntryEditor.Entry.Spell.School, Converter={StaticResource SpellSchoolToIcon}}" />
-        <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Level}" FontWeight="Bold"
-                   Margin="0,0,5,0" />
-        <TextBlock Text="{Binding #Root.SpellEntryEditor.Entry.Spell.Name}" Width="250" />
-        <Button Content="Delete"
-                Command="{Binding #Root.DeleteCommand}"
-                CommandParameter="{Binding #Root.SpellEntryEditor}" />
+                <StackPanel Orientation="Horizontal" IsVisible="{Binding #Root.SpellEntryEditor.RechargeIsChecked}"
+                            VerticalAlignment="Center" Spacing="5">
+                    <controls:LabelComboBox Label="Recharge on"
+                                            SelectedItem="{Binding #Root.SpellEntryEditor.Entry.Uses.Recharge.Type}"
+                                            VerticalAlignment="Center"
+                                            ItemsSource="{Binding #Root.RechargeTypes}" />
 
-        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Prepared}" Content="Prepared" Foreground="White"/>
+                    <StackPanel Orientation="Vertical"
+                                VerticalAlignment="Center">
+                        <Label Content="Max Charges" />
+                        <NumericUpDown ShowButtonSpinner="False"
+                                       Value="{Binding #Root.SpellEntryEditor.Entry.Uses.Recharge.MaxCharges}"
+                                       Minimum="0" ParsingNumberStyle="Integer" />
+                    </StackPanel>
+                </StackPanel>
 
-        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.Entry.Uses.SpellSlot}" Content="Spell Slot" Foreground="White" />
-        <CheckBox IsChecked="{Binding #Root.SpellEntryEditor.RechargeIsChecked}" Content="Charges" Foreground="White"/>
-
-        <StackPanel Orientation="Horizontal" IsVisible="{Binding #Root.SpellEntryEditor.RechargeIsChecked}">
-            <Label Content="Recharge on:" />
-            <ComboBox
-                SelectedItem="{Binding #Root.SpellEntryEditor.Entry.Uses.Recharge.Type}"
-                ItemsSource="{Binding #Root.SpellEntryEditor.RechargeTypes}" />
-            <Label Content="Max Charges:" />
-            <NumericUpDown ShowButtonSpinner="False"
-                           Value="{Binding #Root.SpellEntryEditor.Entry.Uses.Recharge.MaxCharges}"
-                           Minimum="0" ParsingNumberStyle="Integer" />
-        </StackPanel>
-
-        <ToolTip.Tip>
-            <controls:SpellCardViewer Spell="{Binding #Root.SpellEntryEditor.Entry.Spell}" />
-        </ToolTip.Tip>
-    </StackPanel>
+                <ToolTip.Tip>
+                    <controls:SpellCardViewer Spell="{Binding #Root.SpellEntryEditor.Entry.Spell}" />
+                </ToolTip.Tip>
+            </StackPanel>
+            
+            <Button Content="Delete" Grid.Column="2"
+                    Command="{Binding #Root.DeleteCommand}"
+                    CommandParameter="{Binding #Root.SpellEntryEditor}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right" />
+        </Grid>
+    </Border>
 </UserControl>

@@ -7,6 +7,6 @@
         x:Class="DndSpellbook.Windows.DialogWindow"
         x:DataType="system:Object"
         Icon="/Assets/dndspellbook_icon.ico"
-        Title="DialogWindow">
+        Title="DialogWindow" Background="{StaticResource Color2}">
     <ContentControl Content="{Binding}"/>
 </Window>

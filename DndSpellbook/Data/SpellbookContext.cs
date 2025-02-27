@@ -11,6 +11,7 @@ public class SpellbookContext : DbContext
     public DbSet<Spell> Spells { get; set; }
     public DbSet<Character> Characters { get; set; }
     public DbSet<SpellList> SpellLists { get; set; }
+    public DbSet<StringVariable> StringVariables { get; set; }
 
     public SpellbookContext() : base(new DbContextOptionsBuilder<SpellbookContext>()
         .UseSqlite("Data Source=data.db")
