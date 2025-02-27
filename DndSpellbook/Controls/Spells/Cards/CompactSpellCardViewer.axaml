@@ -17,6 +17,9 @@
         <Panel>
             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,10,0,0"
                        Text="{Binding #Root.Spell.Level}" FontSize="24" Foreground="White"/>
+            
+            <CheckBox VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,10,0"
+                      IsVisible="{Binding #Root.IsSelector}" IsChecked="{Binding #Root.IsSelected}"/>
 
             <Button VerticalAlignment="Top" HorizontalAlignment="Right"
                     Content="D"

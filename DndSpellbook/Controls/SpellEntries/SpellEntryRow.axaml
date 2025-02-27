@@ -53,7 +53,7 @@
             
             <Button Content="Delete" Grid.Column="2"
                     Command="{Binding #Root.DeleteCommand}"
-                    CommandParameter="{Binding #Root.SpellEntryEditor}"
+                    CommandParameter="{Binding #Root.SpellEntryEditor.Entry}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right" />
         </Grid>

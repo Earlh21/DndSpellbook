@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using DndSpellbook.Data.Models;
 
@@ -24,6 +25,24 @@ public partial class CompactSpellCardViewer : UserControl
     {
         get => GetValue(DeleteCommandProperty);
         set => SetValue(DeleteCommandProperty, value);
+    }
+    
+    public static readonly StyledProperty<bool> IsSelectedProperty =
+        AvaloniaProperty.Register<SpellCardViewer, bool>(nameof(IsSelected), defaultBindingMode: BindingMode.TwoWay);
+
+    public bool IsSelected
+    {
+        get => GetValue(IsSelectedProperty);
+        set => SetValue(IsSelectedProperty, value);
+    }
+    
+    public static readonly StyledProperty<bool> IsSelectorProperty =
+        AvaloniaProperty.Register<SpellCardViewer, bool>(nameof(IsSelector));
+
+    public bool IsSelector
+    {
+        get => GetValue(IsSelectorProperty);
+        set => SetValue(IsSelectorProperty, value);
     }
     
     public CompactSpellCardViewer()
